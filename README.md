@@ -106,15 +106,21 @@ python python-divisor-wave/plot_cli.py \
 
 ### Riesz Products
 
-$$\prod_{n=2}^{x} \left|1 + f(\pi z n)\right|^{-m} \quad f \in \{\cos, \sin, \tan\}$$
-
-Functions 5, 6, 7.
+| # | Name | Formula |
+|---|------|---------|
+| 5 | Riesz — Cos | $\prod_{n=2}^{x} \|iz_y + \cos(\pi z n)\|^{iz_y \cdot (-m)}$ |
+| 6 | Riesz — Sin | $\prod_{n=2}^{x} \|1 + \sin(\pi z n)\|^{-m}$ |
+| 7 | Riesz — Tan | $\prod_{n=2}^{x} \|1 + \tan(\pi z n)\|^{-m}$ |
 
 ### Viète Products
 
-$$\prod_{n=2}^{x} \left|f\!\left(\frac{\pi z}{2^n}\right)\right|^{-m} \quad f \in \{\cos, \sin, \tan\}$$
+| # | Name | Formula |
+|---|------|---------|
+| 8 | Viète — Cos | $\prod_{n=2}^{x} \left\|\cos\!\left(\dfrac{\pi z}{2^n}\right)\right\|^{-m}$ |
+| 9 | Viète — Sin | $\prod_{n=2}^{x} \left\|\sin\!\left(\dfrac{\pi z}{2^n}\right)\right\|^{-m}$ |
+| 10 | Viète — Tan | $\prod_{n=2}^{x} \left\|\tan\!\left(\dfrac{\pi z}{2^n}\right)\right\|^{-m}$ |
 
-Functions 8, 9, 10. These converge quickly — large `m` values are typically needed.
+These converge quickly — large `m` values are typically needed for Cos and Sin; very small `m` for Tan, which diverges easily.
 
 ### Compositions
 
