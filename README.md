@@ -14,11 +14,19 @@ A **divisor wave** of order k is a real-variable function of the form:
 
 $$a_k(x) = \left| \alpha \frac{x}{k} \sin\!\left(\frac{\pi x}{k}\right) \right|$$
 
-where k is a positive integer greater than 1. Its zeros fall at every integer multiple of k, and its amplitude grows as α(x/k). Taking the infinite product over all k from 2 to x:
+where k is a positive integer greater than 1. Its zeros fall at every integer multiple of k, and its amplitude grows as α(x/k). Taking the infinite product over all k from 2 to x gives **a(z)**:
 
-$$f(x) = \prod_{k=2}^{x} a_k(x)$$
+$$a(z) = \left|\prod_{k=2}^{x} \alpha\frac{x}{k}\sin\!\left(\frac{\pi z}{k}\right)\right|$$
 
-produces a function that is zero at every composite integer and nonzero at every prime — effectively a continuous analogue of the Sieve of Eratosthenes. Extending this to the complex plane and composing with other infinite-product representations (Riesz, Viète, product rep. for sin) is the central object of study.
+a(z) is zero at both primes and composites, but the shape of each zero differs: at a prime p only one wave a_p has an x-intercept there, so the function touches zero sharply and immediately returns — a cusp. At a composite, multiple divisor waves share the zero, pulling the function down more gradually — a curve.
+
+Substituting the Weierstrass product representation of sin into a(z) yields **b(z)**:
+
+$$b(z) = \left|\prod_{k=2}^{x} \frac{\beta x}{k}\left(\pi z \prod_{n=2}^{x}\left(1 - \frac{z^2}{n^2 k^2}\right)\right)\right|$$
+
+b(z) has better left- and right-hand limits at each whole number than a(z) does, and this is what produces the key property: the factor $(1 - z^2/n^2k^2)$ is zero only when $z = nk$, i.e. when z is a product of two integers each ≥ 2 — a composite. For a prime p, no pair (n, k) with n, k ≥ 2 satisfies nk = p, so none of the factors vanish and **b(p) ≠ 0**. For any composite c = nk, the corresponding factor is exactly zero and **b(c) = 0**. b(z) is therefore a continuous prime indicator — nonzero at primes, zero at composites.
+
+Extending both functions to the complex plane and composing with other infinite-product representations (Riesz, Viète) is the central object of study.
 
 The functions are rendered as 3D surfaces over the complex plane: the real axis runs left-right, the imaginary axis runs front-back, and the z-axis shows the function's magnitude.
 
