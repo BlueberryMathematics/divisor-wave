@@ -1,0 +1,17 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Node / Electron
+electron-divisor-wave/node_modules/
+electron-divisor-wave/.next/
+electron-divisor-wave/out/
+
+# Plot output
+plot-outputs/
+
+# OS
+.DS_Store
+Thumbs.db
