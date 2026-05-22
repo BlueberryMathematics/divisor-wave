@@ -1,0 +1,291 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global/global}
+    \entry{bashirov2008multiplicative}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=4dbea77a2e12d525dbb1121592928459}{%
+           family={Bashirov},
+           familyi={B\bibinitperiod},
+           given={Agamirza\bibnamedelima E.},
+           giveni={A\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{hash=7f486717c505e459a049e1fb64cdf089}{%
+           family={Kurp{ı}nar},
+           familyi={K\bibinitperiod},
+           given={Emine\bibnamedelima Mişe},
+           giveni={E\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=d9b594fa79c4ba8d3ffd3d82880728f5}{%
+           family={Özyap{ı}c{ı}},
+           familyi={Ö\bibinitperiod},
+           given={Ali},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{fad7ead805b6e9f06759fa25ddc5ed3c}
+      \strng{fullhash}{fad7ead805b6e9f06759fa25ddc5ed3c}
+      \strng{fullhashraw}{fad7ead805b6e9f06759fa25ddc5ed3c}
+      \strng{bibnamehash}{fad7ead805b6e9f06759fa25ddc5ed3c}
+      \strng{authorbibnamehash}{fad7ead805b6e9f06759fa25ddc5ed3c}
+      \strng{authornamehash}{fad7ead805b6e9f06759fa25ddc5ed3c}
+      \strng{authorfullhash}{fad7ead805b6e9f06759fa25ddc5ed3c}
+      \strng{authorfullhashraw}{fad7ead805b6e9f06759fa25ddc5ed3c}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Mathematical Analysis and Applications}
+      \field{number}{1}
+      \field{title}{Multiplicative calculus and its applications}
+      \field{volume}{337}
+      \field{year}{2008}
+      \field{pages}{36\bibrangedash 48}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1016/j.jmaa.2007.03.081
+      \endverb
+    \endentry
+    \entry{bombieri2000riemann}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=e2d4fa0eea805e9de7709f9c548753f4}{%
+           family={Bombieri},
+           familyi={B\bibinitperiod},
+           given={Enrico},
+           giveni={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{e2d4fa0eea805e9de7709f9c548753f4}
+      \strng{fullhash}{e2d4fa0eea805e9de7709f9c548753f4}
+      \strng{fullhashraw}{e2d4fa0eea805e9de7709f9c548753f4}
+      \strng{bibnamehash}{e2d4fa0eea805e9de7709f9c548753f4}
+      \strng{authorbibnamehash}{e2d4fa0eea805e9de7709f9c548753f4}
+      \strng{authornamehash}{e2d4fa0eea805e9de7709f9c548753f4}
+      \strng{authorfullhash}{e2d4fa0eea805e9de7709f9c548753f4}
+      \strng{authorfullhashraw}{e2d4fa0eea805e9de7709f9c548753f4}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{Clay Mathematics Institute}
+      \field{title}{Problems of the Millennium: The {R}iemann Hypothesis}
+      \field{year}{2000}
+      \verb{urlraw}
+      \verb https://www.claymath.org/wp-content/uploads/2022/05/riemann.pdf
+      \endverb
+      \verb{url}
+      \verb https://www.claymath.org/wp-content/uploads/2022/05/riemann.pdf
+      \endverb
+    \endentry
+    \entry{chan2006sine}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=cc7e4fa367d688b800b0de25cb2ed894}{%
+           family={Chan},
+           familyi={C\bibinitperiod},
+           given={Erica},
+           giveni={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{cc7e4fa367d688b800b0de25cb2ed894}
+      \strng{fullhash}{cc7e4fa367d688b800b0de25cb2ed894}
+      \strng{fullhashraw}{cc7e4fa367d688b800b0de25cb2ed894}
+      \strng{bibnamehash}{cc7e4fa367d688b800b0de25cb2ed894}
+      \strng{authorbibnamehash}{cc7e4fa367d688b800b0de25cb2ed894}
+      \strng{authornamehash}{cc7e4fa367d688b800b0de25cb2ed894}
+      \strng{authorfullhash}{cc7e4fa367d688b800b0de25cb2ed894}
+      \strng{authorfullhashraw}{cc7e4fa367d688b800b0de25cb2ed894}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{MIT OpenCourseWare, 18.104 Seminar in Analysis}
+      \field{title}{The Sine Product Formula and the {G}amma Function}
+      \field{year}{2006}
+      \verb{urlraw}
+      \verb https://ocw.mit.edu/courses/18-104-seminar-in-analysis-applications-to-number-theory-fall-2006/58778de0faae6448c3b0bfb1a1ec4f7a_chan.pdf
+      \endverb
+      \verb{url}
+      \verb https://ocw.mit.edu/courses/18-104-seminar-in-analysis-applications-to-number-theory-fall-2006/58778de0faae6448c3b0bfb1a1ec4f7a_chan.pdf
+      \endverb
+    \endentry
+    \entry{keogh1966riesz}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=73f9cc467145567cdc276024b67f5c83}{%
+           family={Keogh},
+           familyi={K\bibinitperiod},
+           given={F.\bibnamedelimi R.},
+           giveni={F\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+      }
+      \strng{namehash}{73f9cc467145567cdc276024b67f5c83}
+      \strng{fullhash}{73f9cc467145567cdc276024b67f5c83}
+      \strng{fullhashraw}{73f9cc467145567cdc276024b67f5c83}
+      \strng{bibnamehash}{73f9cc467145567cdc276024b67f5c83}
+      \strng{authorbibnamehash}{73f9cc467145567cdc276024b67f5c83}
+      \strng{authornamehash}{73f9cc467145567cdc276024b67f5c83}
+      \strng{authorfullhash}{73f9cc467145567cdc276024b67f5c83}
+      \strng{authorfullhashraw}{73f9cc467145567cdc276024b67f5c83}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the London Mathematical Society}
+      \field{number}{1}
+      \field{title}{Riesz products}
+      \field{volume}{3}
+      \field{year}{1965}
+      \field{pages}{174\bibrangedash 182}
+      \range{pages}{9}
+      \verb{urlraw}
+      \verb https://eclass.uoa.gr/modules/document/file.php/MATH121/04-%CE%95%CF%81%CE%B3%CE%B1%CF%83%CE%AF%CE%B5%CF%82/04-1.%20%CE%A4%CE%B1%20%CE%B8%CE%AD%CE%BC%CE%B1%CF%84%CE%B1/49.%20Riesz%20products.pdf
+      \endverb
+      \verb{url}
+      \verb https://eclass.uoa.gr/modules/document/file.php/MATH121/04-%CE%95%CF%81%CE%B3%CE%B1%CF%83%CE%AF%CE%B5%CF%82/04-1.%20%CE%A4%CE%B1%20%CE%B8%CE%AD%CE%BC%CE%B1%CF%84%CE%B1/49.%20Riesz%20products.pdf
+      \endverb
+    \endentry
+    \entry{riemann1990primzahlen}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=bda6bb5b38f7bd5e17c19c5121715453}{%
+           family={Riemann},
+           familyi={R\bibinitperiod},
+           given={Bernhard},
+           giveni={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{bda6bb5b38f7bd5e17c19c5121715453}
+      \strng{fullhash}{bda6bb5b38f7bd5e17c19c5121715453}
+      \strng{fullhashraw}{bda6bb5b38f7bd5e17c19c5121715453}
+      \strng{bibnamehash}{bda6bb5b38f7bd5e17c19c5121715453}
+      \strng{authorbibnamehash}{bda6bb5b38f7bd5e17c19c5121715453}
+      \strng{authornamehash}{bda6bb5b38f7bd5e17c19c5121715453}
+      \strng{authorfullhash}{bda6bb5b38f7bd5e17c19c5121715453}
+      \strng{authorfullhashraw}{bda6bb5b38f7bd5e17c19c5121715453}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Gesammelte mathematische Werke und wissenschaftlicher Nachla{ß}}
+      \field{title}{Üeber die {A}nzahl der {P}rimzahlen unter einer gegebenen {G}rösse}
+      \field{year}{1990}
+      \field{pages}{177\bibrangedash 185}
+      \range{pages}{9}
+      \verb{urlraw}
+      \verb https://www.claymath.org/wp-content/uploads/2023/04/Wilkins-transcription.pdf
+      \endverb
+      \verb{url}
+      \verb https://www.claymath.org/wp-content/uploads/2023/04/Wilkins-transcription.pdf
+      \endverb
+    \endentry
+    \entry{sahoo2022infinite}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=34c65da7ad1f0c2c26a7bc9393ed8b0a}{%
+           family={Sahoo},
+           familyi={S\bibinitperiod},
+           given={Sarthak},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{34c65da7ad1f0c2c26a7bc9393ed8b0a}
+      \strng{fullhash}{34c65da7ad1f0c2c26a7bc9393ed8b0a}
+      \strng{fullhashraw}{34c65da7ad1f0c2c26a7bc9393ed8b0a}
+      \strng{bibnamehash}{34c65da7ad1f0c2c26a7bc9393ed8b0a}
+      \strng{authorbibnamehash}{34c65da7ad1f0c2c26a7bc9393ed8b0a}
+      \strng{authornamehash}{34c65da7ad1f0c2c26a7bc9393ed8b0a}
+      \strng{authorfullhash}{34c65da7ad1f0c2c26a7bc9393ed8b0a}
+      \strng{authorfullhashraw}{34c65da7ad1f0c2c26a7bc9393ed8b0a}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Parabola}
+      \field{number}{2}
+      \field{title}{Infinite products and their applications to infinite series}
+      \field{volume}{57}
+      \field{year}{2021}
+      \verb{urlraw}
+      \verb https://www.parabola.unsw.edu.au/files/articles/2020-2029/volume-57-2021/issue-2/vol57_no2_3.pdf
+      \endverb
+      \verb{url}
+      \verb https://www.parabola.unsw.edu.au/files/articles/2020-2029/volume-57-2021/issue-2/vol57_no2_3.pdf
+      \endverb
+    \endentry
+    \entry{slavik2007product}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=603f34d332d89d074ffdd976e68bebc9}{%
+           family={Slavík},
+           familyi={S\bibinitperiod},
+           given={Antonín},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Prague}%
+      }
+      \list{publisher}{1}{%
+        {Matfyzpress}%
+      }
+      \strng{namehash}{603f34d332d89d074ffdd976e68bebc9}
+      \strng{fullhash}{603f34d332d89d074ffdd976e68bebc9}
+      \strng{fullhashraw}{603f34d332d89d074ffdd976e68bebc9}
+      \strng{bibnamehash}{603f34d332d89d074ffdd976e68bebc9}
+      \strng{authorbibnamehash}{603f34d332d89d074ffdd976e68bebc9}
+      \strng{authornamehash}{603f34d332d89d074ffdd976e68bebc9}
+      \strng{authorfullhash}{603f34d332d89d074ffdd976e68bebc9}
+      \strng{authorfullhashraw}{603f34d332d89d074ffdd976e68bebc9}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Product Integration, its History and Applications}
+      \field{year}{2007}
+      \verb{urlraw}
+      \verb https://www.karlin.mff.cuni.cz/~slavik/product/product_integration.pdf
+      \endverb
+      \verb{url}
+      \verb https://www.karlin.mff.cuni.cz/~slavik/product/product_integration.pdf
+      \endverb
+    \endentry
+    \entry{zvengrowski2003convergence}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=55c0a070f4e4b9efd7c4efe19020d41b}{%
+           family={Zvengrowski},
+           familyi={Z\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{55c0a070f4e4b9efd7c4efe19020d41b}
+      \strng{fullhash}{55c0a070f4e4b9efd7c4efe19020d41b}
+      \strng{fullhashraw}{55c0a070f4e4b9efd7c4efe19020d41b}
+      \strng{bibnamehash}{55c0a070f4e4b9efd7c4efe19020d41b}
+      \strng{authorbibnamehash}{55c0a070f4e4b9efd7c4efe19020d41b}
+      \strng{authornamehash}{55c0a070f4e4b9efd7c4efe19020d41b}
+      \strng{authorfullhash}{55c0a070f4e4b9efd7c4efe19020d41b}
+      \strng{authorfullhashraw}{55c0a070f4e4b9efd7c4efe19020d41b}
+      \field{sortinit}{Z}
+      \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{University of North Carolina at Greensboro}
+      \field{title}{Convergence of {D}irichlet Series and {E}uler Products}
+      \field{year}{2015}
+      \field{pages}{8\bibrangedash 9}
+      \range{pages}{2}
+      \verb{urlraw}
+      \verb https://math-sites.uncg.edu/number-theory/wp-content/uploads/sites/6/2018/01/zvengrowski-converge-eulerprod.pdf
+      \endverb
+      \verb{url}
+      \verb https://math-sites.uncg.edu/number-theory/wp-content/uploads/sites/6/2018/01/zvengrowski-converge-eulerprod.pdf
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
