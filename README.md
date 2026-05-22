@@ -2,6 +2,8 @@
 
 [📄 Divisor Wave Product Analysis of Prime and Composite Numbers](https://github.com/BlueberryMathematics/divisor-wave/blob/master/latex-divisor-wave-paper/legacy/Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.pdf)
 
+[📄 Divisor Wave Product Analysis of Prime and Composite Numbers (new version — in active development)](https://github.com/BlueberryMathematics/divisor-wave/blob/master/latex-divisor-wave-paper/new/Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.pdf)
+
 An Electron + Next.js desktop app for generating 3D surface plots of infinite-product functions over the complex plane. The functions are motivated by a connection between divisor waves, prime number distribution, and the Riemann Hypothesis.
 
 ![Divisor Wave — Product of Product Rep. for Sin (Normalized, Jet colormap)](assets/divisor-wave-1.png)
