@@ -24,6 +24,7 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 
 from special_functions import Special_Functions
+from compute import compute_grid
 
 plt.style.use('dark_background')
 
@@ -95,25 +96,14 @@ def generate_plot(function_id, normalize, colormap, resolution,
                   xmin, xmax, ymin, ymax, output_dir, elev=30, azim=-70,
                   m_override=None, beta_override=None):
 
-    sf = _SFWithOverrides('3D', m_override=m_override, beta_override=beta_override)
-    fn = sf.lamda_function_library(normalize, selection=function_id)
-
     X = np.arange(xmin, xmax, resolution)
     Y = np.arange(ymin, ymax, resolution)
     X, Y = np.meshgrid(X, Y)
-    xn, yn = X.shape
-    W = X * 0
 
-    for xk in range(xn):
-        for yk in range(yn):
-            try:
-                z = complex(X[xk, yk], Y[xk, yk])
-                w = float(fn(z))
-                if w != w:
-                    raise ValueError
-                W[xk, yk] = w
-            except (ValueError, TypeError, ZeroDivisionError, OverflowError):
-                pass
+    # Vectorized grid computation — replaces the old nested Python for-loop.
+    # Falls back to multiprocessing for recursive/complex functions (15-18, 30-32).
+    W = compute_grid(function_id, normalize, X, Y,
+                     m_override=m_override, beta_override=beta_override)
 
     fig = plt.figure(figsize=(19, 11))
     ax = fig.add_subplot(111, projection='3d')
