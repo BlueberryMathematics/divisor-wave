@@ -44,9 +44,6 @@ const COLORMAPS = [
   { id: '5', name: 'Magma',   stops: ['#000004','#3b0f70','#8c2981','#de4968','#fde0c8'] },
 ]
 
-// Per-function default coefficients, keyed by [functionId][normalize].
-// 'both' means Y and N use identical values.
-// null means the function doesn't use self.m / self.beta (or it's broken/complex).
 const FN_DEFAULTS = {
   '1':  { both: { m: 0.0465,  beta: 0.178  }, note: 'tuned amplitude for product of sin'       },
   '2':  { N:    { m: 0.0125,  beta: 0.078  },
@@ -102,11 +99,11 @@ const DEFAULT_PARAMS = {
   xmin:  2, xmax: 20,
   ymin: -5, ymax:  5,
   elev: 30,  azim: -70,
-  m:    null,   // null = use each function's built-in default
+  m:    null,
   beta: null,
 }
 
-// ── Design tokens ─────────────────────────────────────────────────────────
+// ── Design tokens ──────────────────────────────────────────────────────────
 const T = {
   bg:          '#06060e',
   titlebar:    'rgba(8, 7, 18, 0.97)',
@@ -167,13 +164,10 @@ function GradBar({ stops }) {
   )
 }
 
-// ── Combined slider + inline-editable text ─────────────────────────────────
-// Clicking the value chip lets you type any number (including negatives).
-// The slider stays in sync within [min, max]; the text input is unclamped while typing.
+// ── Slider + inline-editable text ──────────────────────────────────────────
 function ParamControl({ label, value, min, max, step, onChange, fmt, noSlider }) {
-  const [draft, setDraft]     = useState(null) // non-null while editing
-  const inputRef              = useRef()
-
+  const [draft, setDraft] = useState(null)
+  const inputRef          = useRef()
   const display = draft !== null ? draft : (fmt ? fmt(value) : String(value))
 
   const commit = (raw) => {
@@ -220,18 +214,83 @@ function ParamControl({ label, value, min, max, step, onChange, fmt, noSlider })
   )
 }
 
-// ── Title bar ──────────────────────────────────────────────────────────────
+// ── Panel / Sidebar icon (SVG) ─────────────────────────────────────────────
+function PanelIcon({ size = 15 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none"
+      stroke="currentColor" strokeWidth="1.5"
+      strokeLinecap="round" strokeLinejoin="round"
+      style={{ display: 'block', flexShrink: 0 }}
+    >
+      <rect x="1" y="1" width="14" height="14" rx="2" />
+      <line x1="5.5" y1="1" x2="5.5" y2="15" />
+    </svg>
+  )
+}
+
+// ── Collapsible section ────────────────────────────────────────────────────
+function Section({ title, defaultOpen = true, children }) {
+  const [open, setOpen] = useState(defaultOpen)
+  return (
+    <div style={{
+      borderRadius: T.radius,
+      border: `1px solid ${T.border}`,
+      overflow: 'hidden',
+    }}>
+      <button
+        onClick={() => setOpen(v => !v)}
+        style={{
+          width: '100%', display: 'flex', alignItems: 'center', gap: 8,
+          padding: '9px 12px',
+          background: open ? T.glassBright : T.glass,
+          border: 'none', cursor: 'pointer',
+          transition: 'background 0.15s',
+        }}
+      >
+        <span style={{
+          flex: 1, textAlign: 'left',
+          fontSize: 9, fontWeight: 700, letterSpacing: '0.16em',
+          textTransform: 'uppercase', color: T.muted, fontFamily: T.mono,
+        }}>
+          {title}
+        </span>
+        <span style={{
+          fontSize: 10, color: T.dim,
+          display: 'inline-block',
+          transition: 'transform 0.2s',
+          transform: open ? 'rotate(0deg)' : 'rotate(-90deg)',
+        }}>▾</span>
+      </button>
+      <div style={{
+        maxHeight: open ? '1800px' : '0',
+        overflow: 'hidden',
+        transition: 'max-height 0.28s cubic-bezier(0.4,0,0.2,1)',
+      }}>
+        <div style={{
+          padding: '10px 12px',
+          display: 'flex', flexDirection: 'column', gap: 10,
+          background: 'rgba(0,0,0,0.18)',
+          borderTop: `1px solid ${T.border}`,
+        }}>
+          {children}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Traffic light (bigger) ─────────────────────────────────────────────────
 function TrafficLight({ color, hoverColor, onClick, symbol }) {
   const [hov, setHov] = useState(false)
   return (
     <button onClick={onClick}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{
-        width: 13, height: 13, borderRadius: '50%', border: 'none',
+        width: 17, height: 17, borderRadius: '50%', border: 'none',
         background: hov ? hoverColor : color,
         cursor: 'pointer', padding: 0, flexShrink: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 8, color: 'rgba(0,0,0,0.6)', fontWeight: 800,
+        fontSize: 11, color: 'rgba(0,0,0,0.65)', fontWeight: 900,
         WebkitAppRegion: 'no-drag',
         transition: 'background 0.12s, transform 0.1s',
         transform: hov ? 'scale(1.12)' : 'scale(1)',
@@ -242,39 +301,53 @@ function TrafficLight({ color, hoverColor, onClick, symbol }) {
   )
 }
 
+// ── Title bar ──────────────────────────────────────────────────────────────
 function TitleBar({ sidebarOpen, onToggle, isElectron }) {
   const api = isElectron ? window.electronAPI.window : {}
   return (
     <div style={{
-      height: 42, flexShrink: 0, zIndex: 200,
+      height: 44, flexShrink: 0, zIndex: 200,
       background: T.titlebar,
       backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)',
       borderBottom: `1px solid ${T.border}`,
       display: 'flex', alignItems: 'center',
       WebkitAppRegion: 'drag', userSelect: 'none',
     }}>
-      <div style={{ display:'flex', alignItems:'center', gap:10, padding:'0 14px', WebkitAppRegion:'no-drag' }}>
-        <button onClick={onToggle} style={{
-          background: T.glass, border: `1px solid ${T.border}`,
-          color: T.muted, cursor: 'pointer',
-          width: 28, height: 28, borderRadius: T.radiusSm,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 15, padding: 0, transition: 'all 0.15s',
-        }} title={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}>
-          {sidebarOpen ? '‹' : '›'}
+      {/* Sidebar toggle */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '0 14px', WebkitAppRegion: 'no-drag' }}>
+        <button
+          onClick={onToggle}
+          style={{
+            background: T.glass, border: `1px solid ${T.border}`,
+            color: T.muted, cursor: 'pointer',
+            width: 30, height: 30, borderRadius: T.radiusSm,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: 0, transition: 'all 0.15s',
+          }}
+          title={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+        >
+          <PanelIcon size={15} />
         </button>
       </div>
 
-      <div style={{ flex:1, display:'flex', alignItems:'center', gap:8, WebkitAppRegion:'drag' }}>
-        <span style={{ fontSize:11, color:T.dim, fontFamily:T.mono, letterSpacing:'0.22em' }}>◈</span>
-        <span style={{ fontSize:12, fontWeight:600, color:T.muted, letterSpacing:'0.18em', fontFamily:T.mono }}>
-          DIVISOR WAVE
+      {/* App title */}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', WebkitAppRegion: 'drag' }}>
+        <span style={{
+          fontSize: 16,
+          fontWeight: 800,
+          fontFamily: "'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+          background: 'linear-gradient(130deg, #ffffff 20%, #c4b0ff 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          letterSpacing: '-0.01em',
+          lineHeight: 1,
+        }}>
+          Divisor Wave
         </span>
-        <span style={{ fontSize:11, color:T.dim, fontFamily:T.mono }}>·</span>
-        <span style={{ fontSize:11, color:T.dim, fontFamily:T.mono, letterSpacing:'0.08em' }}>plotter</span>
       </div>
 
-      <div style={{ display:'flex', alignItems:'center', gap:8, padding:'0 16px', WebkitAppRegion:'no-drag' }}>
+      {/* Window controls */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '0 18px', WebkitAppRegion: 'no-drag' }}>
         <TrafficLight color="#ffbd44" hoverColor="#ffca5e" onClick={() => api.minimize?.()} symbol="–" />
         <TrafficLight color="#00ca4e" hoverColor="#2ee870" onClick={() => api.maximize?.()} symbol="+" />
         <TrafficLight color="#ff605c" hoverColor="#ff7a77" onClick={() => api.close?.()}    symbol="×" />
@@ -283,7 +356,7 @@ function TitleBar({ sidebarOpen, onToggle, isElectron }) {
   )
 }
 
-// ── Coefficients card ─────────────────────────────────────────────────────
+// ── Coefficients card ──────────────────────────────────────────────────────
 function CoefficientsCard({ params, set, isElectron }) {
   const [autoLoading, setAutoLoading] = useState(false)
   const [autoNote,    setAutoNote]    = useState(null)
@@ -328,75 +401,79 @@ function CoefficientsCard({ params, set, isElectron }) {
   }
 
   return (
-    <Card>
-      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom: 8 }}>
-        <div style={{ fontSize:9, fontWeight:700, letterSpacing:'0.16em', color:T.muted, textTransform:'uppercase', fontFamily:T.mono }}>
-          Coefficients
-        </div>
-        <div style={{ display:'flex', gap:5 }}>
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+        <Label>Coefficients</Label>
+        <div style={{ display: 'flex', gap: 5 }}>
           {isElectron && hasDefs && (
             <button onClick={runAuto} disabled={autoLoading || !hasDefs} style={{
-              fontSize:9, fontFamily:T.mono, padding:'2px 8px', borderRadius:T.radiusPill,
+              fontSize: 9, fontFamily: T.mono, padding: '2px 8px', borderRadius: T.radiusPill,
               cursor: (autoLoading || !hasDefs) ? 'not-allowed' : 'pointer',
               border: `1px solid rgba(99,200,120,0.35)`,
               background: autoLoading ? 'rgba(99,200,120,0.06)' : 'rgba(99,200,120,0.1)',
               color: autoLoading ? 'rgba(99,200,120,0.5)' : 'rgba(130,230,150,0.9)',
               opacity: hasDefs ? 1 : 0.4,
-              transition:'all 0.15s',
+              transition: 'all 0.15s',
             }}>
               {autoLoading ? '…' : 'auto'}
             </button>
           )}
-          <button onClick={custom ? resetToDefaults : (hasDefs ? enableCustom : null)}
+          <button
+            onClick={custom ? resetToDefaults : (hasDefs ? enableCustom : null)}
             disabled={!hasDefs}
             style={{
-              fontSize:9, fontFamily:T.mono, padding:'2px 8px', borderRadius:T.radiusPill, cursor: hasDefs ? 'pointer' : 'not-allowed',
+              fontSize: 9, fontFamily: T.mono, padding: '2px 8px', borderRadius: T.radiusPill,
+              cursor: hasDefs ? 'pointer' : 'not-allowed',
               border: `1px solid ${custom ? T.borderHover : T.border}`,
               background: custom ? T.accentSoft : 'transparent',
               color: custom ? T.accent : (hasDefs ? T.dim : T.dim),
               opacity: hasDefs ? 1 : 0.4,
-              transition:'all 0.15s',
-            }}>
+              transition: 'all 0.15s',
+            }}
+          >
             {custom ? 'custom ✕' : 'override'}
           </button>
         </div>
       </div>
 
-      {/* Always show current defaults so user knows what they're changing from */}
       {hasDefs && (
         <div style={{
-          display:'flex', gap:8, marginBottom: custom ? 10 : 0,
-          padding:'5px 8px', borderRadius:T.radiusSm,
-          background:'rgba(0,0,0,0.2)', border:`1px solid ${T.border}`,
+          display: 'flex', gap: 8, marginBottom: custom ? 10 : 0,
+          padding: '5px 8px', borderRadius: T.radiusSm,
+          background: 'rgba(0,0,0,0.2)', border: `1px solid ${T.border}`,
         }}>
-          <span style={{ fontSize:10, color:T.dim, fontFamily:T.mono, flex:1 }}>
+          <span style={{ fontSize: 10, color: T.dim, fontFamily: T.mono, flex: 1 }}>
             {custom ? 'default:' : 'active:'}
           </span>
-          <span style={{ fontSize:10, fontFamily:T.mono, color: custom ? T.dim : T.accent }}>
+          <span style={{ fontSize: 10, fontFamily: T.mono, color: custom ? T.dim : T.accent }}>
             m={fnDefs.m ?? '—'}
           </span>
-          <span style={{ fontSize:10, fontFamily:T.mono, color: custom ? T.dim : T.accent }}>
+          <span style={{ fontSize: 10, fontFamily: T.mono, color: custom ? T.dim : T.accent }}>
             β={fnDefs.beta ?? '—'}
           </span>
         </div>
       )}
 
       {!hasDefs && (
-        <div style={{ fontSize:10, color:T.dim, fontFamily:T.mono }}>
+        <div style={{ fontSize: 10, color: T.dim, fontFamily: T.mono }}>
           {note || 'no m/β — function uses fixed math'}
         </div>
       )}
 
       {note && hasDefs && (
-        <div style={{ fontSize:9, color:T.dim, fontFamily:T.mono, marginTop: custom ? 0 : 6, marginBottom: custom ? 8 : 0, opacity:0.7, lineHeight:1.5 }}>
+        <div style={{
+          fontSize: 9, color: T.dim, fontFamily: T.mono,
+          marginTop: custom ? 0 : 6, marginBottom: custom ? 8 : 0,
+          opacity: 0.7, lineHeight: 1.5,
+        }}>
           {note}
         </div>
       )}
 
       {autoNote && (
         <div style={{
-          fontSize:9, fontFamily:T.mono, lineHeight:1.5, marginTop:6, marginBottom: custom ? 6 : 0,
-          padding:'4px 8px', borderRadius:T.radiusSm,
+          fontSize: 9, fontFamily: T.mono, lineHeight: 1.5, marginTop: 6, marginBottom: custom ? 6 : 0,
+          padding: '4px 8px', borderRadius: T.radiusSm,
           background: autoNote.startsWith('auto failed') ? 'rgba(255,80,80,0.06)' : 'rgba(99,200,120,0.07)',
           border: `1px solid ${autoNote.startsWith('auto failed') ? 'rgba(255,80,80,0.15)' : 'rgba(99,200,120,0.18)'}`,
           color: autoNote.startsWith('auto failed') ? '#ff8080' : 'rgba(130,230,150,0.85)',
@@ -406,7 +483,7 @@ function CoefficientsCard({ params, set, isElectron }) {
       )}
 
       {custom && (
-        <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 10 }}>
           <ParamControl
             label="m — exponent (vertical pull)"
             value={params.m} min={0.0001} max={2} step={0.0001}
@@ -419,17 +496,15 @@ function CoefficientsCard({ params, set, isElectron }) {
           />
         </div>
       )}
-    </Card>
+    </div>
   )
 }
 
 // ── Sidebar ────────────────────────────────────────────────────────────────
-function Sidebar({ open, params, set, onGenerate, loading, isElectron }) {
-  const groups = [...new Set(FUNCTIONS.map(f => f.group))]
-  const useCustomCoeffs = params.m !== null || params.beta !== null
-
-  const gridPts = Math.ceil((params.xmax - params.xmin) / params.resolution)
-                * Math.ceil((params.ymax - params.ymin) / params.resolution)
+function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, selectedHistory, onSelectHistory }) {
+  const groups   = [...new Set(FUNCTIONS.map(f => f.group))]
+  const gridPts  = Math.ceil((params.xmax - params.xmin) / params.resolution)
+               * Math.ceil((params.ymax - params.ymin) / params.resolution)
   const gridWarn = gridPts > 80000
 
   return (
@@ -451,67 +526,69 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron }) {
         transition: 'opacity 0.18s ease',
         pointerEvents: open ? 'auto' : 'none',
       }}>
-        <div style={{ padding:'14px 12px 24px', display:'flex', flexDirection:'column', gap:9 }}>
+        <div style={{ padding: '12px 10px 24px', display: 'flex', flexDirection: 'column', gap: 8 }}>
 
-          {/* Function */}
-          <Card>
-            <Label>Function</Label>
-            <select value={params.functionId} onChange={e => set('functionId')(e.target.value)}
-              style={{
-                width:'100%', background:'rgba(0,0,0,0.35)',
-                border:`1px solid ${T.border}`, color:T.text,
-                borderRadius:T.radiusSm, padding:'7px 10px', fontSize:12,
-                fontFamily:T.mono, outline:'none', cursor:'pointer',
-              }}>
-              {groups.map(g => (
-                <optgroup key={g} label={g}>
-                  {FUNCTIONS.filter(f => f.group === g).map(f => (
-                    <option key={f.id} value={f.id} style={{ background:'#13112a' }}>
-                      {f.id.padStart(2,' ')}. {f.name}{f.broken ? ' ⚠' : ''}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
-          </Card>
-
-          {/* Normalize */}
-          <Card>
-            <Label>Normalization</Label>
-            <div style={{ display:'flex', gap:6 }}>
-              {[{v:'N',label:'Raw'},{v:'Y',label:'Normalized'}].map(({v,label}) => {
-                const active = params.normalize === v
-                return (
-                  <button key={v} onClick={() => set('normalize')(v)} style={{
-                    flex:1, padding:'6px 0', borderRadius:T.radiusSm, cursor:'pointer',
-                    border: active ? `1px solid ${T.borderHover}` : `1px solid ${T.border}`,
-                    background: active ? T.accentSoft : 'rgba(0,0,0,0.2)',
-                    color: active ? T.accent : T.muted,
-                    fontWeight: active ? 600 : 400, fontSize:12,
-                    transition:'all 0.15s', fontFamily:T.mono,
-                  }}>
-                    {label}
-                  </button>
-                )
-              })}
+          {/* ── Section: Function & Normalization ── */}
+          <Section title="Function & Normalization" defaultOpen={true}>
+            <div>
+              <Label>Function</Label>
+              <select
+                value={params.functionId}
+                onChange={e => set('functionId')(e.target.value)}
+                style={{
+                  width: '100%', background: 'rgba(0,0,0,0.35)',
+                  border: `1px solid ${T.border}`, color: T.text,
+                  borderRadius: T.radiusSm, padding: '7px 10px', fontSize: 12,
+                  fontFamily: T.mono, outline: 'none', cursor: 'pointer',
+                }}
+              >
+                {groups.map(g => (
+                  <optgroup key={g} label={g}>
+                    {FUNCTIONS.filter(f => f.group === g).map(f => (
+                      <option key={f.id} value={f.id} style={{ background: '#13112a' }}>
+                        {f.id.padStart(2, ' ')}. {f.name}{f.broken ? ' ⚠' : ''}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
             </div>
-          </Card>
+            <div>
+              <Label>Normalization</Label>
+              <div style={{ display: 'flex', gap: 6 }}>
+                {[{ v: 'N', label: 'Raw' }, { v: 'Y', label: 'Normalized' }].map(({ v, label }) => {
+                  const active = params.normalize === v
+                  return (
+                    <button key={v} onClick={() => set('normalize')(v)} style={{
+                      flex: 1, padding: '6px 0', borderRadius: T.radiusSm, cursor: 'pointer',
+                      border: active ? `1px solid ${T.borderHover}` : `1px solid ${T.border}`,
+                      background: active ? T.accentSoft : 'rgba(0,0,0,0.2)',
+                      color: active ? T.accent : T.muted,
+                      fontWeight: active ? 600 : 400, fontSize: 12,
+                      transition: 'all 0.15s', fontFamily: T.mono,
+                    }}>
+                      {label}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          </Section>
 
-          {/* Colormap */}
-          <Card>
-            <Label>Colormap</Label>
-            <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
+          {/* ── Section: Colormap ── */}
+          <Section title="Colormap" defaultOpen={true}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
               {COLORMAPS.map(c => {
                 const active = params.colormap === c.id
                 return (
                   <button key={c.id} onClick={() => set('colormap')(c.id)} style={{
-                    display:'flex', flexDirection:'column', gap:5,
-                    padding:'7px 10px', borderRadius:T.radiusSm, cursor:'pointer',
+                    display: 'flex', flexDirection: 'column', gap: 5,
+                    padding: '7px 10px', borderRadius: T.radiusSm, cursor: 'pointer',
                     border: active ? `1px solid ${T.borderHover}` : `1px solid ${T.border}`,
                     background: active ? T.accentSoft : 'rgba(0,0,0,0.15)',
-                    transition:'all 0.15s', textAlign:'left',
+                    transition: 'all 0.15s', textAlign: 'left',
                   }}>
-                    <span style={{ fontSize:11, color: active ? T.accent : T.muted, fontFamily:T.mono, fontWeight: active ? 600 : 400 }}>
+                    <span style={{ fontSize: 11, color: active ? T.accent : T.muted, fontFamily: T.mono, fontWeight: active ? 600 : 400 }}>
                       {c.name}
                     </span>
                     <GradBar stops={c.stops} />
@@ -519,79 +596,120 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron }) {
                 )
               })}
             </div>
-          </Card>
+          </Section>
 
-          {/* Resolution */}
-          <Card>
-            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:7 }}>
-              <div style={{ fontSize:9, fontWeight:700, letterSpacing:'0.16em', color:T.muted, textTransform:'uppercase', fontFamily:T.mono }}>
-                Resolution
+          {/* ── Section: Configuration ── */}
+          <Section title="Configuration" defaultOpen={false}>
+
+            {/* Resolution */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 7 }}>
+                <Label>Resolution</Label>
+                <span style={{
+                  fontSize: 9, fontFamily: T.mono, padding: '2px 7px', borderRadius: T.radiusPill,
+                  background: gridWarn ? 'rgba(251,191,36,0.1)' : 'rgba(180,160,255,0.08)',
+                  color: gridWarn ? T.warn : T.dim,
+                  border: `1px solid ${gridWarn ? 'rgba(251,191,36,0.2)' : T.border}`,
+                }}>
+                  ~{fmtCount(gridPts)} pts{gridWarn ? ' ⚠' : ''}
+                </span>
               </div>
-              <span style={{
-                fontSize:9, fontFamily:T.mono, padding:'2px 7px', borderRadius:T.radiusPill,
-                background: gridWarn ? 'rgba(251,191,36,0.1)' : 'rgba(180,160,255,0.08)',
-                color: gridWarn ? T.warn : T.dim,
-                border: `1px solid ${gridWarn ? 'rgba(251,191,36,0.2)' : T.border}`,
-              }}>
-                ~{fmtCount(gridPts)} pts{gridWarn ? ' ⚠' : ''}
-              </span>
+              <ParamControl
+                label="Grid step — smaller = finer & slower"
+                value={params.resolution} min={0.01} max={0.5} step={0.005}
+                onChange={set('resolution')} fmt={v => v.toFixed(3)}
+              />
             </div>
-            <ParamControl
-              label="Grid step — smaller = finer & slower"
-              value={params.resolution} min={0.01} max={0.5} step={0.005}
-              onChange={set('resolution')} fmt={v => v.toFixed(3)}
-            />
-          </Card>
 
-          {/* Domain */}
-          <Card>
-            <Label>Domain</Label>
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
-              {[
-                { key:'xmin', label:'X min' },
-                { key:'xmax', label:'X max' },
-                { key:'ymin', label:'Y min' },
-                { key:'ymax', label:'Y max' },
-              ].map(({ key, label }) => (
-                <ParamControl key={key} label={label} value={params[key]}
-                  min={-999} max={999} step={0.5}
-                  onChange={set(key)} noSlider
-                />
-              ))}
+            <div style={{ height: 1, background: T.border, margin: '2px 0' }} />
+
+            {/* Domain */}
+            <div>
+              <Label>Domain</Label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                {[
+                  { key: 'xmin', label: 'X min' },
+                  { key: 'xmax', label: 'X max' },
+                  { key: 'ymin', label: 'Y min' },
+                  { key: 'ymax', label: 'Y max' },
+                ].map(({ key, label }) => (
+                  <ParamControl key={key} label={label} value={params[key]}
+                    min={-999} max={999} step={0.5}
+                    onChange={set(key)} noSlider
+                  />
+                ))}
+              </div>
             </div>
-          </Card>
 
-          {/* View */}
-          <Card>
-            <Label>View Angles</Label>
-            <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-              <ParamControl label="Elevation" value={params.elev} min={0}    max={90}  step={1} onChange={set('elev')} fmt={v => `${v}°`} />
-              <ParamControl label="Azimuth"   value={params.azim} min={-180} max={180} step={1} onChange={set('azim')} fmt={v => `${v}°`} />
+            <div style={{ height: 1, background: T.border, margin: '2px 0' }} />
+
+            {/* View Angles */}
+            <div>
+              <Label>View Angles</Label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <ParamControl label="Elevation" value={params.elev} min={0}    max={90}  step={1} onChange={set('elev')} fmt={v => `${v}°`} />
+                <ParamControl label="Azimuth"   value={params.azim} min={-180} max={180} step={1} onChange={set('azim')} fmt={v => `${v}°`} />
+              </div>
             </div>
-          </Card>
 
-          {/* Coefficients */}
-          <CoefficientsCard params={params} set={set} isElectron={isElectron} />
+            <div style={{ height: 1, background: T.border, margin: '2px 0' }} />
 
-          {/* Generate */}
+            {/* Coefficients */}
+            <CoefficientsCard params={params} set={set} isElectron={isElectron} />
+
+          </Section>
+
+          {/* ── Section: History ── */}
+          {history.length > 0 && (
+            <Section title="History" defaultOpen={true}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {history.map(f => {
+                  const active = selectedHistory?.path === f.path
+                  return (
+                    <button
+                      key={f.path}
+                      onClick={async () => {
+                        const r = await window.electronAPI.getPlotData(f.path)
+                        onSelectHistory({ ...f, dataUrl: r.dataUrl })
+                      }}
+                      style={{
+                        padding: '6px 10px', borderRadius: T.radiusSm,
+                        width: '100%', textAlign: 'left',
+                        border: active ? `1px solid ${T.borderHover}` : `1px solid ${T.border}`,
+                        background: active ? T.accentSoft : 'rgba(0,0,0,0.2)',
+                        color: active ? T.accent : T.dim,
+                        fontSize: 11, fontFamily: T.mono, cursor: 'pointer',
+                        transition: 'all 0.15s',
+                        overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {f.name}
+                    </button>
+                  )
+                })}
+              </div>
+            </Section>
+          )}
+
+          {/* ── Generate ── */}
           <button onClick={onGenerate} disabled={loading} style={{
-            padding:'11px 0', borderRadius:T.radius, cursor: loading ? 'not-allowed' : 'pointer',
+            padding: '11px 0', borderRadius: T.radius, cursor: loading ? 'not-allowed' : 'pointer',
             border: loading ? `1px solid ${T.border}` : '1px solid rgba(180,160,255,0.3)',
             background: loading ? 'rgba(0,0,0,0.2)' : 'linear-gradient(135deg, rgba(124,90,240,0.85), rgba(168,100,250,0.85))',
             boxShadow: loading ? 'none' : `0 0 24px ${T.accentGlow}, 0 2px 12px rgba(0,0,0,0.5)`,
             color: loading ? T.dim : '#fff',
-            fontWeight:700, fontSize:13, letterSpacing:'0.06em',
-            transition:'all 0.2s',
+            fontWeight: 700, fontSize: 13, letterSpacing: '0.06em',
+            transition: 'all 0.2s',
           }}>
             {loading ? '⏳  Rendering…' : '▶  Generate Plot'}
           </button>
 
           {isElectron && (
             <button onClick={() => window.electronAPI.openOutputFolder()} style={{
-              padding:'7px 0', borderRadius:T.radiusSm,
-              border:`1px solid ${T.border}`, background:'transparent',
-              color:T.dim, fontSize:10, cursor:'pointer',
-              fontFamily:T.mono, letterSpacing:'0.06em',
+              padding: '7px 0', borderRadius: T.radiusSm,
+              border: `1px solid ${T.border}`, background: 'transparent',
+              color: T.dim, fontSize: 10, cursor: 'pointer',
+              fontFamily: T.mono, letterSpacing: '0.06em',
             }}>
               open output folder
             </button>
@@ -604,106 +722,71 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron }) {
 }
 
 // ── Plot area ──────────────────────────────────────────────────────────────
-function PlotArea({ result, loading, history, selectedHistory, onSelectHistory }) {
+function PlotArea({ result, loading, selectedHistory }) {
   const shown = selectedHistory ?? result
   return (
-    <div style={{ flex:1, display:'flex', flexDirection:'column', overflow:'hidden', minWidth:0 }}>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
 
       {/* Main plot */}
       <div style={{
-        flex:1, display:'flex', alignItems:'center', justifyContent:'center',
-        background: T.bg, position:'relative', overflow:'hidden',
+        flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: T.bg, position: 'relative', overflow: 'hidden',
       }}>
         <div style={{
-          position:'absolute', inset:0, pointerEvents:'none',
-          background:'radial-gradient(ellipse 60% 50% at 50% 40%, rgba(100,70,200,0.055) 0%, transparent 70%)',
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse 60% 50% at 50% 40%, rgba(100,70,200,0.055) 0%, transparent 70%)',
         }} />
 
         {!shown && !loading && (
-          <div style={{ textAlign:'center', color:T.dim, position:'relative' }}>
-            <div style={{ fontSize:40, marginBottom:12, opacity:0.45 }}>◈</div>
-            <div style={{ fontSize:12, color:T.muted, fontFamily:T.mono }}>select a function and generate</div>
+          <div style={{ textAlign: 'center', color: T.dim, position: 'relative' }}>
+            <div style={{ fontSize: 40, marginBottom: 12, opacity: 0.45 }}>◈</div>
+            <div style={{ fontSize: 12, color: T.muted, fontFamily: T.mono }}>select a function and generate</div>
           </div>
         )}
 
         {loading && (
-          <div style={{ textAlign:'center', position:'relative' }}>
+          <div style={{ textAlign: 'center', position: 'relative' }}>
             <div style={{
-              width:36, height:36, margin:'0 auto',
-              border:`2px solid ${T.border}`, borderTopColor:T.accent,
-              borderRadius:'50%', animation:'spin 0.9s linear infinite',
+              width: 36, height: 36, margin: '0 auto',
+              border: `2px solid ${T.border}`, borderTopColor: T.accent,
+              borderRadius: '50%', animation: 'spin 0.9s linear infinite',
             }} />
-            <div style={{ fontSize:11, marginTop:14, fontFamily:T.mono, color:T.dim }}>computing surface…</div>
+            <div style={{ fontSize: 11, marginTop: 14, fontFamily: T.mono, color: T.dim }}>computing surface…</div>
           </div>
         )}
 
         {shown?.error && !loading && (
           <div style={{
-            padding:24, maxWidth:520,
-            background:'rgba(255,80,80,0.04)', border:'1px solid rgba(255,80,80,0.14)',
-            borderRadius:T.radius,
+            padding: 24, maxWidth: 520,
+            background: 'rgba(255,80,80,0.04)', border: '1px solid rgba(255,80,80,0.14)',
+            borderRadius: T.radius,
           }}>
-            <div style={{ fontWeight:700, color:'#ff8080', marginBottom:8, fontFamily:T.mono }}>render error</div>
-            <pre style={{ fontSize:10, color:'#cc6060', whiteSpace:'pre-wrap', fontFamily:T.mono }}>{shown.error}</pre>
+            <div style={{ fontWeight: 700, color: '#ff8080', marginBottom: 8, fontFamily: T.mono }}>render error</div>
+            <pre style={{ fontSize: 10, color: '#cc6060', whiteSpace: 'pre-wrap', fontFamily: T.mono }}>{shown.error}</pre>
           </div>
         )}
 
         {shown?.dataUrl && !loading && (
           <img src={shown.dataUrl} alt={shown.name || 'Plot'}
-            style={{ maxWidth:'100%', maxHeight:'100%', objectFit:'contain', position:'relative' }}
+            style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', position: 'relative' }}
           />
         )}
       </div>
 
-      {/* History strip */}
-      {history.length > 0 && (
-        <div style={{
-          height:50, background:T.sidebar,
-          backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
-          borderTop:`1px solid ${T.border}`,
-          display:'flex', alignItems:'center',
-          padding:'0 14px', gap:7, overflowX:'auto', flexShrink:0,
-        }}>
-          <span style={{ fontSize:9, color:T.dim, fontFamily:T.mono, letterSpacing:'0.14em', whiteSpace:'nowrap', flexShrink:0 }}>
-            HISTORY
-          </span>
-          {history.map(f => {
-            const active = selectedHistory?.path === f.path
-            return (
-              <button key={f.path}
-                onClick={async () => {
-                  const r = await window.electronAPI.getPlotData(f.path)
-                  onSelectHistory({ ...f, dataUrl: r.dataUrl })
-                }}
-                style={{
-                  padding:'3px 10px', borderRadius:T.radiusPill, flexShrink:0,
-                  border: active ? `1px solid ${T.borderHover}` : `1px solid ${T.border}`,
-                  background: active ? T.accentSoft : 'rgba(0,0,0,0.2)',
-                  color: active ? T.accent : T.dim,
-                  fontSize:10, fontFamily:T.mono, cursor:'pointer',
-                  transition:'all 0.15s', whiteSpace:'nowrap',
-                }}>
-                {f.name}
-              </button>
-            )
-          })}
-        </div>
-      )}
-
       {/* Status bar */}
       <div style={{
-        height:24, background:'rgba(5,5,14,0.96)',
-        borderTop:`1px solid ${T.border}`,
-        display:'flex', alignItems:'center',
-        padding:'0 14px', gap:12,
-        fontSize:10, fontFamily:T.mono, color:T.dim, flexShrink:0,
+        height: 24, background: 'rgba(5,5,14,0.96)',
+        borderTop: `1px solid ${T.border}`,
+        display: 'flex', alignItems: 'center',
+        padding: '0 14px', gap: 12,
+        fontSize: 10, fontFamily: T.mono, color: T.dim, flexShrink: 0,
       }}>
         {shown?.path
-          ? <span style={{ opacity:0.6, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{shown.path}</span>
+          ? <span style={{ opacity: 0.6, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{shown.path}</span>
           : <span>no plot loaded</span>
         }
         {shown?.name && (
-          <span style={{ color:T.accent, marginLeft:'auto', flexShrink:0 }}>{shown.name}</span>
+          <span style={{ color: T.accent, marginLeft: 'auto', flexShrink: 0 }}>{shown.name}</span>
         )}
       </div>
     </div>
@@ -748,21 +831,33 @@ export default function App() {
 
   return (
     <div style={{
-      display:'flex', flexDirection:'column', height:'100vh',
-      background:T.bg, color:T.text, overflow:'hidden',
-      fontFamily:'-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
+      display: 'flex', flexDirection: 'column', height: '100vh',
+      background: T.bg, color: T.text, overflow: 'hidden',
+      fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',
     }}>
       <TitleBar sidebarOpen={sidebarOpen} onToggle={() => setSidebarOpen(v => !v)} isElectron={isElectron} />
 
-      <div style={{ flex:1, display:'flex', overflow:'hidden', minHeight:0 }}>
-        <Sidebar open={sidebarOpen} params={params} set={set}
-          onGenerate={generate} loading={loading} isElectron={isElectron} />
-        <PlotArea result={result} loading={loading} history={history}
+      <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0 }}>
+        <Sidebar
+          open={sidebarOpen}
+          params={params}
+          set={set}
+          onGenerate={generate}
+          loading={loading}
+          isElectron={isElectron}
+          history={history}
           selectedHistory={selectedHistory}
-          onSelectHistory={h => { setSelectedHistory(h); setResult(null) }} />
+          onSelectHistory={h => { setSelectedHistory(h); setResult(null) }}
+        />
+        <PlotArea
+          result={result}
+          loading={loading}
+          selectedHistory={selectedHistory}
+        />
       </div>
 
       <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: ${T.bg}; overflow: hidden; }
         ::-webkit-scrollbar       { width: 4px; height: 4px; }
