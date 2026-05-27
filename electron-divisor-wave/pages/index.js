@@ -662,7 +662,7 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, 
           {/* ── Section: History ── */}
           {history.length > 0 && (
             <Section title="History" defaultOpen={true}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, maxHeight: 320, overflowY: 'auto' }}>
                 {history.map(f => {
                   const active = selectedHistory?.path === f.path
                   return (
