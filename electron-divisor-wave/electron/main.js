@@ -69,6 +69,7 @@ ipcMain.handle('generate-plot', async (_event, params) => {
       ...(params.m    != null ? ['--m',    String(params.m)]    : []),
       ...(params.beta != null ? ['--beta', String(params.beta)] : []),
       ...(params.colNormalize ? ['--col-normalize'] : []),
+      ...(params.powerStretch != null ? ['--power-stretch', String(params.powerStretch)] : []),
     ]
 
     let stdout = ''

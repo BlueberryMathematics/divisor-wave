@@ -489,19 +489,41 @@ def _normalize_per_column(W):
     return np.where(col_max > 0, W / np.maximum(col_max, 1e-300), W)
 
 
+# ── Power stretch ──────────────────────────────────────────────────────────
+def _power_stretch(W, p):
+    """
+    Apply W^p  (0 < p < 1) to expand low values upward.
+
+    Since W = |product|^(-m), applying W^p gives |product|^(-m·p), which is
+    exactly equivalent to plotting the same function with a smaller effective m.
+    The shape of every feature is preserved — poles stay poles, valleys stay
+    valleys — but the flanks are stretched so that off-axis structure (waves in
+    the imaginary direction) gains more height and colour contrast.
+
+    p = 1.0  → no change (identity)
+    p = 0.4  → moderate stretch, equivalent to ~40 % of the original m
+    p = 0.2  → aggressive stretch
+    """
+    with np.errstate(all='ignore'):
+        out = np.power(W, p)
+    return np.where(np.isfinite(out), out, 0.0)
+
+
 # ── Public entry point ─────────────────────────────────────────────────────
 def compute_grid(function_id, normalize, X, Y, m_override=None, beta_override=None,
-                 col_normalize=False):
+                 col_normalize=False, power_stretch=1.0):
     """
     Compute the plot surface W over the grid (X, Y).
 
     Parameters
     ----------
-    function_id : str or int
-    normalize   : 'Y' or 'N'
-    X, Y        : 2-D float ndarray (meshgrid)
-    m_override  : float or None
-    beta_override: float or None
+    function_id   : str or int
+    normalize     : 'Y' or 'N'
+    X, Y          : 2-D float ndarray (meshgrid)
+    m_override    : float or None
+    beta_override : float or None
+    col_normalize : bool  — per-column max normalisation (equal hilliness in y)
+    power_stretch : float — W^p stretch; 1.0 = off, <1.0 expands low values
 
     Returns
     -------
@@ -519,4 +541,6 @@ def compute_grid(function_id, normalize, X, Y, m_override=None, beta_override=No
 
     if col_normalize:
         W = _normalize_per_column(W)
+    if power_stretch < 1.0:
+        W = _power_stretch(W, power_stretch)
     return W

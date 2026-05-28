@@ -95,6 +95,7 @@ const DEFAULT_PARAMS = {
   functionId:   '1',
   normalize:    'N',
   colNormalize: false,
+  powerStretch: null,
   colormap:     '4',
   resolution:   0.1,
   xmin:  2, xmax: 20,
@@ -590,6 +591,34 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, 
               >
                 {params.colNormalize ? 'on — equal hilliness' : 'off — raw amplitude'}
               </button>
+            </div>
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 7 }}>
+                <Label>Power Stretch</Label>
+              </div>
+              <button
+                onClick={() => set('powerStretch')(params.powerStretch !== null ? null : 0.4)}
+                style={{
+                  width: '100%', padding: '6px 0', borderRadius: T.radiusSm, cursor: 'pointer',
+                  border: params.powerStretch !== null ? `1px solid ${T.borderHover}` : `1px solid ${T.border}`,
+                  background: params.powerStretch !== null ? T.accentSoft : 'rgba(0,0,0,0.2)',
+                  color: params.powerStretch !== null ? T.accent : T.muted,
+                  fontWeight: params.powerStretch !== null ? 600 : 400, fontSize: 12,
+                  transition: 'all 0.15s', fontFamily: T.mono,
+                  marginBottom: params.powerStretch !== null ? 8 : 0,
+                }}
+              >
+                {params.powerStretch !== null ? `on — W^${params.powerStretch.toFixed(2)}` : 'off — no stretch'}
+              </button>
+              {params.powerStretch !== null && (
+                <ParamControl
+                  label="p  (1 = off · 0.4 = moderate · 0.1 = heavy)"
+                  value={params.powerStretch}
+                  min={0.05} max={1.0} step={0.01}
+                  onChange={v => set('powerStretch')(Math.round(v * 100) / 100)}
+                  fmt={v => v.toFixed(2)}
+                />
+              )}
             </div>
             <div>
               <Label>Plot Mode</Label>
