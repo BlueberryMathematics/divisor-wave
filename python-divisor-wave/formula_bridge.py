@@ -138,6 +138,20 @@ LATEX_FORMULAS: dict[str, str] = {
 }
 
 
+# ── Per-function product TERMS (what goes inside ∏_{k=2}^{⌊x⌋}) ────────────
+# Useful as editable starting points when creating custom functions.
+TERM_FORMULAS: dict[str, str] = {
+    '1':  _fn1t,                                            # β(x/k)sin(πz/k)
+    '5':  r'(iy+\cos(\pi zk))^{iy}',
+    '6':  r'1+\sin(\pi zk)',
+    '7':  r'1+\tan(\pi zk)',
+    '8':  r'\cos\!\left(\dfrac{\pi z}{2^k}\right)',
+    '9':  r'\sin\!\left(\dfrac{\pi z}{2^k}\right)',
+    '10': r'\tan\!\left(\dfrac{\pi z}{2^k}\right)',
+    '28': r'\sin\!\left(\pi z\cdot 2^k\right)',
+}
+
+
 class NumpyToLatex:
     """
     Maps function IDs (str '1'..'32') to their canonical LaTeX formula.
@@ -156,6 +170,10 @@ class NumpyToLatex:
     def all_formulas(self) -> dict:
         """Return a copy of the full {fn_id: latex} registry."""
         return dict(LATEX_FORMULAS)
+
+    def all_terms(self) -> dict:
+        """Return a copy of the {fn_id: term_latex} registry (product-term only)."""
+        return dict(TERM_FORMULAS)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -629,7 +647,11 @@ if __name__ == '__main__':
 
     if _args.all_formulas:
         ntl = NumpyToLatex()
-        print(json.dumps({'success': True, 'formulas': ntl.all_formulas()}))
+        print(json.dumps({
+            'success': True,
+            'formulas': ntl.all_formulas(),
+            'terms': ntl.all_terms(),
+        }))
         sys.exit(0)
 
     if _args.validate is not None:

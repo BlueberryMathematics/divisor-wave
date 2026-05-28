@@ -22,6 +22,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib import cm
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 from special_functions import Special_Functions
 from compute import compute_grid
@@ -73,10 +74,10 @@ FUNCTION_NAMES = {
 
 
 def _load_user_function_names():
-    """Load user-defined function names from user_functions.json."""
+    """Load user-defined function names from function-library/user_functions.json."""
     try:
         _ufpath = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               '..', 'user_functions.json')
+                               '..', 'function-library', 'user_functions.json')
         if not os.path.exists(_ufpath):
             return {}
         with open(_ufpath, 'r', encoding='utf-8') as _f:
@@ -124,14 +125,24 @@ def generate_plot_2d(function_id, normalize, colormap, resolution,
                      m_override=m_override, beta_override=beta_override,
                      col_normalize=col_normalize, power_stretch=power_stretch)
 
-    fig, ax = plt.subplots(figsize=(19, 11))
-    cmap = COLORMAPS.get(str(colormap), cm.viridis)
-    mesh = ax.pcolormesh(X, Y, W, cmap=cmap, shading='auto')
-    plt.colorbar(mesh, ax=ax, label='Value', pad=0.02)
+    # Adaptive figure size: keep the axes aspect close to the data range
+    x_range  = max(float(xmax) - float(xmin), 0.001)
+    y_range  = max(float(ymax) - float(ymin), 0.001)
+    fig_h    = 6.5
+    fig_w    = min(26.0, max(8.0, fig_h * (x_range / y_range) + 1.2))
+
+    fig, ax  = plt.subplots(figsize=(fig_w, fig_h))
+    cmap     = COLORMAPS.get(str(colormap), cm.viridis)
+    mesh     = ax.pcolormesh(X, Y, W, cmap=cmap, shading='auto')
 
     ax.set_xlabel('Real Axis')
     ax.set_ylabel('Imaginary Axis')
     ax.set_aspect('equal', adjustable='box')
+
+    # Colorbar exactly as tall as the axes — avoids the black-space mismatch
+    divider = make_axes_locatable(ax)
+    cax     = divider.append_axes('right', size='2.5%', pad=0.1)
+    fig.colorbar(mesh, cax=cax, label='Value')
 
     fn_name  = FUNCTION_NAMES.get(str(function_id), f'Function {function_id}')
     norm_lbl = 'Normalized' if normalize == 'Y' else 'Raw'

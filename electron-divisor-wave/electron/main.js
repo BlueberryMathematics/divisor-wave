@@ -6,11 +6,12 @@ const DEV = !app.isPackaged
 const START_URL = DEV ? 'http://localhost:3000' : `file://${path.join(__dirname, '../out/index.html')}`
 
 // Paths relative to this file (electron/main.js)
-const ROOT              = path.resolve(__dirname, '..', '..')
-const PYTHON_CLI        = path.join(ROOT, 'python-divisor-wave', 'plot_cli.py')
-const FORMULA_BRIDGE    = path.join(ROOT, 'python-divisor-wave', 'formula_bridge.py')
-const OUTPUT_DIR        = path.join(ROOT, 'plot-outputs')
-const USER_FUNCTIONS_FILE = path.join(ROOT, 'user_functions.json')
+const ROOT                 = path.resolve(__dirname, '..', '..')
+const PYTHON_CLI           = path.join(ROOT, 'python-divisor-wave', 'plot_cli.py')
+const FORMULA_BRIDGE       = path.join(ROOT, 'python-divisor-wave', 'formula_bridge.py')
+const OUTPUT_DIR           = path.join(ROOT, 'plot-outputs')
+const FUNCTION_LIBRARY_DIR = path.join(ROOT, 'function-library')
+const USER_FUNCTIONS_FILE  = path.join(FUNCTION_LIBRARY_DIR, 'user_functions.json')
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -231,6 +232,7 @@ ipcMain.handle('list-user-functions', async () => {
 ipcMain.handle('save-user-function', async (_event, fn) => {
   const fs = require('fs')
   try {
+    fs.mkdirSync(FUNCTION_LIBRARY_DIR, { recursive: true })
     let data = { functions: [] }
     if (fs.existsSync(USER_FUNCTIONS_FILE))
       data = JSON.parse(fs.readFileSync(USER_FUNCTIONS_FILE, 'utf8'))

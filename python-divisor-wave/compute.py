@@ -519,7 +519,7 @@ def _load_user_functions():
     """
     import json as _json
     _ufpath = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                           '..', 'user_functions.json')
+                           '..', 'function-library', 'user_functions.json')
     if not os.path.exists(_ufpath):
         return
 

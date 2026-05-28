@@ -283,226 +283,329 @@ function Section({ title, defaultOpen = true, children }) {
   )
 }
 
-// ── Formula bar ────────────────────────────────────────────────────────────
-function FormulaBar({ functionId, formulasMap, userFunctions }) {
-  const containerRef = useRef(null)
+// ── Formula panel (collapsible bar + custom function library) ──────────────
+const MINT   = '#6ee7b7'   // mint green — operators / actions
+const MINTBG = 'rgba(110,231,183,0.07)'
 
+function FormulaPanel({
+  functionId, formulasMap, termsMap, userFunctions,
+  open, onToggleOpen,
+  editMode, onEnterEdit, onExitEdit,
+  onUserFnsChanged, isElectron,
+}) {
+  const formulaRef = useRef(null)
+
+  // Draft state for the editor
+  const [draft,      setDraft]      = useState({ id: null, name: '', latex: '', m: 0.0125, beta: 0.054 })
+  const [isEditing,  setIsEditing]  = useState(false)
+  const [validation, setValidation] = useState(null)
+  const [validating, setValidating] = useState(false)
+  const [saving,     setSaving]     = useState(false)
+
+  // Pre-load draft when editMode activates
   useEffect(() => {
-    if (!containerRef.current) return
+    if (!editMode) { setValidation(null); return }
+    const fidStr   = String(functionId)
+    const isCustom = fidStr.startsWith('u')
+    const uf       = (userFunctions || []).find(f => f.id === fidStr)
 
-    // Built-in formula from Python
+    if (isCustom && uf) {
+      setDraft({ id: uf.id, name: uf.name, latex: uf.latex,
+                 m: uf.defaults?.m ?? 0.0125, beta: uf.defaults?.beta ?? 0.054 })
+      setIsEditing(true)
+    } else {
+      // Built-in: use term if available, else empty
+      const term = (termsMap || {})[fidStr] || ''
+      setDraft({ id: null, name: '', latex: term, m: 0.0125, beta: 0.054 })
+      setIsEditing(false)
+    }
+    setValidation(null)
+  }, [editMode, functionId])
+
+  // KaTeX rendering (view mode)
+  useEffect(() => {
+    if (!formulaRef.current || editMode) return
     let latex = (formulasMap || {})[String(functionId)] || ''
-
-    // User-defined: wrap their stored term in the ∏|·|^{-m} shell
     if (!latex) {
       const uf = (userFunctions || []).find(f => f.id === functionId)
-      if (uf?.latex) {
-        latex = `\\left|\\prod_{k=2}^{\\lfloor x\\rfloor}${uf.latex}\\right|^{-m}`
-      }
+      if (uf?.latex) latex = `\\left|\\prod_{k=2}^{\\lfloor x\\rfloor}${uf.latex}\\right|^{-m}`
     }
-
-    if (!latex) {
-      containerRef.current.innerHTML = ''
-      return
-    }
-
+    if (!latex) { formulaRef.current.innerHTML = ''; return }
     try {
-      containerRef.current.innerHTML = katex.renderToString(latex, {
-        throwOnError: false,
-        displayMode: false,
-        output: 'html',
-        strict: false,
+      formulaRef.current.innerHTML = katex.renderToString(latex, {
+        throwOnError: false, displayMode: true, output: 'html', strict: false,
       })
-    } catch {
-      containerRef.current.textContent = latex
-    }
-  }, [functionId, formulasMap, userFunctions])
-
-  return (
-    <div style={{
-      height: 52, flexShrink: 0,
-      background: 'rgba(3,3,10,0.98)',
-      borderTop: `1px solid ${T.border}`,
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      padding: '0 44px', overflow: 'hidden', position: 'relative',
-    }}>
-      <div style={{
-        position: 'absolute', left: 0, top: 0, bottom: 0, width: 44,
-        background: 'linear-gradient(90deg,rgba(3,3,10,0.98) 0%,transparent 100%)',
-        pointerEvents: 'none', zIndex: 1,
-      }} />
-      <div style={{
-        position: 'absolute', right: 0, top: 0, bottom: 0, width: 44,
-        background: 'linear-gradient(270deg,rgba(3,3,10,0.98) 0%,transparent 100%)',
-        pointerEvents: 'none', zIndex: 1,
-      }} />
-      <div
-        ref={containerRef}
-        style={{ fontSize: 13, color: T.text, whiteSpace: 'nowrap', overflow: 'hidden' }}
-      />
-    </div>
-  )
-}
-
-// ── Custom function form ────────────────────────────────────────────────────
-function CustomFunctionSection({ userFunctions, onSave, onDelete, isElectron }) {
-  const [name,        setName]       = useState('')
-  const [latex,       setLatex]      = useState('')
-  const [defaultM,    setDefaultM]   = useState(0.0125)
-  const [defaultBeta, setDefaultBeta] = useState(0.054)
-  const [validating,  setValidating] = useState(false)
-  const [validResult, setValidResult] = useState(null)
-  const [saving,      setSaving]     = useState(false)
+    } catch { formulaRef.current.textContent = latex }
+  }, [functionId, formulasMap, userFunctions, editMode, open])
 
   async function handleValidate() {
-    if (!isElectron || !latex.trim()) return
-    setValidating(true); setValidResult(null)
+    if (!isElectron || !draft.latex.trim()) return
+    setValidating(true); setValidation(null)
     try {
-      const r = await window.electronAPI.validateUserFunction(latex.trim())
-      setValidResult({ ok: r.success, message: r.message || r.error || '' })
+      const r = await window.electronAPI.validateUserFunction(draft.latex.trim())
+      setValidation({ ok: r.success, message: r.message || r.error || '' })
     } finally { setValidating(false) }
   }
 
-  async function handleSave() {
-    if (!isElectron || !name.trim() || !latex.trim()) return
+  async function handleSave(asNew = false) {
+    if (!isElectron || !draft.name.trim() || !draft.latex.trim()) return
     setSaving(true)
     try {
-      const r = await window.electronAPI.saveUserFunction({
-        name: name.trim(), latex: latex.trim(),
-        defaults: { m: defaultM, beta: defaultBeta },
-      })
+      const fn = {
+        ...(!asNew && draft.id ? { id: draft.id } : {}),
+        name: draft.name.trim(), latex: draft.latex.trim(),
+        defaults: { m: draft.m, beta: draft.beta },
+      }
+      const r = await window.electronAPI.saveUserFunction(fn)
       if (r.success) {
-        setName(''); setLatex(''); setValidResult(null)
-        setDefaultM(0.0125); setDefaultBeta(0.054)
-        onSave?.()
+        onUserFnsChanged?.()
+        if (asNew || !draft.id) {
+          setDraft({ id: null, name: '', latex: '', m: 0.0125, beta: 0.054 })
+          setIsEditing(false)
+        }
+        setValidation(null)
       }
     } finally { setSaving(false) }
   }
 
-  const canSave = name.trim() && latex.trim() && validResult?.ok
+  async function handleDelete(id) {
+    if (!isElectron) return
+    await window.electronAPI.deleteUserFunction(id)
+    onUserFnsChanged?.()
+    if (draft.id === id) { setDraft({ id: null, name: '', latex: '', m: 0.0125, beta: 0.054 }); setIsEditing(false) }
+  }
+
+  function loadForEdit(uf) {
+    setDraft({ id: uf.id, name: uf.name, latex: uf.latex, m: uf.defaults?.m ?? 0.0125, beta: uf.defaults?.beta ?? 0.054 })
+    setIsEditing(true); setValidation(null)
+  }
+
+  function loadAsCopy(uf) {
+    setDraft({ id: null, name: '', latex: uf.latex, m: uf.defaults?.m ?? 0.0125, beta: uf.defaults?.beta ?? 0.054 })
+    setIsEditing(false); setValidation(null)
+  }
+
+  function loadFromCurrent() {
+    const fidStr = String(functionId)
+    const term   = (termsMap || {})[fidStr] || ''
+    setDraft(d => ({ ...d, latex: term || d.latex }))
+    setValidation(null)
+  }
+
+  const canSave    = !!(draft.name.trim() && draft.latex.trim() && validation?.ok)
+  const panelH     = !open ? 28 : (editMode ? 300 : 90)
+
+  // Header button shared style
+  const hdrBtn = (active = false) => ({
+    padding: '2px 8px', borderRadius: T.radiusPill, cursor: 'pointer',
+    border: `1px solid ${active ? 'rgba(110,231,183,0.35)' : T.border}`,
+    background: active ? MINTBG : 'transparent',
+    color: active ? MINT : T.dim,
+    fontFamily: T.mono, fontSize: 9, transition: 'all 0.15s',
+  })
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+    <div style={{
+      flexShrink: 0, height: panelH,
+      transition: 'height 0.25s cubic-bezier(0.4,0,0.2,1)',
+      background: 'rgba(3,3,10,0.98)',
+      borderTop: `1px solid ${T.border}`,
+      display: 'flex', flexDirection: 'column', overflow: 'hidden',
+    }}>
+      {/* ── Header bar ── */}
+      <div style={{
+        height: 28, flexShrink: 0,
+        display: 'flex', alignItems: 'center', gap: 7,
+        padding: '0 12px',
+        borderBottom: open ? `1px solid ${T.border}` : 'none',
+      }}>
+        <button onClick={onToggleOpen} style={{
+          padding: 0, width: 18, height: 18, border: 'none',
+          background: 'transparent', color: T.dim, cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 10, transform: open ? 'rotate(0deg)' : 'rotate(-90deg)',
+          transition: 'transform 0.2s', flexShrink: 0,
+        }}>▾</button>
 
-      {/* Saved functions list */}
-      {userFunctions.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-          {userFunctions.map(fn => (
-            <div key={fn.id} style={{
-              display: 'flex', alignItems: 'center', gap: 6,
-              padding: '6px 10px', borderRadius: T.radiusSm,
-              background: 'rgba(0,0,0,0.22)', border: `1px solid ${T.border}`,
-            }}>
-              <span style={{
-                flex: 1, fontSize: 11, fontFamily: T.mono, color: T.text,
-                overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-              }}>
-                <span style={{ color: T.dim }}>{fn.id}.</span> {fn.name}
-              </span>
-              <button onClick={() => onDelete?.(fn.id)} style={{
-                fontSize: 10, lineHeight: 1, padding: '2px 7px',
-                borderRadius: T.radiusPill, border: '1px solid rgba(255,80,80,0.22)',
-                background: 'rgba(255,80,80,0.05)', color: 'rgba(255,110,110,0.75)',
-                cursor: 'pointer', flexShrink: 0, fontFamily: T.mono, transition: 'all 0.12s',
-              }}>×</button>
-            </div>
-          ))}
+        <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase',
+          color: T.dim, fontFamily: T.mono, flex: 1 }}>
+          {editMode ? 'Custom Library' : 'Formula'}
+        </span>
+
+        {editMode
+          ? <button onClick={onExitEdit} style={hdrBtn()}>✕ close</button>
+          : <button onClick={onEnterEdit} style={hdrBtn(true)}>⊕ custom</button>
+        }
+      </div>
+
+      {/* ── View mode: rendered KaTeX ── */}
+      {open && !editMode && (
+        <div
+          onDoubleClick={onEnterEdit}
+          title="Double-click to open Custom Library"
+          style={{
+            flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '0 56px', overflow: 'hidden', position: 'relative', cursor: 'default',
+          }}
+        >
+          <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 56, zIndex: 1, pointerEvents: 'none',
+            background: 'linear-gradient(90deg,rgba(3,3,10,0.98) 0%,transparent 100%)' }} />
+          <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 56, zIndex: 1, pointerEvents: 'none',
+            background: 'linear-gradient(270deg,rgba(3,3,10,0.98) 0%,transparent 100%)' }} />
+          <div ref={formulaRef} className="formula-panel" style={{ color: T.text, overflow: 'hidden' }} />
         </div>
       )}
 
-      {/* Add-new form */}
-      <div style={{
-        display: 'flex', flexDirection: 'column', gap: 8,
-        padding: '10px', borderRadius: T.radiusSm,
-        background: 'rgba(0,0,0,0.18)', border: `1px solid ${T.border}`,
-      }}>
-        <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.12em',
-          color: T.muted, textTransform: 'uppercase', fontFamily: T.mono }}>
-          New function
-        </span>
+      {/* ── Edit mode: custom library + editor ── */}
+      {open && editMode && (
+        <div style={{ flex: 1, display: 'flex', gap: 0, overflow: 'hidden', minHeight: 0 }}>
 
-        {/* Name */}
-        <input type="text" value={name} onChange={e => setName(e.target.value)}
-          placeholder="Name (e.g. My Product)"
-          style={{
-            width: '100%', background: 'rgba(0,0,0,0.28)',
-            border: `1px solid ${T.border}`, borderRadius: T.radiusSm,
-            color: T.text, padding: '6px 9px', fontSize: 11,
-            fontFamily: T.mono, outline: 'none',
-          }} />
-
-        {/* LaTeX term */}
-        <div>
-          <div style={{ fontSize: 9, color: T.dim, fontFamily: T.mono, marginBottom: 4, lineHeight: 1 }}>
-            LaTeX term inside ∏  <span style={{ opacity: 0.5 }}>(no outer |·|^&#123;-m&#125;)</span>
-          </div>
-          <textarea value={latex} rows={3}
-            onChange={e => { setLatex(e.target.value); setValidResult(null) }}
-            placeholder={`\\beta\\frac{x}{k}\\sin\\left(\\frac{\\pi z}{k}\\right)`}
-            style={{
-              width: '100%', background: 'rgba(0,0,0,0.28)',
-              border: `1px solid ${T.border}`, borderRadius: T.radiusSm,
-              color: T.text, padding: '6px 9px', fontSize: 10,
-              fontFamily: T.mono, outline: 'none', resize: 'vertical', lineHeight: 1.6,
-            }} />
-        </div>
-
-        {/* Default coefficients */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-          {[
-            { label: 'Default m', val: defaultM, set: setDefaultM },
-            { label: 'Default β', val: defaultBeta, set: setDefaultBeta },
-          ].map(({ label, val, set: setter }) => (
-            <div key={label}>
-              <div style={{ fontSize: 9, color: T.dim, fontFamily: T.mono, marginBottom: 4 }}>{label}</div>
-              <input type="number" value={val} step={0.001} min={0.0001} max={2}
-                onChange={e => setter(parseFloat(e.target.value) || 0.0125)}
-                style={{
-                  width: '100%', background: 'rgba(0,0,0,0.28)',
-                  border: `1px solid ${T.border}`, borderRadius: T.radiusSm,
-                  color: T.text, padding: '5px 8px', fontSize: 11,
-                  fontFamily: T.mono, outline: 'none',
-                }} />
-            </div>
-          ))}
-        </div>
-
-        {/* Validation result */}
-        {validResult && (
+          {/* Left panel: saved custom functions */}
           <div style={{
-            fontSize: 9, fontFamily: T.mono, lineHeight: 1.5,
-            padding: '5px 8px', borderRadius: T.radiusSm, wordBreak: 'break-all',
-            background: validResult.ok ? 'rgba(99,200,120,0.07)' : 'rgba(255,80,80,0.06)',
-            border: `1px solid ${validResult.ok ? 'rgba(99,200,120,0.2)' : 'rgba(255,80,80,0.18)'}`,
-            color: validResult.ok ? 'rgba(130,230,150,0.85)' : '#ff8080',
+            width: 172, flexShrink: 0, borderRight: `1px solid ${T.border}`,
+            display: 'flex', flexDirection: 'column', padding: '8px 8px', gap: 4,
+            overflowY: 'auto',
           }}>
-            {validResult.ok ? '✓ ' : '✗ '}{validResult.message}
-          </div>
-        )}
+            <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase',
+              color: T.dim, fontFamily: T.mono, marginBottom: 2 }}>Saved</span>
 
-        {/* Buttons */}
-        <div style={{ display: 'flex', gap: 6 }}>
-          <button onClick={handleValidate} disabled={validating || !latex.trim()} style={{
-            flex: 1, padding: '6px 0', borderRadius: T.radiusSm,
-            border: `1px solid ${T.border}`, background: 'rgba(180,160,255,0.06)',
-            color: latex.trim() ? T.muted : T.dim, fontSize: 11, fontFamily: T.mono,
-            cursor: latex.trim() ? 'pointer' : 'not-allowed',
-            opacity: latex.trim() ? 1 : 0.5, transition: 'all 0.15s',
-          }}>
-            {validating ? '…' : 'validate'}
-          </button>
-          <button onClick={handleSave} disabled={saving || !canSave} style={{
-            flex: 1, padding: '6px 0', borderRadius: T.radiusSm,
-            border: `1px solid ${canSave ? 'rgba(180,160,255,0.3)' : T.border}`,
-            background: canSave ? T.accentSoft : 'rgba(0,0,0,0.2)',
-            color: canSave ? T.accent : T.dim,
-            fontWeight: canSave ? 600 : 400, fontSize: 11, fontFamily: T.mono,
-            cursor: canSave ? 'pointer' : 'not-allowed', transition: 'all 0.15s',
-          }}>
-            {saving ? '…' : 'save'}
-          </button>
+            {/* Use current function as template */}
+            <button onClick={loadFromCurrent} style={{
+              padding: '5px 8px', borderRadius: T.radiusSm, cursor: 'pointer',
+              border: `1px solid rgba(110,231,183,0.22)`,
+              background: MINTBG, color: MINT,
+              fontSize: 10, fontFamily: T.mono, textAlign: 'left',
+              display: 'flex', alignItems: 'center', gap: 5,
+            }}>
+              <span>⊕</span>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                flex: 1, fontSize: 9 }}>
+                template from fn {functionId}
+              </span>
+            </button>
+
+            {userFunctions.length === 0 && (
+              <div style={{ fontSize: 9, color: T.dim, fontFamily: T.mono, padding: '2px 0', opacity: 0.6 }}>
+                no custom functions yet
+              </div>
+            )}
+
+            {userFunctions.map(uf => (
+              <div key={uf.id} style={{
+                display: 'flex', alignItems: 'center', gap: 3,
+                padding: '5px 7px', borderRadius: T.radiusSm,
+                border: `1px solid ${draft.id === uf.id ? T.borderHover : T.border}`,
+                background: draft.id === uf.id ? T.accentSoft : 'rgba(0,0,0,0.2)',
+              }}>
+                <button onClick={() => loadForEdit(uf)} style={{
+                  flex: 1, textAlign: 'left', border: 'none', background: 'transparent',
+                  cursor: 'pointer', padding: 0,
+                  color: draft.id === uf.id ? T.accent : T.text,
+                  fontSize: 10, fontFamily: T.mono,
+                  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                }}>
+                  <span style={{ color: T.dim, fontSize: 9 }}>{uf.id}. </span>{uf.name}
+                </button>
+                <button onClick={() => loadAsCopy(uf)} title="Copy as new"
+                  style={{ fontSize: 9, padding: '1px 4px', flexShrink: 0,
+                    border: `1px solid ${T.border}`, borderRadius: 4,
+                    background: 'transparent', color: T.dim, cursor: 'pointer' }}>⧉</button>
+                <button onClick={() => handleDelete(uf.id)} title="Delete"
+                  style={{ fontSize: 9, padding: '1px 4px', flexShrink: 0,
+                    border: '1px solid rgba(255,80,80,0.2)', borderRadius: 4,
+                    background: 'transparent', color: 'rgba(255,100,100,0.65)', cursor: 'pointer' }}>×</button>
+              </div>
+            ))}
+          </div>
+
+          {/* Right panel: editor form */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6,
+            padding: '8px 12px', overflowY: 'auto', minWidth: 0 }}>
+
+            <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase',
+              color: isEditing ? MINT : T.dim, fontFamily: T.mono }}>
+              {isEditing ? `editing ${draft.id}` : 'new function'}
+            </span>
+
+            {/* Name */}
+            <input type="text" value={draft.name}
+              onChange={e => setDraft(d => ({ ...d, name: e.target.value }))}
+              placeholder={isEditing ? 'Function name' : 'Name for new function…'}
+              style={{ width: '100%', background: 'rgba(0,0,0,0.32)',
+                border: `1px solid ${T.border}`, borderRadius: T.radiusSm,
+                color: T.text, padding: '5px 9px', fontSize: 11, fontFamily: T.mono, outline: 'none' }} />
+
+            {/* LaTeX term */}
+            <textarea value={draft.latex} rows={2}
+              onChange={e => { setDraft(d => ({ ...d, latex: e.target.value })); setValidation(null) }}
+              placeholder={`\\beta\\frac{x}{k}\\sin\\left(\\frac{\\pi z}{k}\\right)  ← term inside ∏`}
+              style={{ width: '100%', background: 'rgba(0,0,0,0.32)',
+                border: `1px solid ${T.border}`, borderRadius: T.radiusSm,
+                color: '#b0e8cc', padding: '5px 9px', fontSize: 10,
+                fontFamily: T.mono, outline: 'none', resize: 'none', lineHeight: 1.55 }} />
+
+            {/* Coefficients row + buttons */}
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+              {/* m */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span style={{ fontSize: 9, color: T.dim, fontFamily: T.mono }}>m</span>
+                <input type="number" value={draft.m} step={0.001} min={0.0001} max={2}
+                  onChange={e => setDraft(d => ({ ...d, m: parseFloat(e.target.value) || 0.0125 }))}
+                  style={{ width: 68, background: 'rgba(0,0,0,0.32)', border: `1px solid ${T.border}`,
+                    borderRadius: T.radiusSm, color: T.text, padding: '4px 7px',
+                    fontSize: 11, fontFamily: T.mono, outline: 'none' }} />
+              </div>
+              {/* β */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span style={{ fontSize: 9, color: T.dim, fontFamily: T.mono }}>β</span>
+                <input type="number" value={draft.beta} step={0.001} min={0.0001} max={2}
+                  onChange={e => setDraft(d => ({ ...d, beta: parseFloat(e.target.value) || 0.054 }))}
+                  style={{ width: 68, background: 'rgba(0,0,0,0.32)', border: `1px solid ${T.border}`,
+                    borderRadius: T.radiusSm, color: T.text, padding: '4px 7px',
+                    fontSize: 11, fontFamily: T.mono, outline: 'none' }} />
+              </div>
+
+              {/* Action buttons */}
+              <button onClick={handleValidate} disabled={validating || !draft.latex.trim()} style={{
+                padding: '4px 10px', borderRadius: T.radiusSm, fontFamily: T.mono, fontSize: 10,
+                border: `1px solid rgba(110,231,183,0.28)`, background: MINTBG, color: MINT,
+                cursor: draft.latex.trim() ? 'pointer' : 'not-allowed',
+                opacity: draft.latex.trim() ? 1 : 0.5,
+              }}>{validating ? '…' : 'validate'}</button>
+
+              {isEditing && (
+                <button onClick={() => handleSave(false)} disabled={saving || !canSave} style={{
+                  padding: '4px 10px', borderRadius: T.radiusSm, fontFamily: T.mono, fontSize: 10,
+                  border: `1px solid ${canSave ? T.borderHover : T.border}`,
+                  background: canSave ? T.accentSoft : 'rgba(0,0,0,0.2)',
+                  color: canSave ? T.accent : T.dim, cursor: canSave ? 'pointer' : 'not-allowed',
+                }}>{saving ? '…' : 'update'}</button>
+              )}
+
+              <button onClick={() => handleSave(true)} disabled={saving || !canSave} style={{
+                padding: '4px 10px', borderRadius: T.radiusSm, fontFamily: T.mono, fontSize: 10,
+                border: `1px solid ${canSave ? 'rgba(110,231,183,0.32)' : T.border}`,
+                background: canSave ? MINTBG : 'rgba(0,0,0,0.2)',
+                color: canSave ? MINT : T.dim, cursor: canSave ? 'pointer' : 'not-allowed',
+                marginLeft: 'auto',
+              }}>{saving ? '…' : 'save new'}</button>
+            </div>
+
+            {/* Validation result */}
+            {validation && (
+              <div style={{
+                fontSize: 9, fontFamily: T.mono, lineHeight: 1.4, padding: '4px 8px',
+                borderRadius: T.radiusSm, wordBreak: 'break-all',
+                background: validation.ok ? 'rgba(99,200,120,0.07)' : 'rgba(255,80,80,0.06)',
+                border: `1px solid ${validation.ok ? 'rgba(99,200,120,0.2)' : 'rgba(255,80,80,0.18)'}`,
+                color: validation.ok ? 'rgba(130,230,150,0.85)' : '#ff8080',
+              }}>
+                {validation.ok ? '✓ ' : '✗ '}{validation.message}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
@@ -730,7 +833,7 @@ function CoefficientsCard({ params, set, isElectron }) {
 
 // ── Sidebar ────────────────────────────────────────────────────────────────
 function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, selectedHistory, onSelectHistory,
-                   userFunctions, onSaveUserFn, onDeleteUserFn }) {
+                   userFunctions, onOpenCustomLibrary }) {
   const groups   = [...new Set(FUNCTIONS.map(f => f.group))]
   const gridPts  = Math.ceil((params.xmax - params.xmin) / params.resolution)
                * Math.ceil((params.ymax - params.ymin) / params.resolution)
@@ -760,7 +863,15 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, 
           {/* ── Section: Function & Normalization ── */}
           <Section title="Function & Normalization" defaultOpen={true}>
             <div>
-              <Label>Function</Label>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 7 }}>
+                <div style={{ flex: 1 }}><Label>Function</Label></div>
+                <button onClick={onOpenCustomLibrary} style={{
+                  fontSize: 9, fontFamily: T.mono, padding: '2px 8px', borderRadius: T.radiusPill,
+                  border: `1px solid rgba(110,231,183,0.28)`,
+                  background: 'rgba(110,231,183,0.06)', color: '#6ee7b7',
+                  cursor: 'pointer', transition: 'all 0.15s', marginLeft: 6,
+                }}>⊕ custom</button>
+              </div>
               <select
                 value={params.functionId}
                 onChange={e => set('functionId')(e.target.value)}
@@ -963,16 +1074,6 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, 
 
           </Section>
 
-          {/* ── Section: Custom Functions ── */}
-          <Section title="Custom Functions" defaultOpen={false}>
-            <CustomFunctionSection
-              userFunctions={userFunctions || []}
-              onSave={onSaveUserFn}
-              onDelete={onDeleteUserFn}
-              isElectron={isElectron}
-            />
-          </Section>
-
           {/* ── Section: History ── */}
           {history.length > 0 && (
             <Section title="History" defaultOpen={true}>
@@ -1036,7 +1137,10 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, 
 }
 
 // ── Plot area ──────────────────────────────────────────────────────────────
-function PlotArea({ result, loading, selectedHistory, functionId, formulasMap, userFunctions }) {
+function PlotArea({ result, loading, selectedHistory,
+                    functionId, formulasMap, termsMap, userFunctions,
+                    formulaOpen, onToggleFormula, formulaEditMode, onEnterFormulaEdit, onExitFormulaEdit,
+                    onUserFnsChanged, isElectron }) {
   const shown = selectedHistory ?? result
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
@@ -1087,11 +1191,19 @@ function PlotArea({ result, loading, selectedHistory, functionId, formulasMap, u
         )}
       </div>
 
-      {/* Formula bar */}
-      <FormulaBar
+      {/* Formula panel */}
+      <FormulaPanel
         functionId={functionId}
         formulasMap={formulasMap}
+        termsMap={termsMap}
         userFunctions={userFunctions}
+        open={formulaOpen}
+        onToggleOpen={onToggleFormula}
+        editMode={formulaEditMode}
+        onEnterEdit={onEnterFormulaEdit}
+        onExitEdit={onExitFormulaEdit}
+        onUserFnsChanged={onUserFnsChanged}
+        isElectron={isElectron}
       />
 
       {/* Status bar */}
@@ -1123,17 +1235,20 @@ export default function App() {
   const [selectedHistory, setSelectedHistory] = useState(null)
   const [isElectron, setIsElectron]           = useState(false)
   const [sidebarOpen, setSidebarOpen]         = useState(true)
-  const [userFunctions, setUserFunctions]     = useState([])
-  const [formulasMap,   setFormulasMap]       = useState({})
+  const [userFunctions,   setUserFunctions]   = useState([])
+  const [formulasMap,     setFormulasMap]     = useState({})
+  const [termsMap,        setTermsMap]        = useState({})
+  const [formulaOpen,     setFormulaOpen]     = useState(true)
+  const [formulaEditMode, setFormulaEditMode] = useState(false)
 
   useEffect(() => { setIsElectron(!!window.electronAPI) }, [])
 
   useEffect(() => {
     if (!isElectron) return
     window.electronAPI.listPlots().then(r => { if (r.success) setHistory(r.files) })
-    // Load formula map from Python (NumpyToLatex.all_formulas)
-    window.electronAPI.getAllFormulas().then(r => { if (r.success) setFormulasMap(r.formulas) })
-    // Load user-defined functions
+    window.electronAPI.getAllFormulas().then(r => {
+      if (r.success) { setFormulasMap(r.formulas || {}); setTermsMap(r.terms || {}) }
+    })
     window.electronAPI.listUserFunctions().then(r => { if (r.success) setUserFunctions(r.functions) })
   }, [isElectron])
 
@@ -1142,13 +1257,10 @@ export default function App() {
     window.electronAPI.listUserFunctions().then(r => { if (r.success) setUserFunctions(r.functions) })
   }, [isElectron])
 
-  const deleteUserFunction = useCallback(async (id) => {
-    if (!isElectron) return
-    await window.electronAPI.deleteUserFunction(id)
-    // If the deleted function is currently selected, fall back to fn 1
-    setParams(p => p.functionId === id ? { ...p, functionId: '1' } : p)
-    reloadUserFunctions()
-  }, [isElectron, reloadUserFunctions])
+  const openCustomLibrary = useCallback(() => {
+    setFormulaOpen(true)
+    setFormulaEditMode(true)
+  }, [])
 
   const set = key => val => setParams(p => ({ ...p, [key]: val }))
 
@@ -1189,8 +1301,7 @@ export default function App() {
           selectedHistory={selectedHistory}
           onSelectHistory={h => { setSelectedHistory(h); setResult(null) }}
           userFunctions={userFunctions}
-          onSaveUserFn={reloadUserFunctions}
-          onDeleteUserFn={deleteUserFunction}
+          onOpenCustomLibrary={openCustomLibrary}
         />
         <PlotArea
           result={result}
@@ -1198,7 +1309,15 @@ export default function App() {
           selectedHistory={selectedHistory}
           functionId={params.functionId}
           formulasMap={formulasMap}
+          termsMap={termsMap}
           userFunctions={userFunctions}
+          formulaOpen={formulaOpen}
+          onToggleFormula={() => setFormulaOpen(v => !v)}
+          formulaEditMode={formulaEditMode}
+          onEnterFormulaEdit={() => { setFormulaOpen(true); setFormulaEditMode(true) }}
+          onExitFormulaEdit={() => setFormulaEditMode(false)}
+          onUserFnsChanged={reloadUserFunctions}
+          isElectron={isElectron}
         />
       </div>
 
@@ -1212,6 +1331,25 @@ export default function App() {
         select option, select optgroup { background: #100e24; color: #edeaf8; }
         input[type=range] { height: 3px; }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── KaTeX syntax-colouring ── */
+        /* Operators: ∏ ∑ + − · = < > sin cos tan */
+        .katex .mop  { color: #6ee7b7; }
+        .katex .mbin { color: #6ee7b7; }
+        .katex .mrel { color: #86efac; }
+        /* Variables / italic letters (z, x, k, n, m) */
+        .katex .mord.mi, .katex .mord.mathnormal { color: #93c5fd; }
+        /* Numbers */
+        .katex .mord.mn { color: #e2e8f0; }
+        /* Delimiters / brackets / |·| */
+        .katex .mopen, .katex .mclose { color: #c4b5fd; }
+        /* Fraction bar */
+        .katex .frac-line { background-color: #6ee7b7 !important; }
+        /* Floor/ceil brackets */
+        .katex .minner { color: inherit; }
+        /* Display-mode formula: scale up in the panel */
+        .formula-panel .katex-display { margin: 0; }
+        .formula-panel .katex { font-size: 1.65em; }
       `}</style>
     </div>
   )
