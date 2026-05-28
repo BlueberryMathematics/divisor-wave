@@ -94,14 +94,15 @@ class _SFWithOverrides(Special_Functions):
 
 def generate_plot_2d(function_id, normalize, colormap, resolution,
                      xmin, xmax, ymin, ymax, output_dir,
-                     m_override=None, beta_override=None):
+                     m_override=None, beta_override=None, col_normalize=False):
     """Render function as a 2D heatmap over the complex plane."""
     X = np.arange(xmin, xmax, resolution)
     Y = np.arange(ymin, ymax, resolution)
     X, Y = np.meshgrid(X, Y)
 
     W = compute_grid(function_id, normalize, X, Y,
-                     m_override=m_override, beta_override=beta_override)
+                     m_override=m_override, beta_override=beta_override,
+                     col_normalize=col_normalize)
 
     fig, ax = plt.subplots(figsize=(19, 11))
     cmap = COLORMAPS.get(str(colormap), cm.viridis)
@@ -120,8 +121,9 @@ def generate_plot_2d(function_id, normalize, colormap, resolution,
         if m_override    is not None: parts.append(f'm={m_override}')
         if beta_override is not None: parts.append(f'β={beta_override}')
         coeff_lbl = '  [' + ', '.join(parts) + ']'
+    col_lbl = '  +col-norm' if col_normalize else ''
 
-    ax.set_title(f'{fn_name}  [{norm_lbl}]{coeff_lbl}')
+    ax.set_title(f'{fn_name}  [{norm_lbl}]{coeff_lbl}{col_lbl}')
 
     os.makedirs(output_dir, exist_ok=True)
     timestamp   = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -135,7 +137,7 @@ def generate_plot_2d(function_id, normalize, colormap, resolution,
 
 def generate_plot(function_id, normalize, colormap, resolution,
                   xmin, xmax, ymin, ymax, output_dir, elev=30, azim=-70,
-                  m_override=None, beta_override=None):
+                  m_override=None, beta_override=None, col_normalize=False):
 
     X = np.arange(xmin, xmax, resolution)
     Y = np.arange(ymin, ymax, resolution)
@@ -144,7 +146,8 @@ def generate_plot(function_id, normalize, colormap, resolution,
     # Vectorized grid computation — replaces the old nested Python for-loop.
     # Falls back to multiprocessing for recursive/complex functions (15-18, 30-32).
     W = compute_grid(function_id, normalize, X, Y,
-                     m_override=m_override, beta_override=beta_override)
+                     m_override=m_override, beta_override=beta_override,
+                     col_normalize=col_normalize)
 
     fig = plt.figure(figsize=(19, 11))
     ax = fig.add_subplot(111, projection='3d')
@@ -163,11 +166,12 @@ def generate_plot(function_id, normalize, colormap, resolution,
         if m_override    is not None: parts.append(f'm={m_override}')
         if beta_override is not None: parts.append(f'β={beta_override}')
         coeff_lbl = '  [' + ', '.join(parts) + ']'
+    col_lbl = '  +col-norm' if col_normalize else ''
 
     ax.set_xlabel('Real Axis')
     ax.set_ylabel('Imaginary Axis')
     ax.set_zlabel('Value')
-    ax.set_title(f'{fn_name}  [{norm_lbl}]{coeff_lbl}')
+    ax.set_title(f'{fn_name}  [{norm_lbl}]{coeff_lbl}{col_lbl}')
 
     os.makedirs(output_dir, exist_ok=True)
     timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -238,6 +242,8 @@ if __name__ == '__main__':
     parser.add_argument('--mode',        default='3d', choices=['2d', '3d'])
     parser.add_argument('--output',      default=None)
     parser.add_argument('--auto-coeffs', action='store_true', help='Compute auto coefficients and exit without plotting')
+    parser.add_argument('--col-normalize', action='store_true', default=False,
+                        help='Per-column (x-slice) normalization to equalize imaginary-axis hilliness')
     # Optional coefficient overrides (omit to use each function's built-in defaults)
     parser.add_argument('--m',    type=float, default=None, help='Override m exponent coeff')
     parser.add_argument('--beta', type=float, default=None, help='Override beta lead coeff')
@@ -272,6 +278,7 @@ if __name__ == '__main__':
                 args.xmin, args.xmax, args.ymin, args.ymax,
                 args.output,
                 m_override=args.m, beta_override=args.beta,
+                col_normalize=args.col_normalize,
             )
         else:
             path, name = generate_plot(
@@ -280,6 +287,7 @@ if __name__ == '__main__':
                 args.xmin, args.xmax, args.ymin, args.ymax,
                 args.output, args.elev, args.azim,
                 m_override=args.m, beta_override=args.beta,
+                col_normalize=args.col_normalize,
             )
         print(json.dumps({'success': True, 'path': path, 'name': name}))
     except Exception as e:

@@ -92,10 +92,11 @@ function getFnDefaults(functionId, normalize) {
 }
 
 const DEFAULT_PARAMS = {
-  functionId: '1',
-  normalize:  'N',
-  colormap:   '4',
-  resolution: 0.1,
+  functionId:   '1',
+  normalize:    'N',
+  colNormalize: false,
+  colormap:     '4',
+  resolution:   0.1,
   xmin:  2, xmax: 20,
   ymin: -5, ymax:  5,
   elev: 30,  azim: -70,
@@ -573,6 +574,22 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, 
                   )
                 })}
               </div>
+            </div>
+            <div>
+              <Label>Im. Stretch</Label>
+              <button
+                onClick={() => set('colNormalize')(!params.colNormalize)}
+                style={{
+                  width: '100%', padding: '6px 0', borderRadius: T.radiusSm, cursor: 'pointer',
+                  border: params.colNormalize ? `1px solid ${T.borderHover}` : `1px solid ${T.border}`,
+                  background: params.colNormalize ? T.accentSoft : 'rgba(0,0,0,0.2)',
+                  color: params.colNormalize ? T.accent : T.muted,
+                  fontWeight: params.colNormalize ? 600 : 400, fontSize: 12,
+                  transition: 'all 0.15s', fontFamily: T.mono,
+                }}
+              >
+                {params.colNormalize ? 'on — equal hilliness' : 'off — raw amplitude'}
+              </button>
             </div>
             <div>
               <Label>Plot Mode</Label>

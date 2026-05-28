@@ -477,8 +477,21 @@ def _threaded_vec(vec_fn, X, Y, m, beta, normalize):
     return np.vstack(results)
 
 
+# ── Per-column (imaginary-axis) normalization ──────────────────────────────
+def _normalize_per_column(W):
+    """
+    For each fixed real value (column in the meshgrid), scale the imaginary-axis
+    profile so its maximum = 1.  This keeps the waves equally 'hilly' at all x
+    regardless of how many product terms have accumulated — without distorting
+    the relative shape (zeros and valleys remain near zero within each column).
+    """
+    col_max = W.max(axis=0, keepdims=True)
+    return np.where(col_max > 0, W / np.maximum(col_max, 1e-300), W)
+
+
 # ── Public entry point ─────────────────────────────────────────────────────
-def compute_grid(function_id, normalize, X, Y, m_override=None, beta_override=None):
+def compute_grid(function_id, normalize, X, Y, m_override=None, beta_override=None,
+                 col_normalize=False):
     """
     Compute the plot surface W over the grid (X, Y).
 
@@ -499,7 +512,11 @@ def compute_grid(function_id, normalize, X, Y, m_override=None, beta_override=No
 
     vec_fn = _VECTORIZED.get(fid)
     if vec_fn is not None:
-        return _threaded_vec(vec_fn, X, Y, m, beta, normalize)
+        W = _threaded_vec(vec_fn, X, Y, m, beta, normalize)
     else:
         # Scalar parallel fallback via processes (fn 3, 15-18, 30-32)
-        return _parallel_scalar(fid, normalize, X, Y, m_override, beta_override)
+        W = _parallel_scalar(fid, normalize, X, Y, m_override, beta_override)
+
+    if col_normalize:
+        W = _normalize_per_column(W)
+    return W

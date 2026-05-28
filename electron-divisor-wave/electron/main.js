@@ -68,6 +68,7 @@ ipcMain.handle('generate-plot', async (_event, params) => {
       // Optional coefficient overrides — only pass when explicitly set
       ...(params.m    != null ? ['--m',    String(params.m)]    : []),
       ...(params.beta != null ? ['--beta', String(params.beta)] : []),
+      ...(params.colNormalize ? ['--col-normalize'] : []),
     ]
 
     let stdout = ''
