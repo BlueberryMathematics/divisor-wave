@@ -301,6 +301,8 @@ function FormulaPanel({
   const [validation, setValidation] = useState(null)
   const [validating, setValidating] = useState(false)
   const [saving,     setSaving]     = useState(false)
+  // Dynamically measured height of the rendered KaTeX formula
+  const [formulaH,   setFormulaH]   = useState(100)
 
   // Pre-load draft when editMode activates
   useEffect(() => {
@@ -336,6 +338,13 @@ function FormulaPanel({
         throwOnError: false, displayMode: true, output: 'html', strict: false,
       })
     } catch { formulaRef.current.textContent = latex }
+    // Measure the rendered height after the browser has laid it out,
+    // then expand the panel to fit with comfortable vertical breathing room.
+    requestAnimationFrame(() => {
+      if (!formulaRef.current) return
+      const h = formulaRef.current.scrollHeight
+      if (h > 10) setFormulaH(h + 32) // +32px top/bottom padding
+    })
   }, [functionId, formulasMap, userFunctions, editMode, open])
 
   async function handleValidate() {
@@ -393,7 +402,7 @@ function FormulaPanel({
   }
 
   const canSave    = !!(draft.name.trim() && draft.latex.trim() && validation?.ok)
-  const panelH     = !open ? 28 : (editMode ? 300 : 90)
+  const panelH     = !open ? 28 : (editMode ? 300 : 28 + formulaH)
 
   // Header button shared style
   const hdrBtn = (active = false) => ({
@@ -452,7 +461,7 @@ function FormulaPanel({
             background: 'linear-gradient(90deg,rgba(3,3,10,0.98) 0%,transparent 100%)' }} />
           <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 56, zIndex: 1, pointerEvents: 'none',
             background: 'linear-gradient(270deg,rgba(3,3,10,0.98) 0%,transparent 100%)' }} />
-          <div ref={formulaRef} className="formula-panel" style={{ color: T.text, overflow: 'hidden' }} />
+          <div ref={formulaRef} className="formula-panel" style={{ color: T.text }} />
         </div>
       )}
 
