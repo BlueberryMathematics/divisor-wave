@@ -92,6 +92,47 @@ class _SFWithOverrides(Special_Functions):
         super().__setattr__(name, value)
 
 
+def generate_plot_2d(function_id, normalize, colormap, resolution,
+                     xmin, xmax, ymin, ymax, output_dir,
+                     m_override=None, beta_override=None):
+    """Render function as a 2D heatmap over the complex plane."""
+    X = np.arange(xmin, xmax, resolution)
+    Y = np.arange(ymin, ymax, resolution)
+    X, Y = np.meshgrid(X, Y)
+
+    W = compute_grid(function_id, normalize, X, Y,
+                     m_override=m_override, beta_override=beta_override)
+
+    fig, ax = plt.subplots(figsize=(19, 11))
+    cmap = COLORMAPS.get(str(colormap), cm.viridis)
+    mesh = ax.pcolormesh(X, Y, W, cmap=cmap, shading='auto')
+    plt.colorbar(mesh, ax=ax, label='Value', pad=0.02)
+
+    ax.set_xlabel('Real Axis')
+    ax.set_ylabel('Imaginary Axis')
+    ax.set_aspect('equal', adjustable='box')
+
+    fn_name  = FUNCTION_NAMES.get(str(function_id), f'Function {function_id}')
+    norm_lbl = 'Normalized' if normalize == 'Y' else 'Raw'
+    coeff_lbl = ''
+    if m_override is not None or beta_override is not None:
+        parts = []
+        if m_override    is not None: parts.append(f'm={m_override}')
+        if beta_override is not None: parts.append(f'β={beta_override}')
+        coeff_lbl = '  [' + ', '.join(parts) + ']'
+
+    ax.set_title(f'{fn_name}  [{norm_lbl}]{coeff_lbl}')
+
+    os.makedirs(output_dir, exist_ok=True)
+    timestamp   = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+    filename    = f'plot2d_fn{function_id}_{timestamp}.png'
+    output_path = os.path.join(output_dir, filename)
+
+    plt.savefig(output_path, dpi=150, bbox_inches='tight')
+    plt.close(fig)
+    return output_path, fn_name
+
+
 def generate_plot(function_id, normalize, colormap, resolution,
                   xmin, xmax, ymin, ymax, output_dir, elev=30, azim=-70,
                   m_override=None, beta_override=None):
@@ -194,6 +235,7 @@ if __name__ == '__main__':
     parser.add_argument('--ymax',        type=float, default=5.0)
     parser.add_argument('--elev',        type=float, default=30.0)
     parser.add_argument('--azim',        type=float, default=-70.0)
+    parser.add_argument('--mode',        default='3d', choices=['2d', '3d'])
     parser.add_argument('--output',      default=None)
     parser.add_argument('--auto-coeffs', action='store_true', help='Compute auto coefficients and exit without plotting')
     # Optional coefficient overrides (omit to use each function's built-in defaults)
@@ -223,13 +265,22 @@ if __name__ == '__main__':
         sys.exit(1)
 
     try:
-        path, name = generate_plot(
-            args.function, args.normalize, args.colormap,
-            args.resolution,
-            args.xmin, args.xmax, args.ymin, args.ymax,
-            args.output, args.elev, args.azim,
-            m_override=args.m, beta_override=args.beta,
-        )
+        if args.mode == '2d':
+            path, name = generate_plot_2d(
+                args.function, args.normalize, args.colormap,
+                args.resolution,
+                args.xmin, args.xmax, args.ymin, args.ymax,
+                args.output,
+                m_override=args.m, beta_override=args.beta,
+            )
+        else:
+            path, name = generate_plot(
+                args.function, args.normalize, args.colormap,
+                args.resolution,
+                args.xmin, args.xmax, args.ymin, args.ymax,
+                args.output, args.elev, args.azim,
+                m_override=args.m, beta_override=args.beta,
+            )
         print(json.dumps({'success': True, 'path': path, 'name': name}))
     except Exception as e:
         import traceback

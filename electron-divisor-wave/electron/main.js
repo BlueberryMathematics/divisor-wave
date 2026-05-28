@@ -63,6 +63,7 @@ ipcMain.handle('generate-plot', async (_event, params) => {
       '--ymax',       String(params.ymax),
       '--elev',       String(params.elev),
       '--azim',       String(params.azim),
+      '--mode',       params.mode === '2d' ? '2d' : '3d',
       '--output',     OUTPUT_DIR,
       // Optional coefficient overrides — only pass when explicitly set
       ...(params.m    != null ? ['--m',    String(params.m)]    : []),

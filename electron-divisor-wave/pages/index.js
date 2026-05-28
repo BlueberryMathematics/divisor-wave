@@ -101,6 +101,7 @@ const DEFAULT_PARAMS = {
   elev: 30,  azim: -70,
   m:    null,
   beta: null,
+  mode: '3d',
 }
 
 // ── Design tokens ──────────────────────────────────────────────────────────
@@ -573,6 +574,26 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, 
                 })}
               </div>
             </div>
+            <div>
+              <Label>Plot Mode</Label>
+              <div style={{ display: 'flex', gap: 6 }}>
+                {[{ v: '3d', label: '3D Surface' }, { v: '2d', label: '2D Heatmap' }].map(({ v, label }) => {
+                  const active = params.mode === v
+                  return (
+                    <button key={v} onClick={() => set('mode')(v)} style={{
+                      flex: 1, padding: '6px 0', borderRadius: T.radiusSm, cursor: 'pointer',
+                      border: active ? `1px solid ${T.borderHover}` : `1px solid ${T.border}`,
+                      background: active ? T.accentSoft : 'rgba(0,0,0,0.2)',
+                      color: active ? T.accent : T.muted,
+                      fontWeight: active ? 600 : 400, fontSize: 12,
+                      transition: 'all 0.15s', fontFamily: T.mono,
+                    }}>
+                      {label}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
           </Section>
 
           {/* ── Section: Colormap ── */}
@@ -643,7 +664,8 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, 
 
             <div style={{ height: 1, background: T.border, margin: '2px 0' }} />
 
-            {/* View Angles */}
+            {/* View Angles — hidden in 2D mode */}
+            {params.mode !== '2d' && (<>
             <div>
               <Label>View Angles</Label>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -653,6 +675,7 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, 
             </div>
 
             <div style={{ height: 1, background: T.border, margin: '2px 0' }} />
+            </>)}
 
             {/* Coefficients */}
             <CoefficientsCard params={params} set={set} isElectron={isElectron} />
