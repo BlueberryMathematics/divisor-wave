@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import katex from 'katex'
 
 // ── Data ────────────────────────────────────────────────────────────────────
 const FUNCTIONS = [
@@ -282,6 +283,230 @@ function Section({ title, defaultOpen = true, children }) {
   )
 }
 
+// ── Formula bar ────────────────────────────────────────────────────────────
+function FormulaBar({ functionId, formulasMap, userFunctions }) {
+  const containerRef = useRef(null)
+
+  useEffect(() => {
+    if (!containerRef.current) return
+
+    // Built-in formula from Python
+    let latex = (formulasMap || {})[String(functionId)] || ''
+
+    // User-defined: wrap their stored term in the ∏|·|^{-m} shell
+    if (!latex) {
+      const uf = (userFunctions || []).find(f => f.id === functionId)
+      if (uf?.latex) {
+        latex = `\\left|\\prod_{k=2}^{\\lfloor x\\rfloor}${uf.latex}\\right|^{-m}`
+      }
+    }
+
+    if (!latex) {
+      containerRef.current.innerHTML = ''
+      return
+    }
+
+    try {
+      containerRef.current.innerHTML = katex.renderToString(latex, {
+        throwOnError: false,
+        displayMode: false,
+        output: 'html',
+        strict: false,
+      })
+    } catch {
+      containerRef.current.textContent = latex
+    }
+  }, [functionId, formulasMap, userFunctions])
+
+  return (
+    <div style={{
+      height: 52, flexShrink: 0,
+      background: 'rgba(3,3,10,0.98)',
+      borderTop: `1px solid ${T.border}`,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      padding: '0 44px', overflow: 'hidden', position: 'relative',
+    }}>
+      <div style={{
+        position: 'absolute', left: 0, top: 0, bottom: 0, width: 44,
+        background: 'linear-gradient(90deg,rgba(3,3,10,0.98) 0%,transparent 100%)',
+        pointerEvents: 'none', zIndex: 1,
+      }} />
+      <div style={{
+        position: 'absolute', right: 0, top: 0, bottom: 0, width: 44,
+        background: 'linear-gradient(270deg,rgba(3,3,10,0.98) 0%,transparent 100%)',
+        pointerEvents: 'none', zIndex: 1,
+      }} />
+      <div
+        ref={containerRef}
+        style={{ fontSize: 13, color: T.text, whiteSpace: 'nowrap', overflow: 'hidden' }}
+      />
+    </div>
+  )
+}
+
+// ── Custom function form ────────────────────────────────────────────────────
+function CustomFunctionSection({ userFunctions, onSave, onDelete, isElectron }) {
+  const [name,        setName]       = useState('')
+  const [latex,       setLatex]      = useState('')
+  const [defaultM,    setDefaultM]   = useState(0.0125)
+  const [defaultBeta, setDefaultBeta] = useState(0.054)
+  const [validating,  setValidating] = useState(false)
+  const [validResult, setValidResult] = useState(null)
+  const [saving,      setSaving]     = useState(false)
+
+  async function handleValidate() {
+    if (!isElectron || !latex.trim()) return
+    setValidating(true); setValidResult(null)
+    try {
+      const r = await window.electronAPI.validateUserFunction(latex.trim())
+      setValidResult({ ok: r.success, message: r.message || r.error || '' })
+    } finally { setValidating(false) }
+  }
+
+  async function handleSave() {
+    if (!isElectron || !name.trim() || !latex.trim()) return
+    setSaving(true)
+    try {
+      const r = await window.electronAPI.saveUserFunction({
+        name: name.trim(), latex: latex.trim(),
+        defaults: { m: defaultM, beta: defaultBeta },
+      })
+      if (r.success) {
+        setName(''); setLatex(''); setValidResult(null)
+        setDefaultM(0.0125); setDefaultBeta(0.054)
+        onSave?.()
+      }
+    } finally { setSaving(false) }
+  }
+
+  const canSave = name.trim() && latex.trim() && validResult?.ok
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+
+      {/* Saved functions list */}
+      {userFunctions.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          {userFunctions.map(fn => (
+            <div key={fn.id} style={{
+              display: 'flex', alignItems: 'center', gap: 6,
+              padding: '6px 10px', borderRadius: T.radiusSm,
+              background: 'rgba(0,0,0,0.22)', border: `1px solid ${T.border}`,
+            }}>
+              <span style={{
+                flex: 1, fontSize: 11, fontFamily: T.mono, color: T.text,
+                overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+              }}>
+                <span style={{ color: T.dim }}>{fn.id}.</span> {fn.name}
+              </span>
+              <button onClick={() => onDelete?.(fn.id)} style={{
+                fontSize: 10, lineHeight: 1, padding: '2px 7px',
+                borderRadius: T.radiusPill, border: '1px solid rgba(255,80,80,0.22)',
+                background: 'rgba(255,80,80,0.05)', color: 'rgba(255,110,110,0.75)',
+                cursor: 'pointer', flexShrink: 0, fontFamily: T.mono, transition: 'all 0.12s',
+              }}>×</button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Add-new form */}
+      <div style={{
+        display: 'flex', flexDirection: 'column', gap: 8,
+        padding: '10px', borderRadius: T.radiusSm,
+        background: 'rgba(0,0,0,0.18)', border: `1px solid ${T.border}`,
+      }}>
+        <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.12em',
+          color: T.muted, textTransform: 'uppercase', fontFamily: T.mono }}>
+          New function
+        </span>
+
+        {/* Name */}
+        <input type="text" value={name} onChange={e => setName(e.target.value)}
+          placeholder="Name (e.g. My Product)"
+          style={{
+            width: '100%', background: 'rgba(0,0,0,0.28)',
+            border: `1px solid ${T.border}`, borderRadius: T.radiusSm,
+            color: T.text, padding: '6px 9px', fontSize: 11,
+            fontFamily: T.mono, outline: 'none',
+          }} />
+
+        {/* LaTeX term */}
+        <div>
+          <div style={{ fontSize: 9, color: T.dim, fontFamily: T.mono, marginBottom: 4, lineHeight: 1 }}>
+            LaTeX term inside ∏  <span style={{ opacity: 0.5 }}>(no outer |·|^&#123;-m&#125;)</span>
+          </div>
+          <textarea value={latex} rows={3}
+            onChange={e => { setLatex(e.target.value); setValidResult(null) }}
+            placeholder={`\\beta\\frac{x}{k}\\sin\\left(\\frac{\\pi z}{k}\\right)`}
+            style={{
+              width: '100%', background: 'rgba(0,0,0,0.28)',
+              border: `1px solid ${T.border}`, borderRadius: T.radiusSm,
+              color: T.text, padding: '6px 9px', fontSize: 10,
+              fontFamily: T.mono, outline: 'none', resize: 'vertical', lineHeight: 1.6,
+            }} />
+        </div>
+
+        {/* Default coefficients */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+          {[
+            { label: 'Default m', val: defaultM, set: setDefaultM },
+            { label: 'Default β', val: defaultBeta, set: setDefaultBeta },
+          ].map(({ label, val, set: setter }) => (
+            <div key={label}>
+              <div style={{ fontSize: 9, color: T.dim, fontFamily: T.mono, marginBottom: 4 }}>{label}</div>
+              <input type="number" value={val} step={0.001} min={0.0001} max={2}
+                onChange={e => setter(parseFloat(e.target.value) || 0.0125)}
+                style={{
+                  width: '100%', background: 'rgba(0,0,0,0.28)',
+                  border: `1px solid ${T.border}`, borderRadius: T.radiusSm,
+                  color: T.text, padding: '5px 8px', fontSize: 11,
+                  fontFamily: T.mono, outline: 'none',
+                }} />
+            </div>
+          ))}
+        </div>
+
+        {/* Validation result */}
+        {validResult && (
+          <div style={{
+            fontSize: 9, fontFamily: T.mono, lineHeight: 1.5,
+            padding: '5px 8px', borderRadius: T.radiusSm, wordBreak: 'break-all',
+            background: validResult.ok ? 'rgba(99,200,120,0.07)' : 'rgba(255,80,80,0.06)',
+            border: `1px solid ${validResult.ok ? 'rgba(99,200,120,0.2)' : 'rgba(255,80,80,0.18)'}`,
+            color: validResult.ok ? 'rgba(130,230,150,0.85)' : '#ff8080',
+          }}>
+            {validResult.ok ? '✓ ' : '✗ '}{validResult.message}
+          </div>
+        )}
+
+        {/* Buttons */}
+        <div style={{ display: 'flex', gap: 6 }}>
+          <button onClick={handleValidate} disabled={validating || !latex.trim()} style={{
+            flex: 1, padding: '6px 0', borderRadius: T.radiusSm,
+            border: `1px solid ${T.border}`, background: 'rgba(180,160,255,0.06)',
+            color: latex.trim() ? T.muted : T.dim, fontSize: 11, fontFamily: T.mono,
+            cursor: latex.trim() ? 'pointer' : 'not-allowed',
+            opacity: latex.trim() ? 1 : 0.5, transition: 'all 0.15s',
+          }}>
+            {validating ? '…' : 'validate'}
+          </button>
+          <button onClick={handleSave} disabled={saving || !canSave} style={{
+            flex: 1, padding: '6px 0', borderRadius: T.radiusSm,
+            border: `1px solid ${canSave ? 'rgba(180,160,255,0.3)' : T.border}`,
+            background: canSave ? T.accentSoft : 'rgba(0,0,0,0.2)',
+            color: canSave ? T.accent : T.dim,
+            fontWeight: canSave ? 600 : 400, fontSize: 11, fontFamily: T.mono,
+            cursor: canSave ? 'pointer' : 'not-allowed', transition: 'all 0.15s',
+          }}>
+            {saving ? '…' : 'save'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ── Traffic light (bigger) ─────────────────────────────────────────────────
 function TrafficLight({ color, hoverColor, onClick, symbol }) {
   const [hov, setHov] = useState(false)
@@ -504,7 +729,8 @@ function CoefficientsCard({ params, set, isElectron }) {
 }
 
 // ── Sidebar ────────────────────────────────────────────────────────────────
-function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, selectedHistory, onSelectHistory }) {
+function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, selectedHistory, onSelectHistory,
+                   userFunctions, onSaveUserFn, onDeleteUserFn }) {
   const groups   = [...new Set(FUNCTIONS.map(f => f.group))]
   const gridPts  = Math.ceil((params.xmax - params.xmin) / params.resolution)
                * Math.ceil((params.ymax - params.ymin) / params.resolution)
@@ -554,6 +780,15 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, 
                     ))}
                   </optgroup>
                 ))}
+                {userFunctions?.length > 0 && (
+                  <optgroup label="My Functions">
+                    {userFunctions.map(f => (
+                      <option key={f.id} value={f.id} style={{ background: '#13112a' }}>
+                        {f.id}. {f.name}
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
               </select>
             </div>
             <div>
@@ -728,6 +963,16 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, 
 
           </Section>
 
+          {/* ── Section: Custom Functions ── */}
+          <Section title="Custom Functions" defaultOpen={false}>
+            <CustomFunctionSection
+              userFunctions={userFunctions || []}
+              onSave={onSaveUserFn}
+              onDelete={onDeleteUserFn}
+              isElectron={isElectron}
+            />
+          </Section>
+
           {/* ── Section: History ── */}
           {history.length > 0 && (
             <Section title="History" defaultOpen={true}>
@@ -791,7 +1036,7 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, 
 }
 
 // ── Plot area ──────────────────────────────────────────────────────────────
-function PlotArea({ result, loading, selectedHistory }) {
+function PlotArea({ result, loading, selectedHistory, functionId, formulasMap, userFunctions }) {
   const shown = selectedHistory ?? result
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
@@ -842,6 +1087,13 @@ function PlotArea({ result, loading, selectedHistory }) {
         )}
       </div>
 
+      {/* Formula bar */}
+      <FormulaBar
+        functionId={functionId}
+        formulasMap={formulasMap}
+        userFunctions={userFunctions}
+      />
+
       {/* Status bar */}
       <div style={{
         height: 24, background: 'rgba(5,5,14,0.96)',
@@ -871,13 +1123,32 @@ export default function App() {
   const [selectedHistory, setSelectedHistory] = useState(null)
   const [isElectron, setIsElectron]           = useState(false)
   const [sidebarOpen, setSidebarOpen]         = useState(true)
+  const [userFunctions, setUserFunctions]     = useState([])
+  const [formulasMap,   setFormulasMap]       = useState({})
 
   useEffect(() => { setIsElectron(!!window.electronAPI) }, [])
 
   useEffect(() => {
     if (!isElectron) return
     window.electronAPI.listPlots().then(r => { if (r.success) setHistory(r.files) })
+    // Load formula map from Python (NumpyToLatex.all_formulas)
+    window.electronAPI.getAllFormulas().then(r => { if (r.success) setFormulasMap(r.formulas) })
+    // Load user-defined functions
+    window.electronAPI.listUserFunctions().then(r => { if (r.success) setUserFunctions(r.functions) })
   }, [isElectron])
+
+  const reloadUserFunctions = useCallback(() => {
+    if (!isElectron) return
+    window.electronAPI.listUserFunctions().then(r => { if (r.success) setUserFunctions(r.functions) })
+  }, [isElectron])
+
+  const deleteUserFunction = useCallback(async (id) => {
+    if (!isElectron) return
+    await window.electronAPI.deleteUserFunction(id)
+    // If the deleted function is currently selected, fall back to fn 1
+    setParams(p => p.functionId === id ? { ...p, functionId: '1' } : p)
+    reloadUserFunctions()
+  }, [isElectron, reloadUserFunctions])
 
   const set = key => val => setParams(p => ({ ...p, [key]: val }))
 
@@ -917,11 +1188,17 @@ export default function App() {
           history={history}
           selectedHistory={selectedHistory}
           onSelectHistory={h => { setSelectedHistory(h); setResult(null) }}
+          userFunctions={userFunctions}
+          onSaveUserFn={reloadUserFunctions}
+          onDeleteUserFn={deleteUserFunction}
         />
         <PlotArea
           result={result}
           loading={loading}
           selectedHistory={selectedHistory}
+          functionId={params.functionId}
+          formulasMap={formulasMap}
+          userFunctions={userFunctions}
         />
       </div>
 

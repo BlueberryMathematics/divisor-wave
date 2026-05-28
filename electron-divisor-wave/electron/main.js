@@ -6,9 +6,11 @@ const DEV = !app.isPackaged
 const START_URL = DEV ? 'http://localhost:3000' : `file://${path.join(__dirname, '../out/index.html')}`
 
 // Paths relative to this file (electron/main.js)
-const ROOT = path.resolve(__dirname, '..', '..')
-const PYTHON_CLI = path.join(ROOT, 'python-divisor-wave', 'plot_cli.py')
-const OUTPUT_DIR = path.join(ROOT, 'plot-outputs')
+const ROOT              = path.resolve(__dirname, '..', '..')
+const PYTHON_CLI        = path.join(ROOT, 'python-divisor-wave', 'plot_cli.py')
+const FORMULA_BRIDGE    = path.join(ROOT, 'python-divisor-wave', 'formula_bridge.py')
+const OUTPUT_DIR        = path.join(ROOT, 'plot-outputs')
+const USER_FUNCTIONS_FILE = path.join(ROOT, 'user_functions.json')
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -165,5 +167,105 @@ ipcMain.handle('list-plots', async () => {
     return { success: true, files }
   } catch {
     return { success: true, files: [] }
+  }
+})
+
+// ── IPC: get all LaTeX formulas (for formula bar) ──────────────────────────
+ipcMain.handle('get-all-formulas', async () => {
+  return new Promise((resolve) => {
+    const fs = require('fs')
+    const venvPy     = path.join(ROOT, 'venv', 'Scripts', 'python.exe')
+    const venvPyUnix = path.join(ROOT, 'venv', 'bin', 'python')
+    const pythonCmd  = fs.existsSync(venvPy) ? venvPy
+                     : fs.existsSync(venvPyUnix) ? venvPyUnix
+                     : 'python'
+
+    let stdout = '', stderr = ''
+    const proc = spawn(pythonCmd, [FORMULA_BRIDGE, '--all-formulas'])
+    proc.stdout.on('data', d => { stdout += d.toString() })
+    proc.stderr.on('data', d => { stderr += d.toString() })
+    proc.on('close', () => {
+      try { resolve(JSON.parse(stdout.trim().split('\n').pop())) }
+      catch { resolve({ success: false, error: stderr || 'parse error' }) }
+    })
+    proc.on('error', err => resolve({ success: false, error: err.message }))
+  })
+})
+
+// ── IPC: validate a LaTeX term expression ──────────────────────────────────
+ipcMain.handle('validate-user-function', async (_event, latex) => {
+  return new Promise((resolve) => {
+    const fs = require('fs')
+    const venvPy     = path.join(ROOT, 'venv', 'Scripts', 'python.exe')
+    const venvPyUnix = path.join(ROOT, 'venv', 'bin', 'python')
+    const pythonCmd  = fs.existsSync(venvPy) ? venvPy
+                     : fs.existsSync(venvPyUnix) ? venvPyUnix
+                     : 'python'
+
+    let stdout = '', stderr = ''
+    const proc = spawn(pythonCmd, [FORMULA_BRIDGE, '--validate', latex])
+    proc.stdout.on('data', d => { stdout += d.toString() })
+    proc.stderr.on('data', d => { stderr += d.toString() })
+    proc.on('close', () => {
+      try { resolve(JSON.parse(stdout.trim().split('\n').pop())) }
+      catch { resolve({ success: false, error: stderr || 'parse error', message: '' }) }
+    })
+    proc.on('error', err => resolve({ success: false, error: err.message, message: '' }))
+  })
+})
+
+// ── IPC: list user-defined functions ──────────────────────────────────────
+ipcMain.handle('list-user-functions', async () => {
+  const fs = require('fs')
+  try {
+    if (!fs.existsSync(USER_FUNCTIONS_FILE))
+      return { success: true, functions: [] }
+    const data = JSON.parse(fs.readFileSync(USER_FUNCTIONS_FILE, 'utf8'))
+    return { success: true, functions: data.functions || [] }
+  } catch (e) {
+    return { success: false, error: e.message, functions: [] }
+  }
+})
+
+// ── IPC: save (add / update) a user-defined function ─────────────────────
+ipcMain.handle('save-user-function', async (_event, fn) => {
+  const fs = require('fs')
+  try {
+    let data = { functions: [] }
+    if (fs.existsSync(USER_FUNCTIONS_FILE))
+      data = JSON.parse(fs.readFileSync(USER_FUNCTIONS_FILE, 'utf8'))
+
+    // Assign a new 'u<N>' ID if this is a new function
+    if (!fn.id) {
+      const maxN = data.functions.reduce((mx, f) => {
+        const n = parseInt(String(f.id).replace('u', ''), 10)
+        return isNaN(n) ? mx : Math.max(mx, n)
+      }, 0)
+      fn = { ...fn, id: `u${maxN + 1}` }
+    }
+
+    const idx = data.functions.findIndex(f => f.id === fn.id)
+    if (idx >= 0) data.functions[idx] = fn
+    else          data.functions.push(fn)
+
+    fs.writeFileSync(USER_FUNCTIONS_FILE, JSON.stringify(data, null, 2))
+    return { success: true, id: fn.id }
+  } catch (e) {
+    return { success: false, error: e.message }
+  }
+})
+
+// ── IPC: delete a user-defined function ───────────────────────────────────
+ipcMain.handle('delete-user-function', async (_event, id) => {
+  const fs = require('fs')
+  try {
+    if (!fs.existsSync(USER_FUNCTIONS_FILE))
+      return { success: true }
+    const data = JSON.parse(fs.readFileSync(USER_FUNCTIONS_FILE, 'utf8'))
+    data.functions = data.functions.filter(f => f.id !== id)
+    fs.writeFileSync(USER_FUNCTIONS_FILE, JSON.stringify(data, null, 2))
+    return { success: true }
+  } catch (e) {
+    return { success: false, error: e.message }
   }
 })

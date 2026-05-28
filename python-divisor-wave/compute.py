@@ -509,6 +509,63 @@ def _power_stretch(W, p):
     return np.where(np.isfinite(out), out, 0.0)
 
 
+# ── Load user-defined functions from JSON ─────────────────────────────────
+def _load_user_functions():
+    """
+    Read user_functions.json from the repo root, compile each LaTeX term
+    with LatexToNumpy, and register the result in _VECTORIZED / _DEFAULTS.
+
+    Safe to call at import time — failures are silently skipped.
+    """
+    import json as _json
+    _ufpath = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           '..', 'user_functions.json')
+    if not os.path.exists(_ufpath):
+        return
+
+    try:
+        with open(_ufpath, 'r', encoding='utf-8') as _f:
+            _data = _json.load(_f)
+    except Exception:
+        return
+
+    try:
+        from formula_bridge import LatexToNumpy
+        _ltn = LatexToNumpy()
+    except Exception:
+        return
+
+    for _fn in _data.get('functions', []):
+        _fid   = str(_fn.get('id', ''))
+        _latex = _fn.get('latex', '')
+        _defs  = _fn.get('defaults', {})
+        _m_d   = float(_defs.get('m',    0.0125))
+        _b_d   = float(_defs.get('beta', 0.054))
+
+        if not _fid or not _latex:
+            continue
+
+        try:
+            _term = _ltn.make_term_fn(_latex)
+        except Exception as _e:
+            import warnings as _w
+            _w.warn(f'compute: skip user fn {_fid!r}: {_e}')
+            continue
+
+        # Capture loop variables in closure
+        def _make_vec_fn(_tf, _md, _bd):
+            def _user_vec(X, Y, m, beta, normalize):
+                return _single(X, Y, m, beta, normalize,
+                               lambda Z3, k, X3: _tf(Z3, k, X3, beta=beta))
+            return _user_vec
+
+        _VECTORIZED[_fid] = _make_vec_fn(_term, _m_d, _b_d)
+        _DEFAULTS[_fid]   = {'both': (_m_d, _b_d)}
+
+
+_load_user_functions()
+
+
 # ── Public entry point ─────────────────────────────────────────────────────
 def compute_grid(function_id, normalize, X, Y, m_override=None, beta_override=None,
                  col_normalize=False, power_stretch=1.0):

@@ -72,6 +72,25 @@ FUNCTION_NAMES = {
 }
 
 
+def _load_user_function_names():
+    """Load user-defined function names from user_functions.json."""
+    try:
+        _ufpath = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                               '..', 'user_functions.json')
+        if not os.path.exists(_ufpath):
+            return {}
+        with open(_ufpath, 'r', encoding='utf-8') as _f:
+            _data = json.load(_f)
+        return {str(_fn['id']): _fn['name']
+                for _fn in _data.get('functions', [])
+                if 'id' in _fn and 'name' in _fn}
+    except Exception:
+        return {}
+
+
+FUNCTION_NAMES.update(_load_user_function_names())
+
+
 class _SFWithOverrides(Special_Functions):
     """
     Thin subclass that intercepts self.m and self.beta assignments inside each
