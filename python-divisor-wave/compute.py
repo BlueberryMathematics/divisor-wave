@@ -33,7 +33,7 @@ import math
 import warnings
 import numpy as np
 import scipy.special
-from concurrent.futures import ProcessPoolExecutor, as_completed
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 
 
 # ── Default m / beta per function ──────────────────────────────────────────
@@ -437,6 +437,46 @@ def _parallel_scalar(function_id, normalize, X, Y, m_override, beta_override):
     return result.reshape(X.shape)
 
 
+# ── Threaded vectorized execution ─────────────────────────────────────────
+def _threaded_vec(vec_fn, X, Y, m, beta, normalize):
+    """
+    Split the grid into row-chunks and run vec_fn on each chunk in parallel
+    threads.  NumPy releases the GIL during C-level operations, so threads
+    genuinely run on separate CPU cores with no pickling overhead.
+    """
+    n_threads = max(1, os.cpu_count() or 1)
+    rows      = X.shape[0]
+
+    # No point spawning more threads than there are rows.
+    n_threads = min(n_threads, rows)
+    if n_threads <= 1:
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            return vec_fn(X, Y, m, beta, normalize)
+
+    chunk_size = math.ceil(rows / n_threads)
+    slices     = range(0, rows, chunk_size)
+    results    = [None] * len(list(slices))
+
+    def _run(idx, r_start, r_end):
+        Xc = X[r_start:r_end, :]
+        Yc = Y[r_start:r_end, :]
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            return idx, vec_fn(Xc, Yc, m, beta, normalize)
+
+    with ThreadPoolExecutor(max_workers=n_threads) as pool:
+        futures = [
+            pool.submit(_run, idx, r, min(r + chunk_size, rows))
+            for idx, r in enumerate(range(0, rows, chunk_size))
+        ]
+        for fut in futures:
+            idx, chunk_result = fut.result()
+            results[idx] = chunk_result
+
+    return np.vstack(results)
+
+
 # ── Public entry point ─────────────────────────────────────────────────────
 def compute_grid(function_id, normalize, X, Y, m_override=None, beta_override=None):
     """
@@ -459,9 +499,7 @@ def compute_grid(function_id, normalize, X, Y, m_override=None, beta_override=No
 
     vec_fn = _VECTORIZED.get(fid)
     if vec_fn is not None:
-        with warnings.catch_warnings():
-            warnings.simplefilter('ignore')
-            return vec_fn(X, Y, m, beta, normalize)
+        return _threaded_vec(vec_fn, X, Y, m, beta, normalize)
     else:
-        # Scalar parallel fallback (fn 3, 15-18, 30-32)
+        # Scalar parallel fallback via processes (fn 3, 15-18, 30-32)
         return _parallel_scalar(fid, normalize, X, Y, m_override, beta_override)
