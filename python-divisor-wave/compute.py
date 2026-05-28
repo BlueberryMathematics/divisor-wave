@@ -97,11 +97,11 @@ def _prod_abs(terms, valid):
     return np.abs(np.prod(np.where(valid, terms, 1.0 + 0j), axis=0))
 
 def _finalize(raw_abs, m, normalize):
+    # normalize='Y' is now handled globally in compute_grid on the assembled
+    # grid — NOT here. W/Γ(W) per-chunk made trailing-off worse because
+    # Γ(W)→∞ as W→0⁺, which is exactly the regime at large x.
     with np.errstate(all='ignore'):
         W = raw_abs.real ** (-m)
-    if normalize == 'Y':
-        with np.errstate(all='ignore'):
-            W = W / scipy.special.gamma(W)
     return np.where(np.isfinite(W), W, 0.0)
 
 
@@ -199,9 +199,6 @@ def _fn11(X, Y, m, beta, normalize):
     Z3 = Z[None, ...];  X3 = X[None, ...]
     inner = _prod_abs(beta * (X3 / k) * np.sin(np.pi * Z3 / k), v) ** (-m)
     W = np.cos(inner)
-    if normalize == 'Y':
-        with np.errstate(all='ignore'):
-            W = W / scipy.special.gamma(W)
     return np.where(np.isfinite(W), W, 0.0)
 
 def _fn12(X, Y, m, beta, normalize):
@@ -211,9 +208,6 @@ def _fn12(X, Y, m, beta, normalize):
     Z3 = Z[None, ...];  X3 = X[None, ...]
     inner = _prod_abs(beta * (X3 / k) * np.sin(np.pi * Z3 / k), v) ** (-m)
     W = np.sin(inner)
-    if normalize == 'Y':
-        with np.errstate(all='ignore'):
-            W = W / scipy.special.gamma(W)
     return np.where(np.isfinite(W), W, 0.0)
 
 def _fn13(X, Y, m, beta, normalize):
@@ -228,9 +222,6 @@ def _fn13(X, Y, m, beta, normalize):
         acc  = np.where(n_ok, acc * term, acc)
     with np.errstate(all='ignore'):
         W = np.cos(np.abs(acc)) ** (-m)
-    if normalize == 'Y':
-        with np.errstate(all='ignore'):
-            W = W / scipy.special.gamma(W)
     return np.where(np.isfinite(W), W, 0.0)
 
 def _fn14(X, Y, m, beta, normalize):
@@ -245,9 +236,6 @@ def _fn14(X, Y, m, beta, normalize):
         acc  = np.where(n_ok, acc * term, acc)
     with np.errstate(all='ignore'):
         W = np.sin(np.abs(acc)) ** (-m)
-    if normalize == 'Y':
-        with np.errstate(all='ignore'):
-            W = W / scipy.special.gamma(W)
     return np.where(np.isfinite(W), W, 0.0)
 
 def _fn19(X, Y, m, beta, normalize):
@@ -477,6 +465,39 @@ def _threaded_vec(vec_fn, X, Y, m, beta, normalize):
     return np.vstack(results)
 
 
+# ── Global normalization ───────────────────────────────────────────────────
+def _normalize_global(W):
+    """
+    Normalize the fully-assembled grid so every feature is visible regardless
+    of x position.
+
+    Why the old W/Γ(W) approach failed
+    ────────────────────────────────────
+    W/Γ(W) was applied per-chunk in _finalize.  For large x the running product
+    accumulates many small terms so W → 0⁺.  Γ(W) → ∞ as W → 0⁺, making
+    W/Γ(W) → 0 — which amplifies the trailing off instead of correcting it.
+
+    What we do instead
+    ───────────────────
+    1. log1p(W) compresses the dynamic range (tall spikes don't drown small ones).
+    2. Percentile stretch [2 %, 98 %] maps the bulk of the signal to [0, 1],
+       leaving clipped outliers at 0 or 1 without distorting the middle.
+    """
+    W = np.where(np.isfinite(W) & (W >= 0), W, 0.0)
+    if not W.any():
+        return W
+    with np.errstate(all='ignore'):
+        L = np.log1p(W)
+    pos = L[L > 0]
+    if len(pos) == 0:
+        return W
+    lo = float(np.percentile(pos, 2))
+    hi = float(np.percentile(pos, 98))
+    if hi <= lo:
+        return W
+    return np.clip((L - lo) / (hi - lo), 0.0, 1.0)
+
+
 # ── Public entry point ─────────────────────────────────────────────────────
 def compute_grid(function_id, normalize, X, Y, m_override=None, beta_override=None):
     """
@@ -499,7 +520,11 @@ def compute_grid(function_id, normalize, X, Y, m_override=None, beta_override=No
 
     vec_fn = _VECTORIZED.get(fid)
     if vec_fn is not None:
-        return _threaded_vec(vec_fn, X, Y, m, beta, normalize)
+        W = _threaded_vec(vec_fn, X, Y, m, beta, normalize)
     else:
         # Scalar parallel fallback via processes (fn 3, 15-18, 30-32)
-        return _parallel_scalar(fid, normalize, X, Y, m_override, beta_override)
+        W = _parallel_scalar(fid, normalize, X, Y, m_override, beta_override)
+
+    if normalize == 'Y':
+        W = _normalize_global(W)
+    return W
