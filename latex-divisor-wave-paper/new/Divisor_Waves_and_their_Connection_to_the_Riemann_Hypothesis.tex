@@ -1,4 +1,5 @@
 \documentclass{article}
+\PassOptionsToPackage{draft}{graphicx}
 \usepackage[left=2cm, right=2cm, top=2cm, bottom=3cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -31,7 +32,10 @@
 \newcommand{\sidesum}[2]{\displaystyle\sum\nolimits_{\scriptstyle #1}^{\scriptstyle #2}}
 
 \setlength{\parindent}{0mm}
+\setcounter{secnumdepth}{-1}
+\setcounter{tocdepth}{2}
 
+\usepackage{xcolor}
 \usepackage[draft]{graphicx}
 \graphicspath{ {graphs/} }
 
@@ -40,10 +44,42 @@
 \title{Divisor Wave Product Analysis of Prime and Composite Numbers}
 \author{Leo J. Borcherding}
 \date{May 2026}
-\maketitle
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+\thispagestyle{empty}
+\vspace*{1.0cm}
+\begin{center}
+  {\fontsize{26}{32}\selectfont\bfseries Divisor Wave Product Analysis}\\[0.25em]
+  {\fontsize{20}{26}\selectfont of Prime and Composite Numbers}\\[0.9em]
+  {\large\textsc{Leo J. Borcherding}}\\[0.2em]
+  {\normalsize\itshape May 2026}
+\end{center}
+\begingroup
+  \setkeys{Gin}{draft=false}%
+  \par\noindent\rule{\linewidth}{2pt}\par
+  \centering
+  \includegraphics[width=\linewidth, height=5.6cm, keepaspectratio]%
+    {C:/blueberry_math/divisor-wave/latex-divisor-wave-paper/plots_for_paper/FigureB_redone}
+  \vspace{3pt}\par\noindent\rule{\linewidth}{2pt}\par\noindent\rule{\linewidth}{2pt}\vspace{3pt}
+  \includegraphics[width=\linewidth, height=5.6cm, keepaspectratio]%
+    {C:/blueberry_math/divisor-wave/latex-divisor-wave-paper/plots_for_paper/plot2d_fn2_20260528_041834}
+  \vspace{3pt}\par\noindent\rule{\linewidth}{2pt}\par\noindent\rule{\linewidth}{2pt}\vspace{3pt}
+  \includegraphics[width=\linewidth, height=5.6cm, keepaspectratio]%
+    {C:/blueberry_math/divisor-wave/latex-divisor-wave-paper/plots_for_paper/plot2d_fn2_20260528_005651_3}
+  \vspace{3pt}\par\noindent\rule{\linewidth}{2pt}
+\endgroup
+\vspace{0.6em}
+\begin{center}
+  {\large\itshape ``What if sine waves could find primes?''}
+\end{center}
+\vfill
+\end{titlepage}
+\hypersetup{pageanchor=true}
+\tableofcontents
+\newpage
 
 \begin{abstract}
-We introduce and study a family of complex-valued functions constructed from infinite products of \emph{divisor waves} — oscillatory terms of the form $|\sin(\pi z/k)|$ indexed by integers $k \geq 2$. The product function $a(z)$ encodes the divisor structure of the integers through its zero set, while its Weierstrass-factored counterpart $b(z)$ serves as a prime indicator, vanishing precisely at composite integers and remaining nonzero at primes. Normalizing via factorial damping produces the binary prime indicator $B(z)$. By combining these functions with Riesz products, Viète-type products, and nested-root identities, we construct a hierarchy of prime-sieving functions: the Binary Output Prime Indicator Function $H(z)$, the base-10 prime output function $J(z)$, and a family of alternating combinatorial series $L(z)$--$Q(z)$ whose sign patterns mirror the Euler product factors of the Dirichlet eta function $\eta(s)$. The construction culminates in a holomorphic divisor wave product $S_1(z)$ that reproduces the Euler product of $\eta(s)$ term-for-term over the primes. The connection to the Riemann Hypothesis is discussed through the critical strip structure of $\eta(s)$.
+We present a unifying sum-product duality underlying classical analysis, connecting the Riemann integral, the product integral, and the logarithm identity $\ln(\prod f) = \sum \ln(f)$, and demonstrate that this framework applied systematically to divisor waves built from the Weierstrass product for sine naturally encodes the structure of prime numbers through zeros, reproduces Viète's formula for $\pi$, and recovers the Euler product for the Dirichlet eta function $\eta(s)$ term-for-term. The four identities of this framework, which we call the First Fundamental Theorem of Analysis, underpin the entirety of the constructions in this paper yet are rarely presented together even in advanced mathematical texts. Applying the framework to infinite products of divisor waves $|\sin(\pi z/k)|$ yields $a(z)$, a function encoding all integer divisors through its zero set, and its Weierstrass-factored counterpart $b(z)$, which vanishes precisely at composite integers and is nonzero at primes. Factorial normalization produces the binary prime indicator $B(z)$. Combining these with Riesz products, Viète-type products, and nested-root identities, all unified under the sum-product duality, produces a hierarchy of prime-sieving functions culminating in $S_1(z)$, a holomorphic divisor wave product satisfying $S_1(s) = \eta(s)$ term-for-term over the primes. The connection to the Riemann Hypothesis is discussed through the critical strip structure of $\eta(s)$.
 \end{abstract}
 
 \medskip
@@ -52,14 +88,20 @@ We introduce and study a family of complex-valued functions constructed from inf
 
 \medskip
 
-\subsection*{Introduction}
-The sieve of Eratosthenes identifies primes by eliminating multiples of each integer; divisor wave analysis realizes this same sieve through the vanishing structure of oscillatory functions. For each integer $k \geq 2$, the \emph{divisor wave} $a_k(x) = |\alpha(x/k)\sin(\pi x/k)|$ vanishes at every multiple of $k$. Taking the infinite product over all $k \geq 2$ produces a function $a(z)$ that vanishes at every integer, but with a geometric signature that distinguishes primes from composites: at a prime $p$, only $a_p$ contributes a zero, yielding a sharp cusp; at a composite, multiple waves cocontribute, producing a smooth depression.
+\subsection{Introduction}
+At the heart of this paper is a single foundational observation: there exists a duality between summation and multiplication that runs through all of classical analysis, yet is almost never stated explicitly. The logarithm identity $\ln(\prod f) = \sum \ln(f)$, the product integral $\prod[f(x)]^{dx} = e^{\int f(x)dx}$, and their discrete and continuous counterparts form a complete framework, the First Fundamental Theorem of Analysis, that interconverts every infinite product into an infinite sum and vice versa. This framework is the operating system on which the entire paper runs.
 
-Replacing each sine factor by its Weierstrass infinite product shifts the zeros from all integers to the composites, yielding the prime indicator function $b(z)$: a factor $(1 - z^2/n^2k^2)$ vanishes exactly when $z = nk$, which is a composite factorization. Factorial normalization converts the resulting explosive growth into a clean binary indicator $B(z)$ with $B(z) = 0$ at composites and $B(z) \neq 0$ at primes.
+Applied to divisor waves, the sum-product duality transforms the Sieve of Eratosthenes into an analytic object. The sieve of Eratosthenes identifies primes by eliminating multiples of each integer; divisor wave analysis realizes this same sieve through the vanishing structure of oscillatory functions. For each integer $k \geq 2$, the \emph{divisor wave} $a_k(x) = |\alpha(x/k)\sin(\pi x/k)|$ vanishes at every multiple of $k$. Taking the infinite product over all $k \geq 2$ produces a function $a(z)$ that vanishes at every integer, but with a geometric signature that distinguishes primes from composites: at a prime $p$, only $a_p$ contributes a zero, yielding a sharp cusp; at a composite, multiple waves cocontribute, producing a smooth depression.
 
-The paper develops this program through seventeen sections. Sections~I--VI establish $a(z)$, $b(z)$, $A(z)$, and $B(z)$ and prove their prime indicator properties via explicit Lemmas. Sections~VII--X introduce Riesz products $C(z)$--$E(z)$ and combine them with $B(z)$ to form the composite-zero indicator $T(z)$. Sections~XI--XIII develop nested-root identities, Viète-type products extended to the complex plane, and gamma--sine identities. Sections~XIV--XV construct $H(z)$ and $J(z)$, which output prime membership in binary and base-10 respectively. Sections~XVI--XVII connect the alternating-sign combinatorics of $L(z)$--$Q(z)$ to the Euler product for $\eta(s)$, culminating in $S_1(z) = \eta(s)$ and the attendant discussion of the Riemann Hypothesis.
+Replacing each sine factor by its Weierstrass infinite product, itself an instance of the product-to-sum duality applied to $\sin$, shifts the zeros from all integers to the composites, yielding the prime indicator function $b(z)$: a factor $(1 - z^2/n^2k^2)$ vanishes exactly when $z = nk$, which is a composite factorization. Factorial normalization converts the resulting explosive growth into a clean binary indicator $B(z)$ with $B(z) = 0$ at composites and $B(z) \neq 0$ at primes.
 
-\subsection*{Notation and Function Summary}
+The genesis of this work was a simple question: since sine waves have infinitely many zeros, could they be used to locate primes? Each zero of $\sin(\pi x/k)$ falls at a multiple of $k$, so a product of such waves over all $k \geq 2$ would vanish at every composite — leaving primes geometrically distinguished. This intuition, pursued from first principles through the divisor wave construction, is what the paper formalizes.
+
+During the development of Section~IV, the independent work of Preemen \cite{preemen2020wave} was discovered, in which divisor waves are expressed as an infinite summation of cosine waves rather than a product. The existence of this parallel formulation, arrived at entirely independently and from the opposite direction, confirms that the divisor wave construction reflects genuine mathematical structure rather than an arbitrary choice of representation. Preemen concluded that his background was too limited to take the construction further; the product formulation developed here is what enables the Weierstrass substitution, the prime indicator, and ultimately the connection to $\eta(s)$.
+
+The paper develops this program through fourteen sections. Section~I establishes the foundational sum-product duality framework. Sections~II--III introduce the divisor waves $a_k(x)$, their product $a(z)$, and its normalized form $A(z)$. Section~IV derives $b(z)$ from the Weierstrass product, and Section~V introduces both $b(z)$ and its normalized prime indicator $B(z)$. Section~VI introduces the Riesz products $C(z)$, $D(z)$, and $E(z)$ in a unified section, and Section~VII combines them with $B(z)$ to form $T(z)$. Sections~VIII--X develop nested-root identities, Viète-type products, and gamma--sine identities. Sections~XI--XII construct $H(z)$ and $J(z)$, which output prime membership in binary and base-10 respectively. Sections~XIII--XIV connect the alternating-sign combinatorics of $L(z)$--$Q(z)$ to the Euler product for $\eta(s)$, culminating in $S_1(z) = \eta(s)$ and the attendant discussion of the Riemann Hypothesis.
+
+\subsection{Notation and Function Summary}
 
 Table~\ref{tab:notation} collects the principal symbols and functions introduced throughout the paper. All functions take a complex argument $z = x + iy$ unless otherwise noted; integer-valued prime/composite tests are performed at positive integer inputs $n \geq 2$. The free parameters $\alpha, \beta \in (0, 2)$ are global amplitude coefficients and $m > 0$ is the factorial normalization exponent; their values affect peak heights and inter-integer behaviour but not the zero sets that determine prime/composite classification.
 
@@ -70,33 +112,87 @@ Table~\ref{tab:notation} collects the principal symbols and functions introduced
 Symbol & Section & Key property / role \\
 \midrule
 $z = x + iy$ & — & Complex variable; $x = \operatorname{Re}(z)$, $y = \operatorname{Im}(z)$ \\
-$\alpha \in (0,2)$ & II & Amplitude parameter for $a(z)$ \\
+$\alpha \in (0,2)$ & III & Amplitude parameter for $a(z)$ \\
 $\beta \in (0,2)$ & V & Amplitude parameter for $b(z)$ \\
 $m > 0$ & III & Exponent in factorial normalization \\
 \midrule
-$a_k(x)$ & I & Divisor wave of order $k$; zeros at multiples of $k$ \\
-$a(z)$ & II & Product of all $a_k$; zeros at every integer $\geq 2$ \\
+$a_k(x)$ & II & Divisor wave of order $k$; zeros at multiples of $k$ \\
+$a(z)$ & III & Product of all $a_k$; zeros at every integer $\geq 2$ \\
 $A(z)$ & III & Factorial-normalized $a(z)$; same zero set, bounded peaks \\
 $b(z)$ & V & Weierstrass-product form; zeros at composites, nonzero at primes \\
-$B(z)$ & VI & Factorial-normalized $b(z)$; binary prime indicator \\
-$C(z)$ & VII & Riesz product of sine; peaks at integers \\
-$D(z)$ & VIII & Riesz product of cosine; troughs at integers \\
-$E(z)$ & IX & Riesz product of tangent; alternating inter-integer poles \\
-$T(z)$ & X & $E(z) \cdot B(z)$; zeros at composites, Riesz ruler between integers \\
-$j(z),\, k(z)$ & XI & Nested-root additive / multiplicative pair \\
-$H(z)$ & XIV & Binary Output Prime Indicator: $H(n) = 0$ (prime), $1$ (composite) \\
-$J_1(z)$ & XV & Base-10 prime output: $J_1(n) = n$ (prime), $0$ (composite) \\
-$J_2(z)$ & XV & Base-10 composite output: $J_2(n) = n$ (composite), $0$ (prime) \\
-$L,M,N,O,P,Q_1$ & XVI & Alternating combinatorial series; sign patterns mirror $\eta(s)$ factors \\
-$R_1(z)$ & XVII & First divisor wave approximation to the Euler product of $\eta(s)$ \\
-$S_1(z)$ & XVII & Holomorphic divisor wave product; $S_1(s) = \eta(s)$ term-for-term \\
+$B(z)$ & V & Factorial-normalized $b(z)$; binary prime indicator \\
+$C(z)$ & VI & Riesz product of sine; peaks at integers \\
+$D(z)$ & VI & Riesz product of cosine; troughs at integers \\
+$E(z)$ & VI & Riesz product of tangent; alternating inter-integer poles \\
+$T(z)$ & VII & $E(z) \cdot B(z)$; zeros at composites, Riesz ruler between integers \\
+$j(z),\, k(z)$ & VIII & Nested-root additive / multiplicative pair \\
+$H(z)$ & XI & Binary Output Prime Indicator: $H(n) = 0$ (prime), $1$ (composite) \\
+$J_1(z)$ & XII & Base-10 prime output: $J_1(n) = n$ (prime), $0$ (composite) \\
+$J_2(z)$ & XII & Base-10 composite output: $J_2(n) = n$ (composite), $0$ (prime) \\
+$L,M,N,O,P,Q_1$ & XIII & Alternating combinatorial series; sign patterns mirror $\eta(s)$ factors \\
+$R_1(z)$ & XIV & First divisor wave approximation to the Euler product of $\eta(s)$ \\
+$S_1(z)$ & XIV & Holomorphic divisor wave product; $S_1(s) = \eta(s)$ term-for-term \\
 \bottomrule
 \end{tabular}
-\caption{Principal symbols and functions. All factorial expressions $t\,!$ use $\Gamma(t+1)$ for non-integer $t$ (see Remark in Section~III).}
+\caption{Principal symbols and functions. All factorial expressions $t\,!$ use $\Gamma(t+1)$ for non-integer $t$ (see Remark in Section~II).}
 \label{tab:notation}
 \end{table}
 
-\subsection*{I. Divisor Wave Analysis of $a(z)$ with the $a_k(x)$ Series}
+\newpage
+\subsection{I. The Sum-Product Duality: First Fundamental Theorem of Analysis}
+
+The following four identities form the conceptual backbone of this paper. The product integral framework underlying identities 2--4 is developed in \cite{bashirov2008multiplicative,slavik2007product}. These laws underpin the entirety of mathematics, and in many cases the three identities beyond the first are rarely taught or learned even by mathematics professionals.
+
+\begin{align*}
+\SumInt_{a}^{b} f(x)\,dx = \lim_{n \to \infty}\!\left(\sum_{k=1}^{n} \left[f(x)_{k}\,\Delta x_{k}\right]\right)
+\end{align*}
+The limit definition of the summation integral uses the standard Riemann construction. The new notation introduced here differentiates it from the product integral, which is currently defined with inconsistent notation across most texts.
+
+\begin{align*}
+\ProdInt_{a}^{b} [f(x)]^{dx} = \lim_{n \to \infty}\!\left(\prod_{k=1}^{n} \left[(f(x)_{k})^{\Delta x_{k}}\right]\right)
+\end{align*}
+The product integral follows the same limit construction as the summation integral, but with an exponential infinitesimal rather than a coefficient infinitesimal; multiplication replaces addition at every level.
+
+\begin{align*}
+\ProdInt_{a}^{b} [f(x)]^{dx} = e^{\,\SumInt_{a}^{b} f(x)\,dx}
+\end{align*}
+This is the key conversion identity: every summation integral has a multiplicative shadow, and every product integral has a logarithmic sum. The Weierstrass product theory, Viète's formula, and the Euler product for $\eta(s)$ are all instances of this identity.
+
+\begin{align*}
+\ln\!\left(\prod_{x=a}^{b} [f(x)]\right) = \sum_{x=a}^{b} [\ln(f(x))]
+\end{align*}
+The discrete counterpart: an infinite product series and an infinite summation series are the same object viewed through $\ln$ and $\exp$. This identity, applied iteratively across divisor waves, nested radicals, and alternating prime series, drives every construction in this paper.
+
+The root of identity 4 is the fundamental logarithm product rule $\ln(a \cdot b) = \ln(a) + \ln(b)$, and its exponential mirror $e^{a+b} = e^a \cdot e^b$. These are inverses through $e^{\ln x} = x$ and $\ln(e^x) = x$. Together the four identities form a complete circle: each can be derived from any of the others using only this single underlying law. The sum-product duality is not an isolated trick; it is the common language in which the Weierstrass product for $\sin$, the Taylor series, Viète's nested radicals, and the Euler product for $\eta(s)$ are all written.
+
+\newpage
+\textbf{Canonical example: the sine function.} All four identities are instantiated simultaneously by $\sin$, making it the natural running example for the entire paper.
+
+\textit{Identity 1 (sum form):} The Taylor series gives $\sin$ as an infinite summation:
+\begin{align*}
+\sin(x) = \sum_{n=0}^{\infty} \frac{(-1)^n\, x^{2n+1}}{(2n+1)!}
+\end{align*}
+
+\textit{Identity 2 (product form):} The Weierstrass product gives $\sin$ as an infinite product:
+\begin{align*}
+\sin(\pi z) = \pi z \prod_{n=1}^{\infty}\left(1 - \frac{z^2}{n^2}\right)
+\end{align*}
+
+\textit{Identity 3 (product integral):} The product integral of $\sin$ over $[0, \pi]$ is the exponential of its ordinary integral:
+\begin{align*}
+\ProdInt_{0}^{\pi} [\sin(x)]^{dx} = e^{\,\SumInt_{0}^{\pi} \sin(x)\,dx} = e^{2}
+\end{align*}
+
+\textit{Identity 4 (ln of product = sum of ln):} Taking the logarithm of the Weierstrass product converts it into a summation:
+\begin{align*}
+\ln\!\left(\frac{\sin(\pi z)}{\pi z}\right) = \sum_{n=1}^{\infty} \ln\!\left(1 - \frac{z^2}{n^2}\right)
+\end{align*}
+
+These four representations of the same function are the template for every construction that follows. Section~V applies identity 2 directly to build the prime indicator $b(z)$; Section~IX recovers Viète's formula through the same product structure; Section~XIV reaches $\eta(s)$ by applying the duality to the full prime product.
+
+\newpage
+\newpage
+\subsection{II. Divisor Wave Analysis of $a(z)$ with the $a_k(x)$ Series}
 A \emph{divisor wave of order $k$} is a real-variable function of the form
 \begin{align*}
 	a_k(x) = \left|\alpha \frac{x}{k} \sin\!\left(\frac{\pi x}{k}\right)\right|
@@ -154,7 +250,8 @@ This superposition is the Sieve of Eratosthenes realized through sine waves. At 
 
 Having constructed one wave for each possible divisor, we now combine them into a single function by taking their infinite product — a construction defined formally in the next section.
 
-\subsection*{II. Product of Sine Defined as $a(z)$}
+\newpage
+\subsection{III. Product of Sine Defined as $a(z)$}
 Throughout this paper we analyze a family of special functions built from divisor waves and infinite products. All functions are defined on the complex variable $z = x + iy$, and we will work in both real and complex domains as each function is introduced.
 
 We define the function $a(z)$ as the absolute value of the product of all divisor waves:
@@ -168,13 +265,29 @@ The product runs from $k = 2$ to $k = x$, where $x = \operatorname{Re}(z)$. The 
 Throughout this paper, all product upper bounds of the form $\prod_{k=2}^{x}$ are evaluated with $x = \lfloor \operatorname{Re}(z) \rfloor$ whenever $\operatorname{Re}(z)$ is not an integer, so every product is a finite product of terms for any finite $z$. The primes and composites are identified at positive integer inputs $z = n \in \mathbb{Z}_{\geq 2}$, where the bound is exact.
 \end{remark}
 
+\begin{remark}[Independent discovery and relation to Preemen's Wave Divisor Function]
+The function $a(z)$ was developed independently from first principles, beginning with the individual divisor waves $a_k(x)$ and building toward their infinite product — motivated by the observation that infinite products encode divisor structure through zeros in a way that infinite sums do not. Separately and independently, Preemen \cite{preemen2020wave} arrived at the same family of divisor waves from the opposite direction, expressing the divisor function as an infinite \emph{summation} of cosine waves:
+\begin{align*}
+\sigma_0(x) = \sum_{\mathbb{X}=2}^{\infty} \cos^N\!\left(\frac{\pi}{\mathbb{X}}x\right)
+\end{align*}
+These two forms are connected by identity 4 of the First Fundamental Theorem of Analysis:
+\begin{align*}
+\ln\!\left(\prod_{k=2}^{x} \cos^N\!\left(\frac{\pi z}{k}\right)\right) = N\sum_{k=2}^{x} \ln\!\left(\cos\!\left(\frac{\pi z}{k}\right)\right)
+\end{align*}
+One author approached from the sum side; the other from the product side. The sum-product duality reveals they were studying the same object. The product form is what enables the Weierstrass substitution of Section~IV, the prime indicator of Section~V, and ultimately the connection to $\eta(s)$ in Section~XVII — directions Preemen noted were beyond the scope of his work.
+\end{remark}
+
 \begin{remark}[Free parameters]
 Three free parameters appear throughout the paper. The coefficient $\alpha \in (0,2)$ is the global amplitude scaling for the $a_k(x)$ divisor waves; it controls the growth rate of each wave's envelope but does not affect the zero set. The coefficient $\beta \in (0,2)$ plays the same role for the $b(z)$ family. The exponent $m > 0$ governs the sharpness of the factorial normalization: larger $m$ produces more pronounced peaks and a steeper approach to zero. The prime/composite zero set of every function in this paper is independent of the specific values of $\alpha$, $\beta$, and $m$ within their stated ranges.
 \end{remark}
 
 \begin{remark}[Convergence]
-All infinite products in this paper are understood as the limits of their finite truncations. Specifically, $a(z)$, $b(z)$, $C(z)$, $D(z)$, $E(z)$, and the related normalized forms are evaluated at $x = \lfloor \operatorname{Re}(z) \rfloor$ and the limit $x \to \infty$ is taken formally. Rigorous convergence estimates for these products as $x \to \infty$ — including uniform convergence on compact subsets of the complex plane — are left to future work. The finite truncations are what is computed and plotted throughout.
+All infinite products in this paper are understood as the limits of their finite truncations. Specifically, $a(z)$, $b(z)$, $C(z)$, $D(z)$, $E(z)$, and the related normalized forms are evaluated at $x = \lfloor \operatorname{Re}(z) \rfloor$ and the limit $x \to \infty$ is taken formally. Rigorous convergence estimates for these products as $x \to \infty$, including uniform convergence on compact subsets of the complex plane, are left to future work. The finite truncations are what is computed and plotted throughout.
 \end{remark}
+
+\begin{lemma}[Convergence assumption]
+The infinite products $a(z)$, $b(z)$, $C(z)$, $D(z)$, $E(z)$ and their normalized forms are assumed to converge on the domain of interest. All prime/composite indicator properties stated in subsequent lemmas hold for any finite truncation and are asserted to hold in the limit. Rigorous proof of uniform convergence is deferred to future work.
+\end{lemma}
 
 \begin{lemma}[Zero set of $a(z)$]
 For any positive integer $x \geq 2$, $a(x) = 0$. In particular, $a(z)$ vanishes at every integer in its product range: the factor $k = x$ contributes $\sin(\pi x/x) = \sin(\pi) = 0$.
@@ -209,8 +322,9 @@ The complex extension of $a(z)$ reveals the same waveform, with zeros at each in
 \label{fig:az-2d}
 \end{figure}
 
-\newpage
-\subsection*{III. Normalized Form $A(z)$}
+\medskip
+\textbf{Normalized Form $A(z)$.}\medskip
+
 We define the \emph{normalized} form of $a(z)$, which we call $A(z)$, as follows:
 \begin{align*}
 	A(z) = \frac{|\prod_{n=2}^x \alpha\frac{x}{n}\sin\left(\frac{\pi z}{n}\right)|^{-m}}{|\prod_{n=2}^x \alpha\frac{x}{n}\sin\left(\frac{\pi z}{n}\right)|^{-m}!}
@@ -261,7 +375,8 @@ The complex plot of $A(z)$ displays the same zero set as $a(z)$ — every intege
 \end{figure}
 
 \newpage
-\subsection*{IV. Derivation of $a(z)$ and $b(z)$ from the Weierstrass Product for Sine}
+\newpage
+\subsection{IV. Derivation of $a(z)$ and $b(z)$ from the Weierstrass Product for Sine}
 We derive $b(z)$ by substituting the Weierstrass infinite product representation of $\sin$ into the product defining $a(z)$.
 
 The standard Weierstrass product for $\sin(\pi z)$ is $\pi z \prod_{n=1}^\infty (1 - z^2/n^2)$. We use a scaled version, where the argument is $\pi z/k$ for a fixed positive integer $k$:
@@ -280,7 +395,14 @@ For computational purposes we also optimize the upper index bounds to reduce the
 	b(z) = \prod_{k=2}^{\sqrt{x}} \pi z\prod_{n=2}^{x/2} \left(1-\frac{z^2}{n^2k^2}\right)
 \end{align*}
 
-where $k$ runs to $\sqrt{x}$ and $n$ runs to $x/2$. These are the tightest bounds that still guarantee every composite factor of $z$ is captured by some pair $(n,k)$ with $nk = z$. The function $b(z)$ is an equivalent form of $a(z)$ that explicitly exposes both indices $n$ and $k$, giving us an additional parameter to exploit in later constructions.
+where $k$ runs to $\sqrt{x}$ and $n$ runs to $x/2$. The function $b(z)$ is an equivalent form of $a(z)$ that explicitly exposes both indices $n$ and $k$, giving us an additional parameter to exploit in later constructions.
+
+\begin{lemma}[Index bound sufficiency]
+For any composite integer $z \geq 4$, there exist integers $n, k$ with $2 \leq k \leq \sqrt{z}$ and $2 \leq n \leq z/2$ such that $nk = z$.
+\end{lemma}
+\begin{proof}
+Let $z = ab$ be any composite factorization with $a \leq b$ and $a, b \geq 2$. Then $a \leq \sqrt{z}$ (since $a \leq b$ implies $a^2 \leq ab = z$) and $b = z/a \leq z/2$ (since $a \geq 2$). Setting $k = a$ and $n = b$ gives $k \leq \sqrt{z}$ and $n \leq z/2$ with $nk = z$.
+\end{proof}
 
 Expanding the product fully:
 
@@ -327,7 +449,8 @@ $b(4) = $
 \end{align*}
 
 \newpage
-\subsection*{V. The Prime Indicator Function $b(z)$}
+\newpage
+\subsection{V. The Prime Indicator Function $b(z)$}
 The function $b(z)$ is defined as the product over $k$ of the Weierstrass representation of $\sin(\pi z/k)$:
 \begin{align*}
 	b(z) = |\prod_{k=2}^x \left[\frac{\beta x}{k}\left({\pi z}\prod_{n=2}^x\left(1 - \frac{z^2}{n^2k^2}\right)\right)\right]|
@@ -381,8 +504,14 @@ The 3D plot reveals the full complexity of the prime distribution, which is enco
 
 This fractal is the graph of $b(x+iy) \cdot iy$, which multiplies by the imaginary component and applies a logarithmic colorization that stretches values away from the real axis. Spikes correspond to locations with many factors; primes appear as smooth curves between the cusps, reflecting the absence of additional component waves reaching zero.
 
+Applying identity 4 of the First Fundamental Theorem of Analysis to $b(z)$ converts the double product into a double summation, giving the log-sum form of the prime indicator:
+\begin{align*}
+\ln(b(z)) = \sum_{k=2}^{\sqrt{x}}\sum_{n=2}^{x/2} \ln\left|1 - \frac{z^2}{n^2k^2}\right| + \sum_{k=2}^{\sqrt{x}}\ln(\pi z) + \text{scaling terms}
+\end{align*}
+This sum vanishes at composites (where a term $\ln|1 - z^2/n^2k^2| \to -\infty$ when $z = nk$) and remains finite at primes, giving the same prime indicator property through additive rather than multiplicative structure.
+
 \newpage
-\subsection*{VI. Normalized Prime Indicator $B(z)$}
+\textbf{Normalized Prime Indicator $B(z)$.}\medskip
 We define the \emph{normalized} form of $b(z)$, which we call $B(z)$, as follows:
 
 \begin{align*}
@@ -428,8 +557,15 @@ The 2D complex plot of $B(z)$ provides a map of prime and composite numbers: pol
 \end{figure}
 
 \newpage
-\subsection*{VII. Complex Riesz Product of Sine: $C(z)$}
-The Riesz products in Sections VII–IX serve as the oscillatory backbone that, when multiplied by $B(z)$, partition the real line between integers. All complex Riesz product plots use the factorial normalization introduced in Section III, owing to the explosive growth of the unnormalized forms. Following Keogh \cite{keogh1966riesz}, we extend the Riesz product of sine to the complex plane:
+\newpage
+\subsection{VI. Complex Riesz Products: $C(z)$, $D(z)$, and $E(z)$}
+The Riesz products in Sections VII–IX serve as the oscillatory backbone that, when multiplied by $B(z)$, partition the real line between integers. Following Keogh \cite{keogh1966riesz}, we extend the Riesz product of sine to the complex plane. The natural form is:
+
+\begin{align*}
+	C(z) = \prod_{n=2}^{z} \left(1 + \left|\sin\left(\pi z n\right)\right|\right)
+\end{align*}
+
+Each factor $(1 + |\sin(\pi zn)|)$ is bounded between $1$ and $2$, but the infinite product grows without bound as $x \to \infty$ owing to the accumulated multiplicative growth. For complex plotting the factorial normalization of Section III is applied:
 
 \begin{align*}
 	C(z) = \frac{|\prod_{n=2}^z \left(1 + |\sin\left(\pi z n\right)|\right)|^{-m}}{|\prod_{n=2}^z \left(1 + |\sin\left(\pi z n\right)|\right)|^{-m}!}
@@ -480,14 +616,28 @@ The region $7 < x < 12$ reveals tube-like structures erupting from the product, 
 
 The 2D view makes the increasing pole count clearly visible: the poles are discrete and confined between pairs of whole numbers, yet their number in each interval grows without bound as $x \to \infty$.
 
+\begin{remark}[Log-sum shadows of the Riesz products]
+Each Riesz product has a natural summation form via identity 4 of the First Fundamental Theorem of Analysis. Before normalization:
+\begin{align*}
+\ln(C(z)) &= \sum_{n=2}^{z} \ln\!\left(1 + \left|\sin(\pi z n)\right|\right) \\[6pt]
+\ln(D(z)) &= \sum_{n=2}^{z} \ln\!\left(1 + \left|\cos(\pi z n)\right|\right) \\[6pt]
+\ln(E(z)) &= \sum_{n=2}^{z} \ln\!\left(1 + \left|\tan(\pi z n)\right|\right)
+\end{align*}
+Each infinite product of oscillatory factors is equivalent to an infinite sum of logarithms of those factors. The growing pole density visible in the complex plots corresponds directly to the growth of these sums as $x \to \infty$.
+\end{remark}
+
 \newpage
-\subsection*{VIII. Complex Riesz Product of Cosine: $D(z)$}
-We define the normalized complex Riesz product of cosine as:
+\textbf{Riesz Product of Cosine: $D(z)$.}\medskip
+The natural form of the Riesz product of cosine is:
+\begin{align*}
+	D(z) = \prod_{n=2}^{z} \left(1 + \left|\cos\left(\pi z n\right)\right|\right)
+\end{align*}
+
+Each factor $(1 + |\cos(\pi z n)|)$ reaches its minimum when $\cos(\pi z n) = 0$, i.e., at half-integer values of $zn$. As $n$ grows, these minima become increasingly dense, and their product creates a function whose structure varies sharply with $x$. The factorial-normalized form for complex plotting is:
+
 \begin{align*}
 	D(z) = \frac{|\prod_{n=2}^z \left(1 + |\cos\left(\pi z n\right)|\right)|^{-m}}{|\prod_{n=2}^z \left(1 + |\cos\left(\pi z n\right)|\right)|^{-m}!}
 \end{align*}
-
-Each factor $(1 + |\cos(\pi z n)|)$ reaches its minimum when $\cos(\pi z n) = 0$, i.e., at half-integer values of $zn$. As $n$ grows, these minima become increasingly dense, and their product creates a function whose structure varies sharply with $x$.
 
 \begin{figure}[h!]
 \centering
@@ -524,8 +674,14 @@ Like $C(z)$, the normalized complex plot displays poles clustered near specific 
 As with $C(z)$, the pole count in each interval between consecutive integers grows without bound as $x \to \infty$.
 
 \newpage
-\subsection*{IX. Complex Riesz Product of Tangent: $E(z)$}
-We define the normalized complex Riesz product of tangent as:
+\textbf{Riesz Product of Tangent: $E(z)$.}\medskip
+The natural form of the Riesz product of tangent is:
+
+\begin{align*}
+	E(z) = \prod_{n=2}^{z} \left(1 + \left|\tan\left(\pi z n\right)\right|\right)
+\end{align*}
+
+Unlike the sine and cosine Riesz products, the tangent factors introduce poles at half-integer multiples of $1/n$, making the unnormalized product diverge in a more complex manner. The factorial-normalized form for complex plotting is:
 
 \begin{align*}
 	E(z) = \frac{|\prod_{n=2}^z \left(1 + |\tan\left(\pi z n\right)|\right)|^{-m}}{|\prod_{n=2}^z \left(1 + |\tan\left(\pi z n\right)|\right)|^{-m}!}
@@ -567,7 +723,8 @@ The normalized complex plot of $E(z)$ displays poles clustered near specific val
 
 The closer view highlights the alternation between $+\infty$ and $-\infty$ that characterizes the tangent function, here amplified by the infinite product structure.
 \newpage
-\subsection*{X. Combined Prime Indicator and Riesz Product: T(z)}
+\newpage
+\subsection{VII. Combined Prime Indicator and Riesz Product: T(z)}
 We define $T(z)$ as the normalized product of $E(z)$ and $B(z)$:
 \begin{align*}
 	T(z) = \frac{\left[\left|\prod_{n=2}^z\left[\frac{\beta z}{n}\left(1 + |\tan\left(\pi z n\right)|\right)\right]\right| \cdot \left|\prod_{n=2}^z\left[\frac{\beta z}{n}\left(\pi z\prod_{k=2}^z\left(1 - \frac{z^2}{k^2n^2}\right)\right)\right]\right|\right]^{-m}}{\left[\left|\prod_{n=2}^z\left[\frac{\beta z}{n}\left(1 + |\tan\left(\pi z n\right)|\right)\right]\right| \cdot \left|\prod_{n=2}^z\left[\frac{\beta z}{n}\left(\pi z\prod_{k=2}^z\left(1 - \frac{z^2}{k^2n^2}\right)\right)\right]\right|\right]^{-m}!}
@@ -594,43 +751,52 @@ $T(z) = 0$ if and only if $z$ is a composite integer. Since $B(z) = 0$ at every 
 The complex plot of $T(z)$ confirms this behavior: spikes at composite integers, zeros at primes, and an increasing number of poles in the intervals between whole numbers — forming a precise ruler over the number line.
 
 \newpage
-\subsection*{XI. The Symmetry of Nested Roots: Deriving the First Fundamental Theorem of Analysis through Isomorphisms}
+\newpage
+\subsection{VIII. The Symmetry of Nested Roots: Deriving the First Fundamental Theorem of Analysis through Isomorphisms}
 
 This section provides an in-depth examination of the symmetrical isomorphisms inherent in the Nested Roots family. These isomorphisms serve as a derivation of the First Fundamental Theorem of Analysis, offering a novel perspective on these foundational mathematical principles.
 
-Starting with function $j(z)$, we define the infinite square summation root series and its equivalent exponent form:
+We define the \textbf{additive nested root function} $j(z)$ and its multiplicative counterpart $k(z)$:
 \begin{align*}
-j(z) = \sqrt{z + \sqrt{z + \sqrt{z + \ldots}}} = z^{1/2} + z^{1/4} + z^{1/8} + \ldots
+j(z) = \sqrt{z + \sqrt{z + \sqrt{z + \ldots}}} = \left(z + \left(z + \left(z + \ldots\right)^{1/2}\right)^{1/2}\right)^{1/2}
+\end{align*}
+\begin{align*}
+k(z) = \sqrt{z \cdot \sqrt{z \cdot \sqrt{z \cdot \ldots}}} = \left(z \cdot \left(z \cdot \left(z \cdot \ldots\right)^{1/2}\right)^{1/2}\right)^{1/2}
 \end{align*}
 
-Converting the square root series to a factored form gives the identity:
+\textbf{Fixed point equations.} Both satisfy self-referential equations obtained by substituting the definition into itself:
 \begin{align*}
-j(z) = \left(z + \left(z + \left(z + \ldots\right)^{1/2}\right)^{1/2}\right)^{1/2} = \ln(\frac{z}{2}\frac{z}{4}\frac{z}{8}\ldots)
+j(z) = \sqrt{z + j(z)} \implies j^2 - j - z = 0 \implies j(z) = \frac{1 + \sqrt{1 + 4z}}{2}
+\end{align*}
+\begin{align*}
+k(z) = \sqrt{z \cdot k(z)} \implies k^2 = zk \implies k(z) = z
 \end{align*}
 
-This leads to the original infinite summation series definition and its equivalent product formula:
+\textbf{Series form of $k(z)$.} Converting the multiplicative nesting to a factored form gives the exponent summation identity:
 \begin{align*}
-j(z) = \sum_{n=1}^{\infty} \left[\ln\left(z^{2^{-n}}\right)\right] = \ln\left(\prod_{n=1}^{\infty} \left[z^{2^{-n}}\right]\right)
+k(z) = \prod_{n=1}^{\infty} \left[z^{2^{-n}}\right] = z^{\,\sum_{n=1}^{\infty} 2^{-n}} = z
 \end{align*}
 
-We now introduce $k(z)$, the multiplicative counterpart to $j(z)$, which reveals the duality at the heart of the First Fundamental Theorem of Analysis.
+\textbf{Series form of $j(z)$.} The fixed point equation $j^2 - j = z$ yields a power series by substituting $j = \sum_{n=0}^{\infty} a_n z^n$ and matching powers of $z$, giving the recurrence $a_0 = 1$, $a_1 = 1$, and $a_n = -\sum_{k=1}^{n-1} a_k a_{n-k}$ for $n \geq 2$:
 \begin{align*}
-k(z) = \sqrt{z \cdot \sqrt{z \cdot \sqrt{z \cdot \ldots}}} = z = z^{1/2} \cdot z^{1/4} \cdot z^{1/8} \cdot \ldots
+j(z) = 1 + \sum_{n=1}^{\infty} \frac{(-1)^{n-1}(2n-2)!}{n!\,(n-1)!}\, z^n = 1 + z - z^2 + 2z^3 - 5z^4 + 14z^5 - \cdots
 \end{align*}
-Converting the square root chain to a factored form gives the exponent-of-$z$ summation identity:
+This series converges for $|z| < \tfrac{1}{4}$.
+
+\textbf{Logarithmic forms.} Taking $\ln$ of $j = \sqrt{z + j}$ gives the nested logarithmic representation of $j(z)$:
 \begin{align*}
-k(z) = \left(z \cdot \left(z \cdot \left(z \cdot \ldots\right)^{1/2}\right)^{1/2}\right)^{1/2} = z^{\frac{1}{2} + \frac{1}{4} + \frac{1}{8} + \ldots}
+\ln(j) = \frac{1}{2}\ln\!\left(z + e^{\,\frac{1}{2}\ln\!\left(z + e^{\,\frac{1}{2}\ln(z + \cdots)}\right)}\right)
 \end{align*}
-This leads to the original infinite product series definition and its equivalent summation series formula:
+Flipping $+\,\to\,\cdot$ through the product-sum duality $\ln\!\left(\prod f\right) = \sum \ln(f)$ gives the mirror:
 \begin{align*}
-k(z) = \prod_{n=1}^{\infty} \left[z^{2^{-n}}\right] = z^{(\sidesum{n=1}{\infty}[2^{-n}])}
+\ln(k) = \frac{1}{2}\ln\!\left(z \cdot e^{\,\frac{1}{2}\ln\!\left(z \cdot e^{\,\frac{1}{2}\ln(z \cdots)}\right)}\right) = \ln(z)
 \end{align*}
 
-The isomorphism between $j(z)$ and $k(z)$ is now explicit: $j(z)$ is the logarithm of the same infinite product that defines $k(z)$. Comparing their final forms reveals the inverse relationship at the heart of the nested roots family:
+\textbf{The duality.} The additive and multiplicative nested root structures are mirror images under the $+\,\leftrightarrow\,\cdot$ exchange, interconverted by the exponential and logarithm:
 \begin{align*}
-k(z) = e^{j(z)} \qquad \text{and} \qquad j(z) = \ln\!\left(k(z)\right)
+k(z) = z \qquad j(z) = \frac{1 + \sqrt{1+4z}}{2}
 \end{align*}
-The additive nested root structure of $j(z)$ and the multiplicative nested root structure of $k(z)$ are therefore two expressions of the same underlying object, interconverted by the exponential and logarithm.
+The asymmetry --- $k(z)$ collapses to $z$ while $j(z)$ yields a rich power series --- reflects the fundamental difference between additive and multiplicative nesting: $(ab)^{1/2} = a^{1/2}b^{1/2}$ distributes cleanly, while $(a+b)^{1/2}$ does not, producing instead the Catalan factorial coefficients above.
 
 \begin{figure}[ht]
 \begin{minipage}[b]{0.45\textwidth}
@@ -645,48 +811,12 @@ The additive nested root structure of $j(z)$ and the multiplicative nested root 
 \label{fig:nested-prod}
 \end{minipage}
 \end{figure}
-From this, the underlying foundation begins to emerge, presenting the four laws of the First Fundamental Theorem of Analysis.
+The nested root pair $j(z)$ and $k(z)$ is where the First Fundamental Theorem of Analysis (established at the opening of this paper) first becomes visible in concrete form: the additive nesting produces a rich power series while the multiplicative nesting collapses to $z$, and the two are interconverted by $\ln$ and $\exp$ exactly as identities 3 and 4 predict.
 
 \newpage
-The First Fundamental Theorem of Analysis, derived through the exploration of the Nested Roots family, is an extension of the fundamental theorem of calculus. The product integral framework underlying identities 2--4 below is developed in \cite{bashirov2008multiplicative,slavik2007product}. These laws underpin the entirety of mathematics, and in many cases the three identities beyond the first are rarely taught or learned even by mathematics professionals.
-\begin{align*}
-\SumInt_{a}^{b} f(x) dx = \lim_{n \to \infty}{(\sum_{k=1}^{n} \left[f(x)_{k}\Delta x_{k} \right])}
-\end{align*}
-The limit definition of the integral above utilizes the same definition we currently use today, however it does introduce a new notation which allows for differentiation from the product integral which currently is defined with poor notation in most texts.
-
-\begin{align*}
-\ProdInt_{a}^{b} [ f(x) ]^{dx} = \lim_{n \to \infty}{(\prod_{k=1}^{n} \left[(f(x)_{k})^{\Delta x_{k}} \right])}
-\end{align*}
-Next is the limit definition of the product integral which follows the same rules as the summation integral however it contains an exponential infinitesimal rather than a coefficient infinitesimal.
-\begin{align*}
-\ProdInt_{a}^{b} [ f(x) ]^{dx} = e^{\SumInt_{a}^{b} f(x) dx}
-\end{align*}
-This formulation provides the first way to convert between a product integral and a summation integral.
-
-\begin{align*}
-\ln(\prod_{x=a}^{b} [f(x)])= \sum_{x=a}^{b} [\ln(f(x))]
-\end{align*}
-Finally, this identity allows for the conversion between infinite product series and infinite summation series, note the lack of integration.
-
-Once the revelation becomes clear, it becomes easier to broaden one's perspective on mathematics and comprehend the duality of infinite summations and infinite products. Their connection through logarithm rules is beautiful: exponentiation and logarithms are two sides of the same coin.
-
-The root of identity 4 is the fundamental logarithm product rule, applied iteratively across every factor:
-\begin{align*}
-\ln(a \cdot b) = \ln(a) + \ln(b)
-\end{align*}
-The complementary rule for exponentials is its mirror image, distributing over sums in the opposite direction:
-\begin{align*}
-e^{a + b} = e^{a} \cdot e^{b}
-\end{align*}
-and these two rules are inverses of each other through the fundamental pair of identities:
-\begin{align*}
-e^{\ln(x)} = x \qquad \text{and} \qquad \ln\!\left(e^{x}\right) = x
-\end{align*}
-Together these four relationships form a complete circle: the summation integral, the product integral, the exponential distributing over sums, and the logarithm distributing over products are all facets of the single inverse relationship between $e^x$ and $\ln(x)$. Each identity in the First Fundamental Theorem of Analysis can be derived from any of the others using only this one underlying law.
-
 \newpage
-\subsection*{XII. Complex Vi\`ete Products, Vi\`ete's Paradox, and the Nested Roots Solution}
-Section~XII builds on many of the previous ideas presented in this paper. The exploration begins by extending Vi\`ete's products of sine and cosine to the complex plane through repeated application of the double-angle formula. The following relationship is generalized and visualized using the complex plotting software, extending its original formulation from \cite{sahoo2022infinite}, where Vi\`ete's product is defined as:
+\subsection{IX. Complex Vi\`ete Products, Vi\`ete's Paradox, and the Nested Roots Solution}
+Section~IX builds on many of the previous ideas presented in this paper. The exploration begins by extending Vi\`ete's products of sine and cosine to the complex plane through repeated application of the double-angle formula. The following relationship is generalized and visualized using the complex plotting software, extending its original formulation from \cite{sahoo2022infinite}, where Vi\`ete's product is defined as:
 
 \begin{align*}
 \frac{2}{\pi} = \prod_{n=1}^{\infty} \cos\left(\frac{\pi}{2^{n+1}}\right)
@@ -703,14 +833,19 @@ which leads to a proof by mathematical induction that, for all positive integers
 \begin{align*}
 \sin(x) = 2^{n}\sin\!\left(\frac{x}{2^{n}}\right)\prod_{k=1}^{n} \cos\!\left(\frac{x}{2^{k}}\right)
 \end{align*}
-From Section~XI we can utilize the relationship:
+\textbf{Connection to Section~VIII: the nested root function $j(z)$.} The Viète nested radicals are precisely the partial iterates of the fixed-point map $x \mapsto \sqrt{2+x}$, which is the defining recurrence of $j(z)$ evaluated at $z = 2$. From Section~VIII, $j(z)$ satisfies $j^2 - j - z = 0$, giving:
 \begin{align*}
-\sum_{n=1}^{\infty} 2^{2^{-n}} = \sqrt{2 + \sqrt{2 + \sqrt{\ldots}}}
+j(2) = \frac{1+\sqrt{1+8}}{2} = \frac{1+3}{2} = 2
 \end{align*}
-and ultimately from Vi\`ete's infinite series we can form the relationship:
+So the infinite nested radical $\sqrt{2+\sqrt{2+\sqrt{2+\cdots}}}$ equals $j(2) = 2$. The Viète factors are the \emph{partial iterates} $j^{(k)}(2)$ — the $k$-th application of $x\mapsto\sqrt{2+x}$ to $x=0$ — divided by the fixed point:
 \begin{align*}
-\prod_{k=1}^{\infty} (\frac{\sum_{n=1}^{k} (2^{2^{-n}})}{2}) = \frac{2}{\pi}
+\frac{2}{\pi} = \prod_{k=1}^{\infty} \frac{j^{(k)}(2)}{j(2)} = \prod_{k=1}^{\infty} \frac{j^{(k)}(2)}{2}
 \end{align*}
+Applying identity 4 of Section~I (the product-sum duality $\ln(\prod f) = \sum \ln f$) gives the summation form:
+\begin{align*}
+\ln\!\left(\frac{2}{\pi}\right) = \sum_{k=1}^{\infty} \ln\!\left(\frac{j^{(k)}(2)}{2}\right) = \sum_{k=1}^{\infty} \ln\!\left(\cos\frac{\pi}{2^{k+1}}\right)
+\end{align*}
+The Catalan power series of Section~VIII gives the analytic structure of each factor: since $j(z) = 1 + \sum_{n=1}^{\infty} \frac{(-1)^{n-1}(2n-2)!}{n!\,(n-1)!}\,z^n$ (convergent for $|z|<\tfrac{1}{4}$), the partial iterates $j^{(k)}(2)$ are computed via the fixed-point recurrence rather than the series, with the series providing the local analytic structure of the map near $z=0$.
 
 \begin{figure}[ht]
 \begin{minipage}[b]{0.45\textwidth}
@@ -729,7 +864,8 @@ and ultimately from Vi\`ete's infinite series we can form the relationship:
 This plot showcases the zeros of Vi\`ete's product as they are spaced in the discrete space of the complex plane.
 
 \newpage
-\subsection*{XIII. Gamma and Sine Product Identities}
+\newpage
+\subsection{X. Gamma and Sine Product Identities}
 The following section gives insight into the intertwined nature of the sine function and the gamma function by reducing these special functions down to their core infinite series formulas.
 We start with the well-known identity \cite{chan2006sine}:
 \begin{align*}
@@ -765,7 +901,8 @@ then ultimately combining these identities to form the gamma product definition 
 \end{align*}
 
 \newpage
-\subsection*{XIV. Binary Output Prime Indicator Function H(z)}
+\newpage
+\subsection{XI. Binary Output Prime Indicator Function H(z)}
 The following section demonstrates the combination of many techniques outlined throughout the research of divisor wave analysis, and ultimately will create and develop new methods for prime sieving as well as complex discrete and continuous product functions.
 
 \begin{align*}
@@ -781,36 +918,36 @@ H(z) = \left(\frac{|\prod_{n=2}^x \alpha\frac{x}{n}\sin\left(\frac{\pi z}{n}\rig
 
 The function $H(z)$ combines the previous sieve functions $A(z)$ and $B(z)$ through exponentiation to create a new function. $H(z)$ has infinitely many zeros; these zeros correspond to the prime numbers, and $H(z) \to 1$ at composite numbers. This follows from $B(z) = 0$ for composite numbers and $B(z) \neq 0$ for prime numbers: since $A(z)$ vanishes at all whole numbers, raising it to the power $B(z)$ gives $A(z)^0 = 1$ at composites and $A(z)^{(\text{nonzero})} = 0$ at primes, resulting in the Binary Output Prime Indicator Function (BOPIF) $H(z)$.
 
+\begin{remark}[$H(z)$ as identity 3 of the First Fundamental Theorem of Analysis]
+The construction $H(z) = A(z)^{B(z)}$ is identity 3 in disguise. Raising a function to a variable power is precisely the operation of the product integral: $A(z)^{B(z)} = e^{B(z)\ln A(z)}$. Here $B(z)$ plays the role of the exponent (the ``integral'') and $A(z)$ is the base being raised. The binary switch $0^0 = 1$ versus $0^{\text{nonzero}} = 0$ is the discrete manifestation of the product integral collapsing at zeros of $A(z)$ — identity 3 applied pointwise to produce a prime indicator from two functions that individually only know about integers and composites respectively.
+\end{remark}
+
 \begin{align*}
-H(2) = (0)^{(\text{nonzero})}
+\begin{array}{ll}
+H(2) = (0)^{(\text{nonzero})} = 0 & \text{(prime)} \\[4pt]
+H(3) = (0 \cdot 0)^{(\text{nonzero})} = 0 & \text{(prime)} \\[4pt]
+H(4) = (0 \cdot 0 \cdot 0)^{(0)} = 1 & \text{(composite: } 2\times 2\text{)} \\[4pt]
+H(5) = (0 \cdot 0 \cdot 0 \cdot 0)^{(\text{nonzero})} = 0 & \text{(prime)} \\[4pt]
+H(6) = (0 \cdot 0 \cdot 0 \cdot 0 \cdot 0)^{(0)} = 1 & \text{(composite: } 2\times 3\text{)} \\[4pt]
+\vdots & \\[4pt]
+H(x) = \left(\prod_{n=2}^x 0\right)^{B(x)} & \text{general form}
+\end{array}
 \end{align*}
+where $B(x) = 0$ when $x$ is composite and $B(x) \neq 0$ when $x$ is prime. The limit $\lim_{a\to 0^+} a^{b}$ equals $0$ for $b > 0$ and $1$ for $b = 0$, so the binary switch is well-defined as a limit rather than the indeterminate form $0^0$ directly. This gives the prime output sequence:
 \begin{align*}
-H(3) = ((0)(0))^{(\text{nonzero})}
-\end{align*}
-\begin{align*}
-H(4) = ((0)(0)(0))^{(0)}
-\end{align*}
-\begin{align*}
-H(5) = ((0)(0)(0)(0))^{(\text{nonzero})}
-\end{align*}
-\begin{align*}
-H(6) = ((0)(0)(0)(0)(0))^{(0)}
-\end{align*}
-\begin{align*}
-\ldots
-\end{align*}
-\begin{align*}
-H(x) = ((0)(0)(0)(0)(0)\ldots)^{(B(x))}
-\end{align*}
-where $B(x) = 0$ when $z$ is composite, and $B(x) \neq 0$ when $z$ is prime. The series plot for $H(z)$ reflects the relationship that $0^{\text{nonzero}} = 0$ and $0^{0} = 1$, which is the key to outputting the primes from $H(z)$ in binary, giving the series
-\begin{align*}
-H(x) = (0)(0)(1)(0)(1)(0)(1)(1)(1)(0)(1)(0)\ldots
+H(x)\big|_{x=2,3,\ldots} = 0,\, 0,\, 1,\, 0,\, 1,\, 0,\, 1,\, 1,\, 1,\, 0,\, 1,\, 0,\, \ldots
 \end{align*}
 
 \newpage
-\subsection*{XV. Base-10 Value Output Prime Indicator Function J(z)}
+\newpage
+\subsection{XII. Base-10 Value Output Prime Indicator Function J(z)}
 The function J(z) described in the following section is an altered form of H(z), this formula provides the prime numbers in base 10 as the output of the function.
 
+Letting $\mathcal{A}(z) = A(z)$ and $\mathcal{B}(z) = B(z)$ for compactness, $J_1(z)$ can be written as:
+\begin{align*}
+J_{1}(z) = z \cdot \mathcal{A}(z)^{\,\mathcal{A}(z)^{\,\mathcal{B}(z)}}
+\end{align*}
+Expanded in full:
 \begin{align*}
 J_{1}(z) = z \cdot \left(\frac{|\prod_{n=2}^x \alpha\frac{z}{n}\sin\left(\frac{\pi z}{n}\right)|^{m}}{|\prod_{n=2}^x \alpha\frac{z}{n}\sin\left(\frac{\pi z}{n}\right)|^{m}!}\right)^{\left(\left(\frac{|\prod_{n=2}^x \alpha\frac{z}{n}\sin\left(\frac{\pi z}{n}\right)|^{m}}{|\prod_{n=2}^x \alpha\frac{z}{n}\sin\left(\frac{\pi z}{n}\right)|^{m}!}\right)^{\left(\frac{|\prod_{n=2}^x\left[\frac{\beta z}{n}\left({\pi z}\prod_{k=2}^z\left(1 - \frac{z^2}{k^2n^2}\right)\right)\right]|^{m}}{|\prod_{n=2}^x\left[\frac{\beta z}{n}\left({\pi z}\prod_{k=2}^z\left(1 - \frac{z^2}{k^2n^2}\right)\right)\right]|^{m}!}\right)}\right)}
 \end{align*}
@@ -825,7 +962,7 @@ J_{1}(z) = z \cdot \left(\frac{|\prod_{n=2}^x \alpha\frac{z}{n}\sin\left(\frac{\
 The plot of $J(z)$ shows that the function equals $0$ for all composite numbers and equals $z$ for all prime numbers, so the nonzero output values are always prime. The function is one layer of exponentiation deeper than $H(z)$: $H(z)$ raises $A(z)$, which has a zero at every whole number, to the power $B(z)$, giving $0^0 = 1$ at composites and $0^{\text{nonzero}} = 0$ at primes. $J(z)$ then raises $A(z)$ to the power $H(z)$, so $A(z)^0 = 1$ at prime inputs and $A(z)^1 = 0$ at composite inputs; multiplying by $z$ yields $J(z) = z$ at primes and $J(z) = 0$ at composites. The continuous regions between integers reflect the behavior of the underlying product of sine factors. Turning now to the Composite Number Indicator function $J_2(z)$:
 
 \begin{align*}
-J_{2}(z) = x \cdot \left(\frac{|\prod_{n=2}^x \alpha\frac{x}{n}\sin\left(\frac{\pi z}{n}\right)|^{m}}{|\prod_{n=2}^x \alpha\frac{x}{n}\sin\left(\frac{\pi z}{n}\right)|^{m}!}\right)^{\left(\frac{|\prod_{n=2}^x\left[\frac{\beta z}{n}\left({\pi z}\prod_{k=2}^z\left(1 - \frac{z^2}{k^2n^2}\right)\right)\right]|^{m}}{|\prod_{n=2}^x\left[\frac{\beta z}{n}\left({\pi z}\prod_{k=2}^z\left(1 - \frac{z^2}{k^2n^2}\right)\right)\right]|^{m}!}\right)}
+J_{2}(z) = z \cdot \mathcal{A}(z)^{\,\mathcal{B}(z)}
 \end{align*}
 
 \begin{figure}[h!]
@@ -836,7 +973,8 @@ J_{2}(z) = x \cdot \left(\frac{|\prod_{n=2}^x \alpha\frac{x}{n}\sin\left(\frac{\
 \end{figure}
 
 \newpage
-\subsection*{XVI. Multi-Variable Combinatoric Alternating Sequence L(z) for Prime Numbers}
+\newpage
+\subsection{XIII. Multi-Variable Combinatoric Alternating Sequence L(z) for Prime Numbers}
 Laying a structural base to motivate the final section, we investigate alternating discrete series defined such that the rhythm of the alternation for $L(z)$, $M(z)$, $N(z)$, $O(z)$, $P(z)$, and $Q(z)$ resembles the leading sign terms of the Dirichlet eta function represented as an Euler product $\eta(s)$.
 
 We start with the base unit, function L(z), this function is a prime example of the alternating variable-discrete series for a product of (-1),
@@ -957,7 +1095,8 @@ which reduces to
 and alternates from $(-1)$ to $(+1)$ each prime number.
 
 \newpage
-\subsection*{XVII. Divisor Wave Holomorphic Representation of the Euler Product for the Dirichlet $\eta(s)$}
+\newpage
+\subsection{XIV. Divisor Wave Holomorphic Representation of the Euler Product for the Dirichlet $\eta(s)$}
 Continuing where we left off, the functions $J_1(z)$ and $M(z)$ will be combined to showcase an error approximation between $J_1(z)$ and the Dirichlet $\eta(s)$ function. In the following example, we utilize $Q_1(z)$ to construct a holomorphic representation of $\eta(s)$ called $S_1(z)$.
 
 \begin{align*}
@@ -977,7 +1116,7 @@ R_1(s) = (\tfrac{1}{1 - 2^{s}})(\tfrac{1}{1 + 3^{-s}})(\tfrac{1}{1 - 5^{-s}})(\t
 Now, $R_1(s)$ will be subtracted from the Euler product representation of the Dirichlet eta function \cite{zvengrowski2003convergence}, where Zvengrowski defines the Euler product for $\eta(s)$ as:
 
 \begin{align*}
-\eta(s) = \prod_{\text{primes}} \left( \frac{1}{1+(-1)^{s}p^{s}} \right)
+\eta(s) = \prod_{\text{primes}} \left( \frac{1}{1+e^{i\pi s}p^{-s}} \right)
 \end{align*}
 
 \begin{align*}
@@ -1020,7 +1159,7 @@ S_1(s) = (\tfrac{1}{1 - 2^{s}})(\tfrac{1}{1 + 3^{-s}})(\tfrac{1}{1 - 5^{-s}})(\t
 Now, $S_1(s)$ will be compared with the Euler product representation of the Dirichlet eta function \cite{zvengrowski2003convergence}, where Zvengrowski defines the Euler product for $\eta(s)$ as:
 
 \begin{align*}
-\eta(s) = \prod_{\text{primes}} \left( \frac{1}{1+(-1)^{s}p^{s}} \right)
+\eta(s) = \prod_{\text{primes}} \left( \frac{1}{1+e^{i\pi s}p^{-s}} \right)
 \end{align*}
 
 \begin{align*}
@@ -1033,10 +1172,26 @@ therefore,
 \eta(s) - S_1(s) = 0
 \end{align*}
 
-if $S_1(s)$ is holomorphic with $\eta(s)$.
+This equality holds term-for-term at the level of the Euler product factors over primes. The claim $\eta(s) = S_1(s)$ is structural: both sides produce identical factors at every prime, and composite inputs contribute factors of $1$ in $S_1(s)$. A rigorous proof that the two infinite products converge to the same holomorphic function throughout the critical strip remains an open problem and is a primary target of future work.
+
+\begin{remark}[The climax: $\eta(s) = S_1(s)$ is the sum-product duality applied to the primes]
+The Dirichlet eta function has two representations. The sum form (Dirichlet series):
+\begin{align*}
+\eta(s) = \sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n^s} = 1 - \frac{1}{2^s} + \frac{1}{3^s} - \frac{1}{4^s} + \cdots
+\end{align*}
+and the product form (Euler product):
+\begin{align*}
+\eta(s) = \prod_{\text{primes}\, p} \frac{1}{1+(-1)^s p^{-s}}
+\end{align*}
+These two forms are connected by identity 4 of the First Fundamental Theorem of Analysis:
+\begin{align*}
+\ln(\eta(s)) = \ln\!\left(\prod_{p} \frac{1}{1+(-1)^s p^{-s}}\right) = \sum_{p} \ln\!\left(\frac{1}{1+(-1)^s p^{-s}}\right)
+\end{align*}
+The identity $\eta(s) = S_1(s)$ is therefore not merely a numerical coincidence — it is the statement that the sum-product duality, the same framework that connects $a(z)$ to Preemen's sum form, connects the Weierstrass product to the Taylor series of $\sin$, and connects $j(z)$ to $k(z)$, holds at the level of the prime distribution itself. The divisor wave construction is the mechanism by which the product form is built from elementary operations; the Dirichlet series is its sum shadow through identity 4.
+\end{remark}
 
 \newpage
-\subsection*{Conclusion}
+\subsection{Conclusion}
 We have constructed a family of functions — $a(z)$, $b(z)$, $A(z)$, $B(z)$, $C(z)$ through $E(z)$, $T(z)$, $H(z)$, $J(z)$, and $S_1(z)$ — that encode prime and composite structure through the vanishing and non-vanishing of infinite products of divisor waves. The two foundational functions $a(z)$ and $b(z)$ embody complementary perspectives: $a(z)$ encodes all integer multiples through the sine-wave sieve, while $b(z)$ pinpoints composites through their Weierstrass factorizations. Factorial normalization converts both into bounded binary indicators, and their combination via exponentiation yields the Binary Output Prime Indicator $H(z)$ and its base-10 variant $J(z)$.
 
 The most striking result is the identity $\eta(s) - S_1(s) = 0$: the divisor wave product $S_1(z)$, built entirely from elementary trigonometric, factorial, and alternating-sign operations on the prime indicator $J(z)$, reproduces the Euler product of the Dirichlet eta function $\eta(s)$ term-for-term over the primes. Since the non-trivial zeros of the Riemann zeta function $\zeta(s)$ coincide with those of $\eta(s)$, this holomorphic representation places the zeros of $\zeta(s)$ within the reach of divisor wave analysis. The zero structure of $J(z)$ on the critical line $\operatorname{Re}(z) = \tfrac{1}{2}$ is consistent with the Riemann Hypothesis, though a rigorous proof remains an open problem.

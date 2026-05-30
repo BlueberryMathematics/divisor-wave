@@ -1,0 +1,17 @@
+\contentsline {subsection}{Introduction}{2}{section*.2}%
+\contentsline {subsection}{Notation and Function Summary}{3}{section*.3}%
+\contentsline {subsection}{I. The Sum-Product Duality: First Fundamental Theorem of Analysis}{4}{section*.4}%
+\contentsline {subsection}{II. Divisor Wave Analysis of $a(z)$ with the $a_k(x)$ Series}{6}{section*.5}%
+\contentsline {subsection}{III. Product of Sine Defined as $a(z)$}{7}{section*.6}%
+\contentsline {subsection}{IV. Derivation of $a(z)$ and $b(z)$ from the Weierstrass Product for Sine}{9}{section*.7}%
+\contentsline {subsection}{V. The Prime Indicator Function $b(z)$}{12}{section*.8}%
+\contentsline {subsection}{VI. Complex Riesz Products: $C(z)$, $D(z)$, and $E(z)$}{14}{section*.9}%
+\contentsline {subsection}{VII. Combined Prime Indicator and Riesz Product: T(z)}{19}{section*.10}%
+\contentsline {subsection}{VIII. The Symmetry of Nested Roots: Deriving the First Fundamental Theorem of Analysis through Isomorphisms}{20}{section*.11}%
+\contentsline {subsection}{IX. Complex Vi\`ete Products, Vi\`ete's Paradox, and the Nested Roots Solution}{21}{section*.12}%
+\contentsline {subsection}{X. Gamma and Sine Product Identities}{22}{section*.13}%
+\contentsline {subsection}{XI. Binary Output Prime Indicator Function H(z)}{23}{section*.14}%
+\contentsline {subsection}{XII. Base-10 Value Output Prime Indicator Function J(z)}{24}{section*.15}%
+\contentsline {subsection}{XIII. Multi-Variable Combinatoric Alternating Sequence L(z) for Prime Numbers}{25}{section*.16}%
+\contentsline {subsection}{XIV. Divisor Wave Holomorphic Representation of the Euler Product for the Dirichlet $\eta (s)$}{28}{section*.17}%
+\contentsline {subsection}{Conclusion}{31}{section*.18}%

@@ -1,15 +1,15 @@
 [0] Config.pm:328> INFO - This is Biber 2.21
 [0] Config.pm:331> INFO - Logfile is 'Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.blg'
-[94] biber-MSWIN64:342> INFO - === 
-[124] Biber.pm:421> INFO - Reading 'Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.bcf'
-[204] Biber.pm:999> INFO - Using all citekeys in bib section 0
-[214] Biber.pm:4487> INFO - Processing section 0
-[223] Biber.pm:4678> INFO - Looking for bibtex file 'references.bib' for section 0
-[262] bibtex.pm:1713> INFO - LaTeX decoding ...
+[79] biber-MSWIN64:342> INFO - === 
+[110] Biber.pm:421> INFO - Reading 'Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.bcf'
+[188] Biber.pm:999> INFO - Using all citekeys in bib section 0
+[197] Biber.pm:4487> INFO - Processing section 0
+[205] Biber.pm:4678> INFO - Looking for bibtex file 'references.bib' for section 0
+[256] bibtex.pm:1713> INFO - LaTeX decoding ...
 [274] bibtex.pm:1519> INFO - Found BibTeX data source 'references.bib'
-[327] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[328] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[328] Biber.pm:4307> INFO - Sorting list 'nty/global//global/global/global' of type 'entry' with template 'nty' and locale 'en-US'
-[328] Biber.pm:4313> INFO - No sort tailoring available for locale 'en-US'
-[338] bbl.pm:676> INFO - Writing 'Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.bbl' with encoding 'UTF-8'
-[340] bbl.pm:779> INFO - Output to Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.bbl
+[322] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[322] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[322] Biber.pm:4307> INFO - Sorting list 'nty/global//global/global/global' of type 'entry' with template 'nty' and locale 'en-US'
+[322] Biber.pm:4313> INFO - No sort tailoring available for locale 'en-US'
+[331] bbl.pm:676> INFO - Writing 'Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.bbl' with encoding 'UTF-8'
+[333] bbl.pm:779> INFO - Output to Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.bbl

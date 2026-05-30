@@ -143,15 +143,40 @@
       \field{journaltitle}{Proceedings of the London Mathematical Society}
       \field{number}{1}
       \field{title}{Riesz products}
-      \field{volume}{3}
+      \field{volume}{15}
       \field{year}{1965}
       \field{pages}{174\bibrangedash 182}
       \range{pages}{9}
+    \endentry
+    \entry{preemen2020wave}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=97256469fb231d2a2383989e5eb758f7}{%
+           family={Preemen},
+           familyi={P\bibinitperiod},
+           given={V.L.M.},
+           giveni={V\bibinitperiod}}}%
+      }
+      \strng{namehash}{97256469fb231d2a2383989e5eb758f7}
+      \strng{fullhash}{97256469fb231d2a2383989e5eb758f7}
+      \strng{fullhashraw}{97256469fb231d2a2383989e5eb758f7}
+      \strng{bibnamehash}{97256469fb231d2a2383989e5eb758f7}
+      \strng{authorbibnamehash}{97256469fb231d2a2383989e5eb758f7}
+      \strng{authornamehash}{97256469fb231d2a2383989e5eb758f7}
+      \strng{authorfullhash}{97256469fb231d2a2383989e5eb758f7}
+      \strng{authorfullhashraw}{97256469fb231d2a2383989e5eb758f7}
+      \field{sortinit}{P}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{Unsolved Problems in Number Theory, Logic and Cryptography}
+      \field{month}{1}
+      \field{title}{Wave Divisor Function}
+      \field{year}{2020}
       \verb{urlraw}
-      \verb https://eclass.uoa.gr/modules/document/file.php/MATH121/04-%CE%95%CF%81%CE%B3%CE%B1%CF%83%CE%AF%CE%B5%CF%82/04-1.%20%CE%A4%CE%B1%20%CE%B8%CE%AD%CE%BC%CE%B1%CF%84%CE%B1/49.%20Riesz%20products.pdf
+      \verb https://unsolvedproblems.org/S132.pdf
       \endverb
       \verb{url}
-      \verb https://eclass.uoa.gr/modules/document/file.php/MATH121/04-%CE%95%CF%81%CE%B3%CE%B1%CF%83%CE%AF%CE%B5%CF%82/04-1.%20%CE%A4%CE%B1%20%CE%B8%CE%AD%CE%BC%CE%B1%CF%84%CE%B1/49.%20Riesz%20products.pdf
+      \verb https://unsolvedproblems.org/S132.pdf
       \endverb
     \endentry
     \entry{riemann1990primzahlen}{article}{}{}

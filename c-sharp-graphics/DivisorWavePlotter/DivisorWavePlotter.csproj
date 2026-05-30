@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>DivisorWavePlotter</RootNamespace>
+    <AssemblyName>DivisorWavePlotter</AssemblyName>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- OpenTK 4.x: window, OpenGL 4.3 (compute shaders), GLFW -->
+    <PackageReference Include="OpenTK" Version="4.9.3" />
+  </ItemGroup>
+
+  <!-- Copy shaders to output so they're found at runtime -->
+  <ItemGroup>
+    <None Update="Shaders\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

@@ -2,11 +2,16 @@ const { app, BrowserWindow, ipcMain, shell } = require('electron')
 const path = require('path')
 const { spawn } = require('child_process')
 
+// ── C# GPU plotter process state ───────────────────────────────────────────
+let gpuPlotterProc = null
+
 const DEV = !app.isPackaged
 const START_URL = DEV ? 'http://localhost:3000' : `file://${path.join(__dirname, '../out/index.html')}`
 
 // Paths relative to this file (electron/main.js)
 const ROOT                 = path.resolve(__dirname, '..', '..')
+const CSHARP_EXE           = path.join(ROOT, 'c-sharp-graphics', 'DivisorWavePlotter',
+                               'bin', 'Release', 'net8.0-windows', 'win-x64', 'DivisorWavePlotter.exe')
 const PYTHON_CLI           = path.join(ROOT, 'python-divisor-wave', 'plot_cli.py')
 const FORMULA_BRIDGE       = path.join(ROOT, 'python-divisor-wave', 'formula_bridge.py')
 const OUTPUT_DIR           = path.join(ROOT, 'plot-outputs')
@@ -266,6 +271,124 @@ ipcMain.handle('delete-user-function', async (_event, id) => {
     const data = JSON.parse(fs.readFileSync(USER_FUNCTIONS_FILE, 'utf8'))
     data.functions = data.functions.filter(f => f.id !== id)
     fs.writeFileSync(USER_FUNCTIONS_FILE, JSON.stringify(data, null, 2))
+    return { success: true }
+  } catch (e) {
+    return { success: false, error: e.message }
+  }
+})
+
+// ── IPC: GPU plotter — launch / kill / send command ────────────────────────
+ipcMain.handle('gpu-plotter-launch', async (_event, params) => {
+  const fs = require('fs')
+
+  // Kill any existing instance
+  if (gpuPlotterProc) {
+    try { gpuPlotterProc.kill() } catch {}
+    gpuPlotterProc = null
+  }
+
+  if (!fs.existsSync(CSHARP_EXE))
+    return { success: false, error: `C# exe not found. Build first:\n  cd c-sharp-graphics/DivisorWavePlotter\n  dotnet publish -c Release -r win-x64\n\nExpected: ${CSHARP_EXE}` }
+
+  const win = BrowserWindow.getFocusedWindow()
+  if (!win) return { success: false, error: 'No focused window' }
+
+  // Get the native HWND of the Electron window so C# can embed inside it
+  const hwndBuf    = win.getNativeWindowHandle()
+  const parentHwnd = process.arch === 'x64'
+    ? hwndBuf.readBigInt64LE(0).toString()
+    : hwndBuf.readInt32LE(0).toString()
+
+  const bounds  = win.getContentBounds()
+  const sidebarW = params.sidebarWidth  || 280
+  const titleH   = 30
+
+  const embedX = sidebarW
+  const embedY = titleH
+  const embedW = bounds.width  - sidebarW
+  const embedH = bounds.height - titleH - 24  // 24 = status bar height
+
+  return new Promise((resolve) => {
+    const args = [
+      '--parent-hwnd', parentHwnd,
+      '--embed-x', String(embedX),
+      '--embed-y', String(embedY),
+      '--width',   String(embedW),
+      '--height',  String(embedH),
+    ]
+
+    gpuPlotterProc = spawn(CSHARP_EXE, args, {
+      stdio: ['pipe', 'pipe', 'pipe'],
+      cwd: path.dirname(CSHARP_EXE),   // ensure glfw3.dll and OpenTK dlls resolve
+    })
+
+    let ready = false
+    let stderrBuf = ''
+
+    gpuPlotterProc.stdout.on('data', (data) => {
+      const lines = data.toString().split('\n').filter(l => l.trim())
+      for (const line of lines) {
+        try {
+          const msg = JSON.parse(line)
+          if (!ready && msg.type === 'ready') {
+            ready = true
+            resolve({ success: true, gpu: msg.gpu, glsl: msg.glsl })
+          }
+          // Forward all messages to renderer
+          if (win && !win.isDestroyed())
+            win.webContents.send('gpu-plotter-message', msg)
+        } catch {}
+      }
+    })
+
+    gpuPlotterProc.stderr.on('data', (d) => {
+      const txt = d.toString()
+      console.error('[C#]', txt.trim())
+      stderrBuf += txt
+      if (!ready) { ready = true; resolve({ success: false, error: stderrBuf.trim() }) }
+    })
+
+    gpuPlotterProc.on('close', () => {
+      gpuPlotterProc = null
+      if (win && !win.isDestroyed())
+        win.webContents.send('gpu-plotter-message', { type: 'closed' })
+      if (!ready) { ready = true; resolve({ success: false, error: 'Process exited' }) }
+    })
+
+    gpuPlotterProc.on('error', (err) => {
+      if (!ready) { ready = true; resolve({ success: false, error: err.message }) }
+    })
+
+    // Timeout guard — resolve with error if ready never fires
+    setTimeout(() => {
+      if (!ready) { ready = true; resolve({ success: false, error: 'Timeout waiting for gpu plotter ready' }) }
+    }, 8000)
+  })
+})
+
+ipcMain.handle('gpu-plotter-send', async (_event, payload) => {
+  if (!gpuPlotterProc || gpuPlotterProc.killed)
+    return { success: false, error: 'GPU plotter not running' }
+  try {
+    gpuPlotterProc.stdin.write(JSON.stringify(payload) + '\n')
+    return { success: true }
+  } catch (e) {
+    return { success: false, error: e.message }
+  }
+})
+
+ipcMain.handle('gpu-plotter-kill', async () => {
+  if (gpuPlotterProc) {
+    try { gpuPlotterProc.kill() } catch {}
+    gpuPlotterProc = null
+  }
+  return { success: true }
+})
+
+ipcMain.handle('gpu-plotter-resize', async (_event, params) => {
+  if (!gpuPlotterProc) return { success: false }
+  try {
+    gpuPlotterProc.stdin.write(JSON.stringify({ cmd: 'resize', params }) + '\n')
     return { success: true }
   } catch (e) {
     return { success: false, error: e.message }

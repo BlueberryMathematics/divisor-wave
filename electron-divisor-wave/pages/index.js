@@ -92,6 +92,30 @@ function getFnDefaults(functionId, normalize) {
   return entry[normalize] ?? entry.N ?? null
 }
 
+// ── GPU / Real-2D function list (C# plotter) ───────────────────────────────
+const GPU_FUNCTIONS = [
+  { id: 'dw_anim',    name: 'Divisor Wave Animation',  group: 'Divisor Waves' },
+  { id: 'dw_product', name: 'a(x) — Product of Waves', group: 'Divisor Waves' },
+  { id: '1',          name: 'a(x) — Product of Sin',   group: 'Real Variants' },
+  { id: '2',          name: 'b(x) — Weierstrass',      group: 'Real Variants' },
+  { id: '3',          name: 'A(x) — Normalized',       group: 'Real Variants' },
+  { id: '4',          name: 'B(x) — Normalized',       group: 'Real Variants' },
+  { id: '5',          name: 'Riesz — Cos',             group: 'Real Variants' },
+  { id: '6',          name: 'Riesz — Sin',             group: 'Real Variants' },
+  { id: '7',          name: 'Riesz — Tan',             group: 'Real Variants' },
+  { id: '8',          name: 'Viète — Cos',             group: 'Real Variants' },
+  { id: '11',         name: 'Cos of a(x)',              group: 'Real Variants' },
+  { id: '12',         name: 'Sin of a(x)',              group: 'Real Variants' },
+  { id: '15',         name: 'Prime Indicator H(x)',     group: 'Prime' },
+  { id: '16',         name: 'Prime Output J(x)',        group: 'Prime' },
+  { id: '19',         name: '|log Γ(x)|',               group: 'Analytic' },
+  { id: '20',         name: '1/(1+x²)',                  group: 'Analytic' },
+  { id: '21',         name: '|x^x|',                    group: 'Analytic' },
+  { id: '22',         name: 'Γ(x)',                      group: 'Analytic' },
+  { id: 'nested_sum', name: 'Nested Roots Sum j(x)',    group: 'Experimental' },
+  { id: 'nested_prod',name: 'Nested Roots Prod k(x)',   group: 'Experimental' },
+]
+
 const DEFAULT_PARAMS = {
   functionId:   '1',
   normalize:    'N',
@@ -105,6 +129,16 @@ const DEFAULT_PARAMS = {
   m:    null,
   beta: null,
   mode: '3d',
+  // GPU / Real-2D params
+  renderEngine: 'python',  // 'python' | 'gpu'
+  gpuFuncId:    'dw_anim',
+  gpuXMin:      -2,
+  gpuXMax:      20,
+  gpuAlpha:     1.0,
+  // Divisor wave animation params
+  dwKMax:       12,
+  dwSpeed:      2.0,
+  dwDotRadius:  8,
 }
 
 // ── Design tokens ──────────────────────────────────────────────────────────
@@ -840,9 +874,131 @@ function CoefficientsCard({ params, set, isElectron }) {
   )
 }
 
+// ── GPU Plotter Controls ──────────────────────────────────────────────────
+function GpuControls({ params, set, isElectron, gpuStatus, onLaunch, onKill, onSendPlot, onStartAnim, onStopAnim }) {
+  const isDwAnim  = params.gpuFuncId === 'dw_anim'
+  const gpuGroups = [...new Set(GPU_FUNCTIONS.map(f => f.group))]
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+
+      {/* Status + Launch/Kill */}
+      <div style={{ display: 'flex', gap: 6 }}>
+        <button onClick={gpuStatus === 'running' ? onKill : onLaunch}
+          disabled={!isElectron}
+          style={{
+            flex: 1, padding: '7px 0', borderRadius: T.radiusSm, cursor: 'pointer',
+            border: gpuStatus === 'running'
+              ? '1px solid rgba(255,100,100,0.4)' : '1px solid rgba(110,231,183,0.35)',
+            background: gpuStatus === 'running'
+              ? 'rgba(255,80,80,0.08)' : 'rgba(110,231,183,0.07)',
+            color: gpuStatus === 'running' ? '#ff8080' : '#6ee7b7',
+            fontSize: 11, fontFamily: T.mono, fontWeight: 600,
+            transition: 'all 0.15s',
+          }}>
+          {gpuStatus === 'running' ? '⏹ Kill GPU Plotter' :
+           gpuStatus === 'starting' ? '⌛ Starting…' : '▶ Launch GPU Plotter'}
+        </button>
+      </div>
+
+      {gpuStatus === 'error' && (
+        <div style={{
+          fontSize: 9, fontFamily: T.mono, padding: '6px 8px', borderRadius: T.radiusSm,
+          background: 'rgba(255,80,80,0.06)', border: '1px solid rgba(255,80,80,0.18)',
+          color: '#ff8080', whiteSpace: 'pre-wrap', lineHeight: 1.5,
+        }}>
+          {params._gpuError || 'Launch failed'}
+        </div>
+      )}
+
+      {gpuStatus === 'running' && (
+        <>
+          {/* Function selector */}
+          <div>
+            <Label>Real 2D Function</Label>
+            <select value={params.gpuFuncId} onChange={e => set('gpuFuncId')(e.target.value)}
+              style={{
+                width: '100%', background: 'rgba(0,0,0,0.35)',
+                border: `1px solid ${T.border}`, color: T.text,
+                borderRadius: T.radiusSm, padding: '7px 10px', fontSize: 12,
+                fontFamily: T.mono, outline: 'none', cursor: 'pointer',
+              }}>
+              {gpuGroups.map(g => (
+                <optgroup key={g} label={g}>
+                  {GPU_FUNCTIONS.filter(f => f.group === g).map(f => (
+                    <option key={f.id} value={f.id} style={{ background: '#13112a' }}>
+                      {f.name}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+          </div>
+
+          {/* Divisor wave animation controls */}
+          {isDwAnim && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <ParamControl label="k max  (waves 2 … k)"
+                value={params.dwKMax} min={2} max={40} step={1}
+                onChange={set('dwKMax')} fmt={v => `k=${v}`} />
+              <ParamControl label="Speed  (x-units / sec)"
+                value={params.dwSpeed} min={0.1} max={10} step={0.1}
+                onChange={set('dwSpeed')} fmt={v => v.toFixed(1)} />
+              <ParamControl label="Dot radius  (px)"
+                value={params.dwDotRadius} min={3} max={20} step={1}
+                onChange={set('dwDotRadius')} fmt={v => `${v}px`} />
+              <ParamControl label="α  (wave amplitude)"
+                value={params.gpuAlpha} min={0.01} max={5} step={0.01}
+                onChange={set('gpuAlpha')} fmt={v => v.toFixed(2)} />
+              <div style={{ display: 'flex', gap: 6 }}>
+                <button onClick={onStartAnim} style={{
+                  flex: 1, padding: '7px 0', borderRadius: T.radiusSm, cursor: 'pointer',
+                  border: '1px solid rgba(180,160,255,0.3)',
+                  background: 'linear-gradient(135deg, rgba(124,90,240,0.85),rgba(168,100,250,0.85))',
+                  color: '#fff', fontSize: 11, fontFamily: T.mono, fontWeight: 700,
+                }}>▶ Play</button>
+                <button onClick={onStopAnim} style={{
+                  flex: 1, padding: '7px 0', borderRadius: T.radiusSm, cursor: 'pointer',
+                  border: `1px solid ${T.border}`, background: 'rgba(0,0,0,0.2)',
+                  color: T.muted, fontSize: 11, fontFamily: T.mono,
+                }}>⏹ Stop</button>
+              </div>
+            </div>
+          )}
+
+          {/* x-range for non-animation real functions */}
+          {!isDwAnim && (
+            <div>
+              <Label>X Range</Label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                <ParamControl label="X min" value={params.gpuXMin}
+                  min={-50} max={50} step={0.5} onChange={set('gpuXMin')} noSlider />
+                <ParamControl label="X max" value={params.gpuXMax}
+                  min={-50} max={200} step={0.5} onChange={set('gpuXMax')} noSlider />
+              </div>
+            </div>
+          )}
+
+          {/* Send Plot button */}
+          <button onClick={onSendPlot} style={{
+            padding: '9px 0', borderRadius: T.radiusSm, cursor: 'pointer',
+            border: '1px solid rgba(110,231,183,0.3)',
+            background: 'rgba(110,231,183,0.08)',
+            color: '#6ee7b7', fontWeight: 600, fontSize: 12, fontFamily: T.mono,
+            transition: 'all 0.15s',
+          }}>
+            ◈ Send to GPU Plotter
+          </button>
+        </>
+      )}
+    </div>
+  )
+}
+
 // ── Sidebar ────────────────────────────────────────────────────────────────
 function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, selectedHistory, onSelectHistory,
-                   userFunctions, onOpenCustomLibrary }) {
+                   userFunctions, onOpenCustomLibrary,
+                   gpuStatus, onGpuLaunch, onGpuKill, onGpuSendPlot, onGpuStartAnim, onGpuStopAnim }) {
   const groups   = [...new Set(FUNCTIONS.map(f => f.group))]
   const gridPts  = Math.ceil((params.xmax - params.xmin) / params.resolution)
                * Math.ceil((params.ymax - params.ymin) / params.resolution)
@@ -869,7 +1025,43 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, 
       }}>
         <div style={{ padding: '12px 10px 24px', display: 'flex', flexDirection: 'column', gap: 8 }}>
 
-          {/* ── Section: Function & Normalization ── */}
+          {/* ── Section: Render Engine selector ── */}
+          <Section title="Render Engine" defaultOpen={true}>
+            <div>
+              <Label>Engine</Label>
+              <div style={{ display: 'flex', gap: 6 }}>
+                {[{ v: 'python', label: '🐍 Python (CPU)' }, { v: 'gpu', label: '⚡ C# GPU' }].map(({ v, label }) => {
+                  const active = params.renderEngine === v
+                  return (
+                    <button key={v} onClick={() => set('renderEngine')(v)} style={{
+                      flex: 1, padding: '7px 0', borderRadius: T.radiusSm, cursor: 'pointer',
+                      border: active ? `1px solid ${T.borderHover}` : `1px solid ${T.border}`,
+                      background: active ? T.accentSoft : 'rgba(0,0,0,0.2)',
+                      color: active ? T.accent : T.muted,
+                      fontWeight: active ? 600 : 400, fontSize: 11,
+                      transition: 'all 0.15s', fontFamily: T.mono,
+                    }}>
+                      {label}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* GPU plotter controls — shown when gpu engine is selected */}
+            {params.renderEngine === 'gpu' && (
+              <GpuControls
+                params={params} set={set} isElectron={isElectron}
+                gpuStatus={gpuStatus}
+                onLaunch={onGpuLaunch} onKill={onGpuKill}
+                onSendPlot={onGpuSendPlot}
+                onStartAnim={onGpuStartAnim} onStopAnim={onGpuStopAnim}
+              />
+            )}
+          </Section>
+
+          {/* ── Section: Function & Normalization (Python engine only) ── */}
+          {params.renderEngine === 'python' && (
           <Section title="Function & Normalization" defaultOpen={true}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: 7 }}>
@@ -996,9 +1188,12 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, 
               </div>
             </div>
           </Section>
+          )}   {/* end python-only Section */}
 
-          {/* ── Section: Colormap ── */}
-          <Section title="Colormap" defaultOpen={true}>
+          {/* ── Section: Colormap (Python only) ── */}
+          {params.renderEngine === 'python' && false && <></>}
+          {params.renderEngine === 'python' && (
+          <Section title="Colormap" defaultOpen={false}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
               {COLORMAPS.map(c => {
                 const active = params.colormap === c.id
@@ -1019,6 +1214,8 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, 
               })}
             </div>
           </Section>
+          )}
+
 
           {/* ── Section: Configuration ── */}
           <Section title="Configuration" defaultOpen={false}>
@@ -1149,10 +1346,15 @@ function Sidebar({ open, params, set, onGenerate, loading, isElectron, history, 
 function PlotArea({ result, loading, selectedHistory,
                     functionId, formulasMap, termsMap, userFunctions,
                     formulaOpen, onToggleFormula, formulaEditMode, onEnterFormulaEdit, onExitFormulaEdit,
-                    onUserFnsChanged, isElectron }) {
+                    onUserFnsChanged, isElectron, hidden }) {
   const shown = selectedHistory ?? result
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
+    <div style={{
+      flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0,
+      // When GPU window is active, keep layout space but make content invisible
+      // so the embedded C# window (which sits on top) is unobstructed
+      visibility: hidden ? 'hidden' : 'visible',
+    }}>
 
       {/* Main plot */}
       <div style={{
@@ -1249,6 +1451,8 @@ export default function App() {
   const [termsMap,        setTermsMap]        = useState({})
   const [formulaOpen,     setFormulaOpen]     = useState(true)
   const [formulaEditMode, setFormulaEditMode] = useState(false)
+  // GPU plotter state
+  const [gpuStatus, setGpuStatus]   = useState('idle')  // idle | starting | running | error
 
   useEffect(() => { setIsElectron(!!window.electronAPI) }, [])
 
@@ -1259,6 +1463,13 @@ export default function App() {
       if (r.success) { setFormulasMap(r.formulas || {}); setTermsMap(r.terms || {}) }
     })
     window.electronAPI.listUserFunctions().then(r => { if (r.success) setUserFunctions(r.functions) })
+
+    // Listen for GPU plotter messages from main process
+    const handleGpuMsg = (msg) => {
+      if (msg.type === 'closed') setGpuStatus('idle')
+    }
+    window.electronAPI.gpuPlotter.onMessage(handleGpuMsg)
+    return () => window.electronAPI.gpuPlotter.offMessage(handleGpuMsg)
   }, [isElectron])
 
   const reloadUserFunctions = useCallback(() => {
@@ -1290,6 +1501,52 @@ export default function App() {
     }
   }, [params, isElectron])
 
+  // ── GPU plotter actions ──────────────────────────────────────────────────
+  const handleGpuLaunch = useCallback(async () => {
+    setGpuStatus('starting')
+    const sidebarW = sidebarOpen ? 280 : 0
+    const r = await window.electronAPI.gpuPlotter.launch({ sidebarWidth: sidebarW })
+    if (r.success) {
+      setGpuStatus('running')
+    } else {
+      setGpuStatus('error')
+      set('_gpuError')(r.error)
+    }
+  }, [isElectron, sidebarOpen])
+
+  const handleGpuKill = useCallback(async () => {
+    await window.electronAPI.gpuPlotter.kill()
+    setGpuStatus('idle')
+  }, [isElectron])
+
+  const handleGpuSendPlot = useCallback(async () => {
+    if (gpuStatus !== 'running') return
+    const p = params
+    const isDwAnim = p.gpuFuncId === 'dw_anim'
+    if (isDwAnim) {
+      await window.electronAPI.gpuPlotter.send({
+        cmd: 'plot', mode: 'divisorwave', funcId: p.gpuFuncId,
+        params: { kMax: p.dwKMax, alpha: p.gpuAlpha, speed: p.dwSpeed,
+                  dotRadius: p.dwDotRadius, xMin: p.gpuXMin }
+      })
+    } else {
+      await window.electronAPI.gpuPlotter.send({
+        cmd: 'plot', mode: 'real2d', funcId: p.gpuFuncId,
+        params: { xMin: p.gpuXMin, xMax: p.gpuXMax, alpha: p.gpuAlpha }
+      })
+    }
+  }, [params, gpuStatus])
+
+  const handleGpuStartAnim = useCallback(() => {
+    if (gpuStatus !== 'running') return
+    window.electronAPI.gpuPlotter.send({ cmd: 'startAnim' })
+  }, [gpuStatus])
+
+  const handleGpuStopAnim  = useCallback(() => {
+    if (gpuStatus !== 'running') return
+    window.electronAPI.gpuPlotter.send({ cmd: 'stopAnim' })
+  }, [gpuStatus])
+
   return (
     <div style={{
       display: 'flex', flexDirection: 'column', height: '100vh',
@@ -1311,7 +1568,15 @@ export default function App() {
           onSelectHistory={h => { setSelectedHistory(h); setResult(null) }}
           userFunctions={userFunctions}
           onOpenCustomLibrary={openCustomLibrary}
+          gpuStatus={gpuStatus}
+          onGpuLaunch={handleGpuLaunch}
+          onGpuKill={handleGpuKill}
+          onGpuSendPlot={handleGpuSendPlot}
+          onGpuStartAnim={handleGpuStartAnim}
+          onGpuStopAnim={handleGpuStopAnim}
         />
+        {/* When GPU engine is running, the C# window sits in this space.
+            We keep PlotArea mounted but invisible so layout is stable. */}
         <PlotArea
           result={result}
           loading={loading}
@@ -1327,6 +1592,7 @@ export default function App() {
           onExitFormulaEdit={() => setFormulaEditMode(false)}
           onUserFnsChanged={reloadUserFunctions}
           isElectron={isElectron}
+          hidden={gpuStatus === 'running'}
         />
       </div>
 

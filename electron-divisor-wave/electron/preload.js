@@ -13,6 +13,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
   listUserFunctions:    ()        => ipcRenderer.invoke('list-user-functions'),
   saveUserFunction:     (fn)      => ipcRenderer.invoke('save-user-function', fn),
   deleteUserFunction:   (id)      => ipcRenderer.invoke('delete-user-function', id),
+  // GPU plotter (C# OpenGL window embedded in Electron)
+  gpuPlotter: {
+    launch:  (params)  => ipcRenderer.invoke('gpu-plotter-launch', params),
+    send:    (payload) => ipcRenderer.invoke('gpu-plotter-send', payload),
+    kill:    ()        => ipcRenderer.invoke('gpu-plotter-kill'),
+    resize:  (params)  => ipcRenderer.invoke('gpu-plotter-resize', params),
+    onMessage: (cb)    => ipcRenderer.on('gpu-plotter-message', (_e, msg) => cb(msg)),
+    offMessage: (cb)   => ipcRenderer.off('gpu-plotter-message', cb),
+  },
   window: {
     minimize:    () => ipcRenderer.invoke('window-minimize'),
     maximize:    () => ipcRenderer.invoke('window-maximize'),
