@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.5.21)  31 MAY 2026 03:28
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.5.21)  31 MAY 2026 03:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1005,14 +1005,14 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 425.
 
-[10] [11] [12]
+[10] [11] [12] [13]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 511.
+(hyperref)                removing `math shift' on input line 526.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 511.
+(hyperref)                removing `math shift' on input line 526.
 
 
 ! LaTeX Error: File `graphs/2D_Real_Graphs/prime_indicator_og_redone' not found
@@ -1022,7 +1022,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.518 ...2D_Real_Graphs/prime_indicator_og_redone}
+l.533 ...2D_Real_Graphs/prime_indicator_og_redone}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
@@ -1037,7 +1037,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.540 ...tion_of_sin/non_normalized_goodm_prism_1}
+l.555 ...tion_of_sin/non_normalized_goodm_prism_1}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
@@ -1052,7 +1052,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.549 ...tion_of_sin/non_normalized_goodm_prism_8}
+l.564 ...tion_of_sin/non_normalized_goodm_prism_8}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
@@ -1068,14 +1068,14 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.558 ...ct_17_n_2-28__imaginary_scalar_logarithm}
+l.573 ...ct_17_n_2-28__imaginary_scalar_logarithm}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-[13] [14]
+[14] [15]
 
 ! LaTeX Error: File `graphs/2D_Real_Graphs/prime_indicator_norm' not found.
 
@@ -1083,7 +1083,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.585 ...aphs/2D_Real_Graphs/prime_indicator_norm}
+l.600 ...aphs/2D_Real_Graphs/prime_indicator_norm}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
@@ -1098,7 +1098,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.603 ..._prodprodforsin_4_Prism_Colorization_New}
+l.618 ..._prodprodforsin_4_Prism_Colorization_New}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
@@ -1113,7 +1113,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.612 ...tion_of_sin/ComplexPlot_prodprodforsin_8}
+l.627 ...tion_of_sin/ComplexPlot_prodprodforsin_8}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
@@ -1128,37 +1128,37 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.619 .../ComplexPlot_norm_prodprodforsin_prism_3}
+l.634 .../ComplexPlot_norm_prodprodforsin_prism_3}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-[15]
+[16] [17]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 626.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 626.
+(hyperref)                removing `math shift' on input line 681.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 626.
+(hyperref)                removing `math shift' on input line 681.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 626.
+(hyperref)                removing `math shift' on input line 681.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 626.
+(hyperref)                removing `math shift' on input line 681.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 626.
+(hyperref)                removing `math shift' on input line 681.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 681.
 
 
 ! LaTeX Error: File `graphs/2D_Real_Graphs/1+sin_prod' not found.
@@ -1167,7 +1167,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.641 ...e=0.30]{graphs/2D_Real_Graphs/1+sin_prod}
+l.696 ...e=0.30]{graphs/2D_Real_Graphs/1+sin_prod}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
@@ -1182,7 +1182,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.650 ...ex_Graphs/riesz_sin/HD_Riesz_sin_1_12_n5}
+l.705 ...ex_Graphs/riesz_sin/HD_Riesz_sin_1_12_n5}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
@@ -1197,7 +1197,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.660 ...ex_Graphs/riesz_sin/HD_Riesz_sin_7_12_n7}
+l.715 ...ex_Graphs/riesz_sin/HD_Riesz_sin_7_12_n7}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
@@ -1212,7 +1212,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.667 ...ex_Graphs/riesz_sin/HD_Riesz_sin_7_12_n6}
+l.722 ...ex_Graphs/riesz_sin/HD_Riesz_sin_7_12_n6}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
@@ -1227,14 +1227,14 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.677 ...x_Graphs/riesz_sin/HD_Riesz_sin_2_12_n11}
+l.732 ...x_Graphs/riesz_sin/HD_Riesz_sin_2_12_n11}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-[16] [17]
+[18] [19]
 
 ! LaTeX Error: File `graphs/2D_Real_Graphs/1+cos_prod' not found.
 
@@ -1242,7 +1242,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.709 ...e=0.30]{graphs/2D_Real_Graphs/1+cos_prod}
+l.764 ...e=0.30]{graphs/2D_Real_Graphs/1+cos_prod}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
@@ -1257,7 +1257,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.718 ...ex_Graphs/riesz_cos/HD_Riesz_cos_2_12_n5}
+l.773 ...ex_Graphs/riesz_cos/HD_Riesz_cos_2_12_n5}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
@@ -1272,7 +1272,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.727 ...ex_Graphs/riesz_cos/HD_Riesz_cos_2_12_n8}
+l.782 ...ex_Graphs/riesz_cos/HD_Riesz_cos_2_12_n8}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
@@ -1287,11 +1287,307 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.734 ...ex_Graphs/riesz_cos/HD_Riesz_cos_2_12_n3}
+l.789 ...ex_Graphs/riesz_cos/HD_Riesz_cos_2_12_n3}
                                                   
 I could not locate the file with any of these extensions:
 .pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-[18
+[20]
+
+! LaTeX Error: File `graphs/2D_Real_Graphs/prod_1+tan' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.812 ...e=0.30]{graphs/2D_Real_Graphs/prod_1+tan}
+                                                  
+I could not locate the file with any of these extensions:
+.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/riesz_tan/HD_Riesz_tan_2_12_n5' n
+ot found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.821 ...ex_Graphs/riesz_tan/HD_Riesz_tan_2_12_n5}
+                                                  
+I could not locate the file with any of these extensions:
+.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+[21]
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/riesz_tan/Ries_tan_norm_2' not fo
+und.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.832 ...Complex_Graphs/riesz_tan/Ries_tan_norm_2}
+                                                  
+I could not locate the file with any of these extensions:
+.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/riesz_tan/HD_Riesz_tan_2_12_n6' n
+ot found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.839 ...ex_Graphs/riesz_tan/HD_Riesz_tan_2_12_n6}
+                                                  
+I could not locate the file with any of these extensions:
+.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+[22]
+
+! LaTeX Error: File `graphs/2D_Real_Graphs/1+tan_prod_xprimefunc' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.855 ...phs/2D_Real_Graphs/1+tan_prod_xprimefunc}
+                                                  
+I could not locate the file with any of these extensions:
+.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/Riesztan_PrimeFunc/HD_2_12_riesz_
+tanreversedivisionprimeindc_4' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.866 ...2_12_riesz_tanreversedivisionprimeindc_4}
+                                                  
+I could not locate the file with any of these extensions:
+.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+[23] [24]
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/NestedRoots/Roots_sum' not found.
+
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.939 .../3D_Complex_Graphs/NestedRoots/Roots_sum}
+                                                  
+I could not locate the file with any of these extensions:
+.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/NestedRoots/Roots_prod' not found
+.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.945 ...3D_Complex_Graphs/NestedRoots/Roots_prod}
+                                                  
+I could not locate the file with any of these extensions:
+.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+[25] [26]
+Overfull \hbox (23.88185pt too wide) in paragraph at lines 998--999
+[]\OT1/cmr/m/n/10 The Cata-lan power se-ries of Sec-tion VIII gives the an-a-ly
+tic struc-ture of each fac-tor: since $\OML/cmm/m/it/10 j\OT1/cmr/m/n/10 (\OML/
+cmm/m/it/10 z\OT1/cmr/m/n/10 ) = 1 + [][] [] \OML/cmm/m/it/10 z[]$
+ []
+
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/Viete_cos/Viete_cos_norm_1' not f
+ound.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1002 ...mplex_Graphs/Viete_cos/Viete_cos_norm_1}
+                                                  
+I could not locate the file with any of these extensions:
+.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/Viete_cos/Viete_cos_norm_3' not f
+ound.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1008 ...mplex_Graphs/Viete_cos/Viete_cos_norm_3}
+                                                  
+I could not locate the file with any of these extensions:
+.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+[27] [28] [29]
+
+! LaTeX Error: File `graphs/2D_Real_New/Prime_Indicator_H_normalized_labeled' n
+ot found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1096 ...ew/Prime_Indicator_H_normalized_labeled}
+                                                  
+I could not locate the file with any of these extensions:
+.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+[30]
+
+! LaTeX Error: File `graphs/2D_Real_New/Prime_Indicator_J_normalized' not found
+.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1139 ...D_Real_New/Prime_Indicator_J_normalized}
+                                                  
+I could not locate the file with any of these extensions:
+.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: File `graphs/2D_Real_New/Composite_Indicator_H_normalized' not f
+ound.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1152 ...al_New/Composite_Indicator_H_normalized}
+                                                  
+I could not locate the file with any of these extensions:
+.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+[31] [32] [33] [34]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1294.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\eta' on input line 1294.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1294.
+
+[35] [36] [37] [38]
+(Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.aux)
+ ***********
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-24>
+ ***********
+
+
+LaTeX Font Warning: Size substitutions with differences
+(Font)              up to 1.12pt have occurred.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+Package rerunfilecheck Info: File `Divisor_Waves_and_their_Connection_to_the_Ri
+emann_Hypothesis.out' has not changed.
+(rerunfilecheck)             Checksum: 44D4ACCB67618B1E1A0062BB7295D4D6;5689.
+Package logreq Info: Writing requests to 'Divisor_Waves_and_their_Connection_to
+_the_Riemann_Hypothesis.run.xml'.
+\openout1 = `Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.run.x
+ml'.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 19665 strings out of 467871
+ 409111 string characters out of 5415956
+ 1173405 words of memory out of 5000000
+ 48221 multiletter control sequences out of 15000+600000
+ 642138 words of font info for 93 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 63i,17n,67p,1583b,1339s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\Gr33nb3rry\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600
+\tcrm1000.pk><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/pub
+lic/amsfonts/cm/cmbx10.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/Gr33nb3rry/AppData/Local/Pro
+grams/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx5.pfb><C:/Users/Gr33nb3rry/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Users/Gr
+33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb
+><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
+/cm/cmbxti10.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1
+/public/amsfonts/cm/cmcsc10.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiK
+TeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/Gr33nb3rry/AppData/Loca
+l/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex7.pfb><C:/Users/Gr33n
+b3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex9.p
+fb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
+ts/cm/cmmi10.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1
+/public/amsfonts/cm/cmmi12.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKT
+eX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/Gr33nb3rry/AppData/Local/
+Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/Gr33nb3rry/A
+ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users
+/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi9.
+pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
+nts/cm/cmr10.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1
+/public/amsfonts/cm/cmr12.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTe
+X/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/Gr33nb3rry/AppData/Local/P
+rograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/Gr33nb3rry/App
+Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/Gr
+33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb>
+<C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
+cm/cmr9.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/publ
+ic/amsfonts/cm/cmsy10.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fo
+nts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/Gr33nb3rry/AppData/Local/Progr
+ams/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/Gr33nb3rry/AppDat
+a/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/Gr33
+nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+<C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
+cm/cmti12.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/pu
+blic/amsfonts/cm/cmti7.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/Gr33nb3rry/AppData/Local/Pro
+grams/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Users/Gr33nb3rr
+y/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
+Output written on Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.
+pdf (39 pages, 1082652 bytes).
+PDF statistics:
+ 555 PDF objects out of 1000 (max. 8388607)
+ 121 named destinations out of 1000 (max. 500000)
+ 152 words of extra memory for PDF output out of 10000 (max. 10000000)
+

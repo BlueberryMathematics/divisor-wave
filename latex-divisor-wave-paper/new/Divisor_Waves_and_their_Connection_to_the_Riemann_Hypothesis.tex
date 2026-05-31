@@ -425,10 +425,25 @@ The complex plot of $A(z)$ displays the same zero set as $a(z)$ — every intege
 \subsection{IV. Derivation of $a(z)$ and $b(z)$ from the Weierstrass Product for Sine}
 We derive $b(z)$ by substituting the Weierstrass infinite product representation of $\sin$ into the product defining $a(z)$.
 
+\begin{remark}[Why the Weierstrass substitution shifts zeros from integers to composites]
+In $a(z)$, zeros arise from $\sin(\pi z/k) = 0$, which occurs whenever $z$ is an integer multiple of $k$ — placing zeros at every integer $\geq 2$. The Weierstrass product for $\sin(\pi z/k)$ replaces this with factors $(1 - z^2/n^2k^2)$, each of which vanishes precisely at $z = nk$. After taking the outer product over $k \geq 2$, a factor vanishes at $z$ if and only if $z = nk$ for some $n, k \geq 2$ — the definition of a composite number. The critical step is that the inner product starts at $n = 2$: the $n = 1$ factor would contribute a zero at every multiple of $k$ (including primes), but by excluding $n = 1$ the Weierstrass substitution strips all zeros at primes while preserving all zeros at composites. This is the analytic implementation of the Sieve of Eratosthenes encoded as a product of Weierstrass factors.
+\end{remark}
+
 The standard Weierstrass product for $\sin(\pi z)$ is $\pi z \prod_{n=1}^\infty (1 - z^2/n^2)$. We use a scaled version, where the argument is $\pi z/k$ for a fixed positive integer $k$:
 \begin{align*}
 	\sin\left(\frac{\pi z}{k}\right) = \pi z\prod_{n=2}^x \left(1-\frac{z^2}{n^2k^2}\right) \\
 \end{align*}
+
+Applying identity 4 of Section~I to this single-$k$ Weierstrass factor gives its additive form:
+\begin{align*}
+\ln\!\left|\sin\!\left(\frac{\pi z}{k}\right)\right| = \ln(\pi|z|) + \sum_{n=2}^{x} \ln\!\left|1 - \frac{z^2}{n^2k^2}\right|
+\end{align*}
+and identity 3 gives the product integral over $k$:
+\begin{align*}
+\ProdInt_2^x \left[\left|\sin\!\left(\frac{\pi z}{k}\right)\right|\right]^{dk}
+= e^{\,\SumInt_2^x \ln\!\left|\sin\!\left(\frac{\pi z}{k}\right)\right| dk}
+\end{align*}
+Taking the outer product $\prod_{k=2}^x$ on both sides of the Weierstrass identity converts $a(z)$ on the left into $b(z)$ on the right — both being product integral instances of identity 3.
 
 Taking the product over $k$ from $2$ to $x$ on both sides gives $a(z)$ on the left and defines a new functional form $b(z)$ on the right:
 \begin{align*}
@@ -620,6 +635,46 @@ The 2D complex plot of $B(z)$ provides a map of prime and composite numbers: pol
 \caption{3D graph of $B(x+iy)$ with prism colorization}
 \label{fig:Bz-3d-prism}
 \end{figure}
+
+\medskip
+\textbf{Product Green's Theorem Applied to $b(z)$.}\medskip
+
+The product Green's theorem of Section~I, applied to $b(z)$, yields a multiplicative primality criterion via contour integration. Let $\Omega_n$ denote a small disk of radius $\varepsilon$ centered at a positive integer $n \geq 2$, with boundary $\partial\Omega_n$. Define the normal derivative $\partial_\mathbf{n}\ln|b(z)|$ on $\partial\Omega_n$.
+
+Since $\ln|b(z)|$ is harmonic away from the zeros of $b(z)$ (the composites), Green's second identity gives:
+\begin{align*}
+\oint_{\partial\Omega_n} \frac{\partial \ln|b(z)|}{\partial \mathbf{n}}\,ds = \iint_{\Omega_n} \nabla^2 \ln|b(z)|\,dA = 2\pi Z_n
+\end{align*}
+where $Z_n$ counts the zeros of $b(z)$ inside $\Omega_n$ with multiplicity (by the Poincar\'{e}--Lelong formula for the subharmonic function $\ln|b|$). Both sides are sum integrals, so the product Green's theorem of Section~I converts this into the multiplicative identity:
+\begin{align*}
+\ProdInt_{\partial\Omega_n} [|b(z)|]^{\,\partial_\mathbf{n}\,ds} = e^{\,2\pi Z_n}
+\end{align*}
+By the prime indicator property (Lemma~2) and the zero multiplicity lemma (Section~IV, Lemma~2):
+\begin{align*}
+\ProdInt_{\partial\Omega_p} [|b(z)|]^{\,\partial_\mathbf{n}\,ds} &= e^{2\pi \cdot 0} = 1 \qquad (p \text{ prime}) \\[6pt]
+\ProdInt_{\partial\Omega_c} [|b(z)|]^{\,\partial_\mathbf{n}\,ds} &= e^{2\pi(\tau(c)-2)} \qquad (c \text{ composite})
+\end{align*}
+since $Z_c = \tau(c) - 2$ by the zero multiplicity lemma. The product Green's theorem therefore gives a \textbf{multiplicative primality test}: $n$ is prime if and only if
+\begin{align*}
+\ProdInt_{\partial\Omega_n} [|b(z)|]^{\,\partial_\mathbf{n}\,ds} = 1
+\end{align*}
+and the value $e^{2\pi(\tau(n)-2)}$ at composites encodes their divisor count directly in the product integral.
+
+\begin{remark}[Connection to the M\"{o}bius function]
+The zero set of $b(z)$ at the composites is related to the M\"{o}bius function $\mu(n)$. Recall $\mu(n) = 0$ whenever $n$ is divisible by a perfect square, i.e., whenever $n$ is not squarefree. All composites contribute $b(n) = 0$, which encompasses both the squarefree composites (where $\mu = \pm 1$) and the non-squarefree composites (where $\mu = 0$). The finer distinction between squarefree and non-squarefree composites is not captured by $b(z)$ alone — it would require a refinement of the inner product that distinguishes repeated prime factors, a direction for future work.
+\end{remark}
+
+\begin{remark}[Product integral as a prime counter]
+The sum integral of $\ln|b(t)|$ over an interval $[2, N]$ accumulates the logarithmic singularities at each composite in $[2, N]$:
+\begin{align*}
+\SumInt_2^N \ln|b(t)|\,dt
+\end{align*}
+diverges proportionally to the count and multiplicity of composites in $[2, N]$. Its product integral dual:
+\begin{align*}
+\ProdInt_2^N [|b(t)|]^{dt} = e^{\,\SumInt_2^N \ln|b(t)|\,dt}
+\end{align*}
+therefore collapses to zero as $N \to \infty$ at a rate governed by the density of composites — equivalently, by $1$ minus the prime density. The prime number theorem predicts that the density of primes near $N$ is $\sim 1/\ln N$, so the product integral decays at a rate tied to the prime-counting function $\pi(N)$. Connecting this decay rate to the zeros of $\eta(s)$ in the critical strip is a natural target for future work.
+\end{remark}
 
 \newpage
 \newpage
