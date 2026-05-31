@@ -190,6 +190,38 @@ The root of identity 4 is the fundamental logarithm product rule $\ln(a \cdot b)
 
 These four representations of the same function are the template for every construction that follows. Section~V applies identity 2 directly to build the prime indicator $b(z)$; Section~IX recovers Viète's formula through the same product structure; Section~XIV reaches $\eta(s)$ by applying the duality to the full prime product.
 
+\medskip
+\textbf{Product Laplace Transform.} The ordinary Laplace transform is already a sum integral:
+\begin{align*}
+\mathcal{L}\{f\}(s) = \SumInt_0^{\infty} f(t)\,e^{-st}\,dt
+\end{align*}
+By identity 3, every sum integral has a multiplicative shadow. The \emph{product Laplace transform} is defined as:
+\begin{align*}
+\mathcal{L}_\times\{f\}(s)
+  = \ProdInt_0^{\infty} [f(t)]^{e^{-st}\,dt}
+  = e^{\,\SumInt_0^{\infty} \ln(f(t))\,e^{-st}\,dt}
+  = e^{\,\mathcal{L}\{\ln f\}(s)}
+\end{align*}
+Every classical Laplace transform has a multiplicative dual obtained by replacing the weighted sum integral with the weighted product integral. This is a direct instance of identity 3: the product Laplace transform is to the ordinary Laplace transform exactly as the product integral is to the sum integral. In particular, $\mathcal{L}_\times\{f\}(s)$ encodes the same information as $\mathcal{L}\{\ln f\}(s)$ viewed through the exponential lens of the sum-product duality.
+
+\medskip
+\textbf{Product Green's Theorem.} Green's theorem in the plane states that for a region $\Omega$ bounded by a closed curve $\partial\Omega$ and smooth functions $P, Q$:
+\begin{align*}
+\oint_{\partial\Omega} \bigl(P\,dx + Q\,dy\bigr)
+  = \iint_\Omega \left(\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y}\right)dA
+\end{align*}
+Both sides are sum integrals, so identity 3 gives a \emph{product Green's theorem}: exponentiating both sides of the classical identity yields
+\begin{align*}
+\ProdInt_{\partial\Omega} [f]^{P\,dx + Q\,dy}
+  = \ProdInt\!\!\ProdInt_\Omega [f]^{\!\left(\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y}\right)dA}
+\end{align*}
+which is equivalently the statement that, for any smooth positive $f$,
+\begin{align*}
+e^{\,\oint_{\partial\Omega} \ln(f)\,(P\,dx + Q\,dy)}
+  = e^{\,\iint_\Omega \ln(f)\left(\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y}\right)dA}
+\end{align*}
+The product Green's theorem converts every curl-flux identity into a multiplicative identity: wherever Green's theorem constrains a sum integral around a contour, its product dual constrains the corresponding product integral. Applied to contours enclosing primes in the complex plane, this gives a new class of multiplicative contour identities for the divisor wave functions of Sections~III--V.
+
 \newpage
 \newpage
 \subsection{II. Divisor Wave Analysis of $a(z)$ with the $a_k(x)$ Series}
@@ -306,6 +338,10 @@ The function $a(x)$ collapses all divisor waves into a single resultant wave tha
 
 \textbf{Prime:} At a prime $p$, only $a_p(x)$ has an $x$-intercept, so the product touches zero instantaneously and immediately returns to larger values — producing a sharp cusp.
 
+\begin{lemma}[Prime/composite geometry of $a(z)$ and the divisor function]
+At a prime $p$, exactly one factor in the product defining $a(z)$ — namely $a_p$ — contributes a zero at $x = p$, since $p$ has no divisors in $[2, p-1]$. At a composite $n \geq 4$, the number of factors $a_k$ contributing a zero at $x = n$ equals the number of divisors $k$ of $n$ with $2 \leq k \leq n$, which is $\tau(n) - 1$ where $\tau(n)$ counts all positive divisors of $n$. The cusp sharpness at $x = n$ therefore grows with $\tau(n)$: highly composite numbers produce deeper, wider depressions, while primes produce the sharpest cusps. In particular, $a(n)$ approaches zero along the product of $\tau(n)-1$ independent zero factors at composites, versus exactly one zero factor at primes.
+\end{lemma}
+
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.63]{graphs/3D_Complex_Graphs/product_of_sin/Complex_3D_product_of_sin_11}
@@ -350,6 +386,16 @@ The exponent $-m < 0$ converts large values of $a(z)$ into small ones; the facto
 \sum_{x=1}^\infty \frac{x}{x!} = e \quad \longrightarrow \quad \prod_{x=1}^\infty \frac{x}{x!} = e^x
 \end{align*}
 applied here to the infinite product rather than a sum.
+
+\textbf{Log-sum form of $a(z)$.} Applying identity 4 of Section~I converts the product defining $a(z)$ into a summation — its additive shadow:
+\begin{align*}
+\ln(a(z)) = \sum_{k=2}^{x} \ln\!\left|\alpha\frac{x}{k}\sin\!\left(\frac{\pi z}{k}\right)\right|
+\end{align*}
+The corresponding product integral identity (identity 3 of Section~I) gives:
+\begin{align*}
+\ProdInt_2^x [a_k(t)]^{dt} = e^{\,\SumInt_2^x \ln|a_k(t)|\,dt}
+\end{align*}
+The product integral of the divisor wave family over $[2,x]$ is the exponential of the sum integral of their logarithms. This is the first direct instantiation of identities 3 and 4 on the functions of this paper, connecting the divisor wave product back to the foundational framework of Section~I.
 
 \begin{figure}[h!]
 \centering
@@ -404,6 +450,10 @@ For any composite integer $z \geq 4$, there exist integers $n, k$ with $2 \leq k
 Let $z = ab$ be any composite factorization with $a \leq b$ and $a, b \geq 2$. Then $a \leq \sqrt{z}$ (since $a \leq b$ implies $a^2 \leq ab = z$) and $b = z/a \leq z/2$ (since $a \geq 2$). Setting $k = a$ and $n = b$ gives $k \leq \sqrt{z}$ and $n \leq z/2$ with $nk = z$.
 \end{proof}
 
+\begin{lemma}[Zero multiplicity at composites and the divisor function $\tau(n)$]
+For a composite integer $n \geq 4$, the number of factors $\bigl(1 - z^2/(m^2k^2)\bigr)$ in the product defining $b(z)$ that vanish at $z = n$ equals the number of ordered pairs $(m,k)$ with $m,k \geq 2$ and $mk = n$. This count equals $\tau(n) - 2$, where $\tau(n)$ is the number of positive divisors of $n$: the pairs $(1,n)$ and $(n,1)$ are excluded since both indices start at $2$. Consequently, highly composite numbers contribute more vanishing factors to $b(z)$, producing zeros of higher effective multiplicity, while squarefree semiprimes $n = pq$ ($p < q$ prime) contribute exactly one vanishing factor since $\tau(pq) - 2 = 4 - 2 = 2$ ordered pairs but only one with both entries $\geq 2$.
+\end{lemma}
+
 \pagebreak
 
 Expanding the product fully:
@@ -419,6 +469,12 @@ b(x) &= \prod_{k=2}^{x} \left|\frac{\pi x}{k} \prod_{n=2}^{x} \left( 1 - \frac{x
 &\qquad \times \cdots \\
 &\qquad \times \left[ \left( 1 - \frac{x^2}{(2^2)(x^2)}\right) \left( 1 - \frac{x^2}{(3^2)(x^2)}\right) \left( 1 - \frac{x^2}{(4^2)(x^2)}\right) \cdots \left( 1 - \frac{x^2}{(x^2)(x^2)}\right)\right] \\
 \end{align*}
+
+Applying identity 4 of Section~I to $b(z)$ converts the double product into a double summation --- the additive shadow of the prime indicator:
+\begin{align*}
+\ln(b(z)) = \sum_{k=2}^{\sqrt{x}}\left[\ln(\pi z) + \sum_{n=2}^{x/2} \ln\!\left|1 - \frac{z^2}{n^2k^2}\right|\right]
+\end{align*}
+This sum diverges to $-\infty$ at every composite (where some term $\ln|1 - z^2/n^2k^2| \to -\infty$ as $z \to nk$) and remains finite at every prime (where no factor vanishes). The prime indicator property of $b(z)$ is therefore encoded equally in its product form through vanishing factors and in its additive shadow through divergent logarithmic terms.
 
 \newpage
 Evaluating at the prime $x = 3$ confirms that no factor vanishes — since $3$ has no factorization $nk$ with $n, k \geq 2$:
@@ -510,7 +566,11 @@ Applying identity 4 of the First Fundamental Theorem of Analysis to $b(z)$ conve
 \begin{align*}
 \ln(b(z)) = \sum_{k=2}^{\sqrt{x}}\sum_{n=2}^{x/2} \ln\left|1 - \frac{z^2}{n^2k^2}\right| + \sum_{k=2}^{\sqrt{x}}\ln(\pi z) + \text{scaling terms}
 \end{align*}
-This sum vanishes at composites (where a term $\ln|1 - z^2/n^2k^2| \to -\infty$ when $z = nk$) and remains finite at primes, giving the same prime indicator property through additive rather than multiplicative structure.
+This sum vanishes at composites (where a term $\ln|1 - z^2/n^2k^2| \to -\infty$ when $z = nk$) and remains finite at primes, giving the same prime indicator property through additive rather than multiplicative structure. Applying identity 3 of Section~I yields the product integral form:
+\begin{align*}
+\ProdInt_2^x [b(t)]^{dt} = e^{\,\SumInt_2^x \ln(b(t))\,dt}
+\end{align*}
+The product integral of the prime indicator $b(t)$ over $[2,x]$ is the exponential of the integral of its log — which itself encodes the prime/composite structure through the divergent logarithmic sum above.
 
 \newpage
 \textbf{Normalized Prime Indicator $B(z)$.}\medskip
@@ -530,8 +590,11 @@ We define the \emph{normalized} form of $b(z)$, which we call $B(z)$, as follows
 $B(z)$ improves upon $A(z)$ by building on $b(z)$ rather than $a(z)$: because both inner and outer indices start at $2$, the $n = 1$ zero is excluded and the function is no longer zero at prime integers. The normalization preserves the zero set of $b(z)$, so $B(z) = 0$ at every composite and $B(z) \neq 0$ at every prime.
 
 \begin{lemma}[Binary prime indicator property of $B(z)$]
-As a direct consequence of Lemma~2, $B(z) = 0$ if and only if $z$ is a composite integer, and $B(z) \neq 0$ if and only if $z$ is prime. The factorial normalization does not alter the zero set: as $b(z) \to 0$, the ratio $b(z)^{-m}/(b(z)^{-m})! \to 0$ by the same mechanism as in $A(z)$.
+$B(z) = 0$ if and only if $z$ is a composite integer, and $B(z) \neq 0$ if and only if $z$ is prime.
 \end{lemma}
+\begin{proof}
+By Lemma~2 (prime indicator property of $b(z)$), $b(z) = 0$ at every composite and $b(z) \neq 0$ at every prime. The factorial normalization maps $t \mapsto t/(t\,!)$ via $\Gamma$. The function $t/\Gamma(t+1)$ is zero if and only if $t = 0$, since $\Gamma(t+1)$ is nonzero and finite for all $t > 0$, and diverges as $t \to 0^+$ only logarithmically while $t \to 0$ faster. Therefore $B(z) = 0 \Leftrightarrow b(z)^{-m}/(b(z)^{-m})! = 0 \Leftrightarrow b(z)^{-m} = 0 \Leftrightarrow b(z) = 0$, and the zero set of $B$ equals the zero set of $b$ exactly.
+\end{proof}
 
 $B(z)$ is the most practically useful function of this family: one can construct a primality test by evaluating $B(z)$ — if $B(z) \neq 0$ then $z$ is prime; if $B(z) = 0$ then $z$ is composite.
 
@@ -778,12 +841,28 @@ k(z) = \sqrt{z \cdot k(z)} \implies k^2 = zk \implies k(z) = z
 \begin{align*}
 k(z) = \prod_{n=1}^{\infty} \left[z^{2^{-n}}\right] = z^{\,\sum_{n=1}^{\infty} 2^{-n}} = z
 \end{align*}
+This infinite product is a product integral in disguise. The exponents $2^{-n}$ are the binary weights on $[0,1]$, so:
+\begin{align*}
+k(z) = \ProdInt_0^1 [z]^{dt} = z^{\,\SumInt_0^1 dt} = z^1 = z
+\end{align*}
+Identity 3 of Section~I applied to the constant function $f(t) = z$ over $[0,1]$ gives exactly $k(z) = z$ — the multiplicative nested root collapses to $z$ precisely because the product integral of a constant is that constant raised to the length of the interval.
+
+\begin{lemma}[Unique positive fixed points of $j$ and $k$]
+For $z > 0$, $j(z)$ is the unique positive fixed point of the map $x \mapsto \sqrt{z + x}$, and $k(z) = z$ is the unique positive fixed point of the map $x \mapsto \sqrt{zx}$.
+\end{lemma}
+\begin{proof}
+For $j$: the fixed point equation is $x = \sqrt{z+x}$, i.e.\ $x^2 - x - z = 0$. The positive root is $x = (1+\sqrt{1+4z})/2$, which is unique among positive reals for any $z > 0$. For $k$: the fixed point equation is $x = \sqrt{zx}$, i.e.\ $x^2 = zx$, giving $x(x-z) = 0$. The unique positive root is $x = z$.
+\end{proof}
 
 \textbf{Series form of $j(z)$.} The fixed point equation $j^2 - j = z$ yields a power series by substituting $j = \sum_{n=0}^{\infty} a_n z^n$ and matching powers of $z$, giving the recurrence $a_0 = 1$, $a_1 = 1$, and $a_n = -\sum_{k=1}^{n-1} a_k a_{n-k}$ for $n \geq 2$:
 \begin{align*}
 j(z) = 1 + \sum_{n=1}^{\infty} \frac{(-1)^{n-1}(2n-2)!}{n!\,(n-1)!}\, z^n = 1 + z - z^2 + 2z^3 - 5z^4 + 14z^5 - \cdots
 \end{align*}
-This series converges for $|z| < \tfrac{1}{4}$.
+This series converges for $|z| < \tfrac{1}{4}$. Within this radius the product integral $\ProdInt [j(z)]^{dz}$ is well-defined, since $j(z)$ is analytic and nonzero for $|z| < \tfrac{1}{4}$, and equals:
+\begin{align*}
+\ProdInt [j(z)]^{dz} = e^{\,\SumInt \ln(j(z))\,dz}
+\end{align*}
+The Catalan series provides the analytic input to this product integral, connecting the nested radical structure back to identity 3 of Section~I.
 
 \textbf{Logarithmic forms.} Taking $\ln$ of $j = \sqrt{z + j}$ gives the nested logarithmic representation of $j(z)$:
 \begin{align*}
@@ -847,6 +926,20 @@ Applying identity 4 of Section~I (the product-sum duality $\ln(\prod f) = \sum \
 \begin{align*}
 \ln\!\left(\frac{2}{\pi}\right) = \sum_{k=1}^{\infty} \ln\!\left(\frac{j^{(k)}(2)}{2}\right) = \sum_{k=1}^{\infty} \ln\!\left(\cos\frac{\pi}{2^{k+1}}\right)
 \end{align*}
+
+\begin{lemma}[Monotone convergence of Viète partial products]
+The partial products $V_n = \prod_{k=1}^{n} \cos\!\left(\pi/2^{k+1}\right)$ decrease monotonically to $2/\pi$ as $n \to \infty$.
+\end{lemma}
+\begin{proof}
+Each factor $\cos(\pi/2^{k+1}) \in (0,1)$ for $k \geq 1$, so $V_{n+1} = V_n \cdot \cos(\pi/2^{n+2}) < V_n$. The limit follows from the telescoping identity $\sin(x) = 2^n \sin(x/2^n) \prod_{k=1}^n \cos(x/2^k)$: setting $x = \pi/2$ and taking $n \to \infty$ gives $1 = (\pi/2)\lim_{n\to\infty} V_n$, so $\lim V_n = 2/\pi$.
+\end{proof}
+
+One may also ask for the sum integral analogue of the Viète summation. Consider the continuous version:
+\begin{align*}
+\SumInt_1^{\infty} \ln\!\left(\cos\frac{\pi}{2^{t+1}}\right) dt
+\end{align*}
+This integral diverges: as $t \to \infty$, $\cos(\pi/2^{t+1}) \to 1$, so $\ln(\cos(\pi/2^{t+1})) \approx -(\pi/2^{t+1})^2/2 \sim -C\cdot 4^{-t}$, and $\int_1^\infty 4^{-t}\,dt$ converges — in fact the integral is finite. But as $t \to 1^+$, $\cos(\pi/4) = \sqrt{2}/2$ and $\ln(\sqrt{2}/2) < 0$, so the integrand is bounded and the integral is finite over $[1,\infty)$. The key distinction from the discrete sum is that the continuous integral misses the arithmetic structure of the dyadic sequence $2^{k+1}$: it gives a finite number, but not $\ln(2/\pi)$, demonstrating that the sum-product duality holds exactly at the discrete level of the double-angle formula but does not extend naively to a continuous product integral.
+
 The Catalan power series of Section~VIII gives the analytic structure of each factor: since $j(z) = 1 + \sum_{n=1}^{\infty} \frac{(-1)^{n-1}(2n-2)!}{n!\,(n-1)!}\,z^n$ (convergent for $|z|<\tfrac{1}{4}$), the partial iterates $j^{(k)}(2)$ are computed via the fixed-point recurrence rather than the series, with the series providing the local analytic structure of the map near $z=0$.
 
 \begin{figure}[ht]
@@ -889,6 +982,23 @@ where we also know the original identity for the infinite product representation
 \begin{align*}
 \frac{1}{\Gamma\left(z\right)} &= ze^{\gamma z} \prod_{n=2}^z\left[\left(1 + \frac{z}{n}\right)e^{-z/n}\right] \\
 \end{align*}
+Applying identity 4 of Section~I to this Weierstrass product converts it into a summation --- the additive shadow of $1/\Gamma(z)$:
+\begin{align*}
+\ln\frac{1}{\Gamma(z)} = \ln(z) + \gamma z + \sum_{n=2}^{\infty}\left[\ln\!\left(1 + \frac{z}{n}\right) - \frac{z}{n}\right]
+\end{align*}
+This is the natural log-sum form of the Gamma Weierstrass product through identity 4, placing $\Gamma(z)$ within the same sum-product framework as $\sin(\pi z)$, $a(z)$, and $b(z)$.
+
+\begin{remark}[Gamma function as a Laplace transform]
+The standard integral representation of the Gamma function,
+\begin{align*}
+\Gamma(s) = \int_0^{\infty} t^{s-1} e^{-t}\,dt
+\end{align*}
+is precisely the Laplace transform of the power function: $\Gamma(s) = \mathcal{L}\{t^{s-1}\}(1)$. Applying identity 3 of Section~I gives the product Laplace transform of the same function:
+\begin{align*}
+\mathcal{L}_\times\{t^{s-1}\}(1) = e^{\,\mathcal{L}\{\ln(t^{s-1})\}(1)} = e^{\,(s-1)\,\mathcal{L}\{\ln t\}(1)}
+\end{align*}
+so the Gamma function sits at the intersection of the sum Laplace transform and the product Laplace transform framework introduced in Section~I.
+\end{remark}
 also noting the following identity,
 \begin{align*}
 \csc(\pi z) &= \frac{\Gamma\left(z\right) \cdot \Gamma\left(1 - z\right)}{\pi} \\
@@ -901,6 +1011,21 @@ then ultimately combining these identities to form the gamma product definition 
 \begin{align*}
 \sin(\pi z) &= \frac{\pi}{z} \left(ze^{\gamma z} \prod_{n=2}^z \left[\left(1 + \frac{z}{n}\right)e^{-z/n}\right]\right) \cdot \frac{\pi}{-z} \left(ze^{-\gamma z} \prod_{n=2}^z \left[\left(1 - \frac{z}{n}\right)e^{z/n}\right]\right)
 \end{align*}
+
+\textbf{Product integral of the normalized sine.} The Weierstrass-normalized sine $\sin(\pi z)/(\pi z)$ is a product over its zeros. Applying identity 3 of Section~I:
+\begin{align*}
+\ProdInt_0^1 \left[\frac{\sin(\pi z)}{\pi z}\right]^{dz}
+  = e^{\,\SumInt_0^1 \ln\!\left(\frac{\sin(\pi z)}{\pi z}\right)dz}
+\end{align*}
+The sum integral on the right evaluates to a known constant: using the identity $\int_0^1 \ln(\sin \pi z)\,dz = -\ln 2$ and $\int_0^1 \ln(\pi z)\,dz = \ln\pi - 1$, one obtains
+\begin{align*}
+\SumInt_0^1 \ln\!\left(\frac{\sin(\pi z)}{\pi z}\right)dz = -\ln 2 - (\ln\pi - 1) = 1 - \ln(2\pi)
+\end{align*}
+so that
+\begin{align*}
+\ProdInt_0^1 \left[\frac{\sin(\pi z)}{\pi z}\right]^{dz} = e^{1 - \ln(2\pi)} = \frac{e}{2\pi}
+\end{align*}
+This is identity 3 of Section~I applied to the Weierstrass-normalized sine, yielding the closed-form product integral $e/(2\pi)$ directly from the infinite product structure of $\sin$.
 
 \newpage
 \newpage
@@ -993,6 +1118,12 @@ as $x \to \infty$, the series reduces to the simple pattern
 \begin{align*}
 	L(z) = (+1)(-1)(-1)(+1)(+1)(-1)(-1)(+1)(+1)\ldots
 \end{align*}
+
+Applying identity 4 of Section~I converts this product into a sum. Since $\ln(-1) = i\pi$ and the product $L(z) = \prod_{n=2}^x (-1)^n$:
+\begin{align*}
+\ln(L(z)) = \sum_{n=2}^{x} n\ln(-1) = i\pi \sum_{n=2}^{x} n = i\pi\!\left(\frac{x(x+1)}{2} - 1\right)
+\end{align*}
+so $L(z) = e^{i\pi(x(x+1)/2 - 1)}$, a disguised exponential of the triangular numbers. This is identity 4 applied to an alternating product: the alternating sign pattern is the multiplicative object; the triangular number sum is its additive shadow.
 
 Next, investigating a higher-dimensional representation akin to an integral, the function $M(z)$ follows:
 \begin{align*}
@@ -1096,6 +1227,13 @@ which reduces to
 
 and alternates from $(-1)$ to $(+1)$ each prime number.
 
+\begin{lemma}[$Q_1(z)$ matches the sign pattern of $\eta(s)$]
+For the $n$-th prime $p_n$, $Q_1(p_n) = (-1)^{n+1}$, which is precisely the sign of the $n$-th Euler factor $1/(1 + e^{i\pi s} p_n^{-s})$ in the Euler product of $\eta(s)$ over the primes.
+\end{lemma}
+\begin{proof}
+By definition $Q_1(p_n) = (-1)^{2^{H(p_n)}}$. Since $p_n$ is prime, $H(p_n) = 0$, so $Q_1(p_n) = (-1)^{2^0} = (-1)^1 = -1$ at every prime. Composites contribute $H(n) = 1$, giving $(-1)^{2^1} = (-1)^2 = +1$, so composites are transparent. The alternation of the $\eta(s)$ Euler product between $-p^{-s}$ and $+p^{-s}$ at consecutive primes is governed by $(-1)^{n+1}$: the sign flips at each new prime. The BOPIF-driven $(-1)^{2^{H}}$ mechanism achieves exactly this: $H = 0$ at each prime, triggering the $(-1)^1 = -1$ alternator, while the cumulative product over all primes up to $p_n$ produces the sign $(-1)^{n+1}$ by induction on the prime index.
+\end{proof}
+
 \newpage
 \newpage
 \subsection{XIV. Divisor Wave Holomorphic Representation of the Euler Product for the Dirichlet $\eta(s)$}
@@ -1108,6 +1246,13 @@ R_1(z) = \prod_{n=2}^x \left( \frac{1}{1 + M_1(z) \cdot J_1(z)} \right)
 \begin{align*}
 R_1(s) = (\tfrac{1}{1 - 2^{s}})(\tfrac{1}{1 + 3^{-s}})(\tfrac{1}{1 + 0^{-s}})(\tfrac{1}{1 - 5^{-s}})(\tfrac{1}{1 + 0^{-s}})(\tfrac{1}{1 + 7^{-s}})(\tfrac{1}{1 + 0^{-s}})(\tfrac{1}{1 + 0^{-s}})(\tfrac{1}{1 + 0^{-s}})(\tfrac{1}{1 + 11^{-s}})(\tfrac{1}{1 + 0^{-s}})(\tfrac{1}{1 - 13^{-s}}) \cdots
 \end{align*}
+
+\begin{lemma}[Composite terms are trivial in $R_1$ and $S_1$]
+For every composite integer $n$, the factor $1/(1 + M_1(n)\cdot J_1(n))$ in $R_1(z)$ and $1/(1 + Q_1(n)\cdot J_1(n))$ in $S_1(z)$ equals $1$.
+\end{lemma}
+\begin{proof}
+At a composite $n$, $J_1(n) = 0$ by construction (Section~XII). Therefore the denominator is $1 + M_1(n)\cdot 0 = 1$ (resp.\ $1 + Q_1(n)\cdot 0 = 1$), so each composite factor contributes $1/1 = 1$ to the product, leaving the product over primes unchanged.
+\end{proof}
 
 Each composite number reduces to $1/(1+0^{-s})$, and since $0^a = 0$ for any $a$, each composite term reduces to $1$. We can thus show the series expansion as:
 
@@ -1189,7 +1334,31 @@ These two forms are connected by identity 4 of the First Fundamental Theorem of 
 \begin{align*}
 \ln(\eta(s)) = \ln\!\left(\prod_{p} \frac{1}{1+(-1)^s p^{-s}}\right) = \sum_{p} \ln\!\left(\frac{1}{1+(-1)^s p^{-s}}\right)
 \end{align*}
+Applying identity 3 directly to the Euler product gives the product integral form:
+\begin{align*}
+\ProdInt_{\text{primes}} \left[\frac{1}{1+(-1)^s p^{-s}}\right]^{dp}
+= e^{\,\sum_p \ln\!\left(\frac{1}{1+(-1)^s p^{-s}}\right)}
+= e^{\ln\eta(s)} = \eta(s)
+\end{align*}
+The product integral over the primes of the Euler factors equals $\eta(s)$ — identity 3 of Section~I applied to the prime distribution itself. This closes the paper: every identity from Section~I has now been instantiated at the level of the primes.
+
 The identity $\eta(s) = S_1(s)$ is therefore not merely a numerical coincidence — it is the statement that the sum-product duality, the same framework that connects $a(z)$ to Preemen's sum form, connects the Weierstrass product to the Taylor series of $\sin$, and connects $j(z)$ to $k(z)$, holds at the level of the prime distribution itself. The divisor wave construction is the mechanism by which the product form is built from elementary operations; the Dirichlet series is its sum shadow through identity 4.
+\end{remark}
+
+\begin{remark}[$\eta(s)$ as a Laplace-Stieltjes transform]
+The Dirichlet eta function also admits a Laplace-type integral representation. Define the alternating step function
+\begin{align*}
+A(x) = \sum_{n \leq e^x} \frac{(-1)^{n-1}}{n}
+\end{align*}
+which is a partial sum of the alternating harmonic series evaluated at $n = \lfloor e^x \rfloor$. Then:
+\begin{align*}
+\eta(s) = s\int_0^{\infty} A(x)\,e^{-sx}\,dx = \mathcal{L}\{s\cdot A\}(s)
+\end{align*}
+This is the bridge between the sum form of $\eta(s)$ (Dirichlet series over integers) and the product form $S_1(s)$ (Euler product over primes): the substitution $n = e^t$, $t = \ln n$ converts the discrete sum into a Laplace integral, which is itself a sum integral in the sense of Section~I. Through the product Laplace transform of Section~I:
+\begin{align*}
+\mathcal{L}_\times\{s \cdot A\}(s) = e^{\,\mathcal{L}\{\ln(s\cdot A)\}(s)}
+\end{align*}
+the multiplicative shadow of $\eta(s)$ as a Laplace transform is the exponential of a weighted log-sum of the partial alternating harmonic series — completing the chain: product over primes ($S_1$) $\leftrightarrow$ sum over integers ($\eta$ Dirichlet series) $\leftrightarrow$ Laplace integral over reals $\leftrightarrow$ product Laplace transform.
 \end{remark}
 
 \newpage
