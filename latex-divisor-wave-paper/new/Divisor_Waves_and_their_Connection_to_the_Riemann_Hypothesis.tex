@@ -434,13 +434,6 @@ The standard Weierstrass product for $\sin(\pi z)$ is $\pi z \prod_{n=1}^\infty 
 	\sin\left(\frac{\pi z}{k}\right) = \pi z\prod_{n=2}^x \left(1-\frac{z^2}{n^2k^2}\right) \\
 \end{align*}
 
-Applying identity 4 of Section~I to this single-$k$ factor gives its additive form, and identity 3 gives the corresponding product integral:
-\begin{align*}
-\ln\!\left|\sin\!\left(\frac{\pi z}{k}\right)\right| &= \ln(\pi|z|) + \sum_{n=2}^{x} \ln\!\left|1 - \frac{z^2}{n^2k^2}\right| \\[6pt]
-\ProdInt_2^x \left[\left|\sin\!\left(\frac{\pi z}{k}\right)\right|\right]^{dk}
-&= e^{\,\SumInt_2^x \ln\!\left|\sin\!\left(\frac{\pi z}{k}\right)\right| dk}
-\end{align*}
-
 Taking the product over $k$ from $2$ to $x$ on both sides gives $a(z)$ on the left and defines a new functional form $b(z)$ on the right:
 \begin{align*}
 	\prod_{k=2}^x\sin\left(\frac{\pi z}{k}\right) = \prod_{k=2}^x \pi z\prod_{n=2}^x \left(1-\frac{z^2}{n^2k^2}\right) \\
