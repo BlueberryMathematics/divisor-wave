@@ -108,6 +108,13 @@ ef
 unfilecheck.sty
 (C:\Users\Gr33nb3rry\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\un
 iquecounter.sty)))
+(C:\Users\Gr33nb3rry\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+(C:\Users\Gr33nb3rry\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color
+.cfg)
+(C:\Users\Gr33nb3rry\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdfte
+x.def)
+(C:\Users\Gr33nb3rry\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor
+.ltx))
 (C:\Users\Gr33nb3rry\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.
 sty
 (C:\Users\Gr33nb3rry\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.
@@ -115,6 +122,609 @@ sty
 (C:\Users\Gr33nb3rry\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty)
 
 (C:\Users\Gr33nb3rry\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graph
-ics.cfg)
-(C:\Users\Gr33nb3rry\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdfte
-x.def)))
+ics.cfg))) (Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.aux)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+
+(C:\Users\Gr33nb3rry\AppData\Local\Programs\MiKTeX\tex/latex/biblatex/lbx\engli
+sh.lbx) (Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.bbl)
+(Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.out)
+(Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.out)
+(C:\Users\Gr33nb3rry\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-p
+df.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(C:\Users\Gr33nb3rry\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epsto
+pdf-base.sty
+(C:\Users\Gr33nb3rry\AppData\Local\Programs\MiKTeX\tex/latex/grfext\grfext.sty)
+
+(C:\Users\Gr33nb3rry\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-
+sys.cfg))
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <26> not available
+(Font)              size <24.88> substituted on input line 52.
+
+
+LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <26> not available
+(Font)              size <24.88> substituted on input line 52.
+
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <20> not available
+(Font)              size <20.74> substituted on input line 53.
+
+[1{C:/Users/Gr33nb3rry/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map} <C:/bl
+ueberry_math/divisor-wave/latex-divisor-wave-paper/plots_for_paper/FigureB_redo
+ne.png> <C:/blueberry_math/divisor-wave/latex-divisor-wave-paper/plots_for_pape
+r/plot2d_fn2_20260528_041834.png> <C:/blueberry_math/divisor-wave/latex-divisor
+-wave-paper/plots_for_paper/plot2d_fn2_20260528_005651_3.png>]
+(Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.toc
+(C:\Users\Gr33nb3rry\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
+(C:\Users\Gr33nb3rry\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd))
+[1] [2] [3] [4] [5]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 195.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 195.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 195.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 195.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 195.
+
+
+! LaTeX Error: File `graphs/2D_Real_New/FigureA' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.210 ...[scale=0.305]{graphs/2D_Real_New/FigureA}
+                                                  
+
+! LaTeX Error: File `graphs/2D_Real_New/Figure1_2' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.217 ...scale=0.28]{graphs/2D_Real_New/Figure1_2}
+                                                  
+
+! LaTeX Error: File `graphs/2D_Real_New/FigureB_redone' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.237 ...=0.31]{graphs/2D_Real_New/FigureB_redone}
+                                                  
+
+! LaTeX Error: File `graphs/2D_Real_New/Figure4_redone' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.244 ...=0.38]{graphs/2D_Real_New/Figure4_redone}
+                                                  
+[6]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 254.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 254.
+
+
+! LaTeX Error: File `graphs/2D_Real_Graphs/cuspcurve' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.298 ...ale=0.5]{graphs/2D_Real_Graphs/cuspcurve}
+                                                  
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[7]
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/product_of_sin/Complex_3D_product
+_of_sin_11' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.311 ...duct_of_sin/Complex_3D_product_of_sin_11}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/product_of_sin/Complex_3D_product
+_of_sin_10' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.320 ...duct_of_sin/Complex_3D_product_of_sin_10}
+                                                  
+
+! LaTeX Error: File `graphs/2D_Real_Graphs/norm_cuspcurve' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.334 ...55]{graphs/2D_Real_Graphs/norm_cuspcurve}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/product_of_sin/normalized_Complex
+_3D_product_of_sin_HDSET_5' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.356 ...alized_Complex_3D_product_of_sin_HDSET_5}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/product_of_sin/normalized_Complex
+_3D_product_of_sin_HDSET_4' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.365 ...alized_Complex_3D_product_of_sin_HDSET_4}
+                                                  
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/product_of_sin/normalized_Complex
+_3D_product_of_sin_HDSET_8' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.372 ...alized_Complex_3D_product_of_sin_HDSET_8}
+                                                  
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[8]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 379.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 379.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 379.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 379.
+
+[9] [10] [11]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 455.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 455.
+
+
+! LaTeX Error: File `graphs/2D_Real_Graphs/prime_indicator_og_redone' not found
+.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.462 ...2D_Real_Graphs/prime_indicator_og_redone}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/product_of_product_representation
+_of_sin/non_normalized_goodm_prism_1' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.484 ...tion_of_sin/non_normalized_goodm_prism_1}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/product_of_product_representation
+_of_sin/non_normalized_goodm_prism_8' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.493 ...tion_of_sin/non_normalized_goodm_prism_8}
+                                                  
+
+! LaTeX Error: File `graphs/2D_Complex_Graphs/Infinite_Product_of_infinite_prod
+uct_representation_of_sin/Complex_product_17_n_2-28__imaginary_scalar_logarithm
+' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.502 ...ct_17_n_2-28__imaginary_scalar_logarithm}
+                                                  
+[12]
+
+! LaTeX Error: File `graphs/2D_Real_Graphs/prime_indicator_norm' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.525 ...aphs/2D_Real_Graphs/prime_indicator_norm}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/product_of_product_representation
+_of_sin/ComplexPlot_prodprodforsin_4_Prism_Colorization_New' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.540 ..._prodprodforsin_4_Prism_Colorization_New}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/product_of_product_representation
+_of_sin/ComplexPlot_prodprodforsin_8' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.549 ...tion_of_sin/ComplexPlot_prodprodforsin_8}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/product_of_product_representation
+_of_sin/ComplexPlot_norm_prodprodforsin_prism_3' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.556 .../ComplexPlot_norm_prodprodforsin_prism_3}
+                                                  
+[13]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 563.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 563.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 563.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 563.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 563.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 563.
+
+
+! LaTeX Error: File `graphs/2D_Real_Graphs/1+sin_prod' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.578 ...e=0.30]{graphs/2D_Real_Graphs/1+sin_prod}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/riesz_sin/HD_Riesz_sin_1_12_n5' n
+ot found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.587 ...ex_Graphs/riesz_sin/HD_Riesz_sin_1_12_n5}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/riesz_sin/HD_Riesz_sin_7_12_n7' n
+ot found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.597 ...ex_Graphs/riesz_sin/HD_Riesz_sin_7_12_n7}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/riesz_sin/HD_Riesz_sin_7_12_n6' n
+ot found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.604 ...ex_Graphs/riesz_sin/HD_Riesz_sin_7_12_n6}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/riesz_sin/HD_Riesz_sin_2_12_n11' 
+not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.614 ...x_Graphs/riesz_sin/HD_Riesz_sin_2_12_n11}
+                                                  
+[14] [15]
+
+! LaTeX Error: File `graphs/2D_Real_Graphs/1+cos_prod' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.646 ...e=0.30]{graphs/2D_Real_Graphs/1+cos_prod}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/riesz_cos/HD_Riesz_cos_2_12_n5' n
+ot found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.655 ...ex_Graphs/riesz_cos/HD_Riesz_cos_2_12_n5}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/riesz_cos/HD_Riesz_cos_2_12_n8' n
+ot found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.664 ...ex_Graphs/riesz_cos/HD_Riesz_cos_2_12_n8}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/riesz_cos/HD_Riesz_cos_2_12_n3' n
+ot found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.671 ...ex_Graphs/riesz_cos/HD_Riesz_cos_2_12_n3}
+                                                  
+[16]
+
+! LaTeX Error: File `graphs/2D_Real_Graphs/prod_1+tan' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.694 ...e=0.30]{graphs/2D_Real_Graphs/prod_1+tan}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/riesz_tan/HD_Riesz_tan_2_12_n5' n
+ot found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.703 ...ex_Graphs/riesz_tan/HD_Riesz_tan_2_12_n5}
+                                                  
+[17]
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/riesz_tan/Ries_tan_norm_2' not fo
+und.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.714 ...Complex_Graphs/riesz_tan/Ries_tan_norm_2}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/riesz_tan/HD_Riesz_tan_2_12_n6' n
+ot found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.721 ...ex_Graphs/riesz_tan/HD_Riesz_tan_2_12_n6}
+                                                  
+[18]
+
+! LaTeX Error: File `graphs/2D_Real_Graphs/1+tan_prod_xprimefunc' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.737 ...phs/2D_Real_Graphs/1+tan_prod_xprimefunc}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/Riesztan_PrimeFunc/HD_2_12_riesz_
+tanreversedivisionprimeindc_4' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.748 ...2_12_riesz_tanreversedivisionprimeindc_4}
+                                                  
+[19]
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/NestedRoots/Roots_sum' not found.
+
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.805 .../3D_Complex_Graphs/NestedRoots/Roots_sum}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/NestedRoots/Roots_prod' not found
+.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.811 ...3D_Complex_Graphs/NestedRoots/Roots_prod}
+                                                  
+[20]
+Overfull \hbox (23.88185pt too wide) in paragraph at lines 849--851
+\OT1/cmr/m/n/10 The Cata-lan power se-ries of Sec-tion VIII gives the an-a-lyti
+c struc-ture of each fac-tor: since $\OML/cmm/m/it/10 j\OT1/cmr/m/n/10 (\OML/cm
+m/m/it/10 z\OT1/cmr/m/n/10 ) = 1 + [][] [] \OML/cmm/m/it/10 z[]$
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/Viete_cos/Viete_cos_norm_1' not f
+ound.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.854 ...omplex_Graphs/Viete_cos/Viete_cos_norm_1}
+                                                  
+
+! LaTeX Error: File `graphs/3D_Complex_Graphs/Viete_cos/Viete_cos_norm_3' not f
+ound.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.860 ...omplex_Graphs/Viete_cos/Viete_cos_norm_3}
+                                                  
+[21] [22]
+
+! LaTeX Error: File `graphs/2D_Real_New/Prime_Indicator_H_normalized_labeled' n
+ot found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.916 ...New/Prime_Indicator_H_normalized_labeled}
+                                                  
+[23]
+
+! LaTeX Error: File `graphs/2D_Real_New/Prime_Indicator_J_normalized' not found
+.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.959 ...2D_Real_New/Prime_Indicator_J_normalized}
+                                                  
+
+! LaTeX Error: File `graphs/2D_Real_New/Composite_Indicator_H_normalized' not f
+ound.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.972 ...eal_New/Composite_Indicator_H_normalized}
+                                                  
+[24] [25] [26] [27]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1101.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\eta' on input line 1101.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1101.
+
+[28] [29] [30] [31]
+(Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.aux)
+
+LaTeX Font Warning: Size substitutions with differences
+(Font)              up to 1.12pt have occurred.
+
+ )
+(see the transcript file for additional information) <C:\Users\Gr33nb3rry\AppDa
+ta\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/Gr33nb
+3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C
+:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm
+/cmbx12.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/publ
+ic/amsfonts/cm/cmbx9.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fon
+ts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Users/Gr33nb3rry/AppData/Local/Pro
+grams/MiKTeX/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Users/Gr33nb3rry/Ap
+pData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users
+/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/c
+mex7.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/
+amsfonts/cmextra/cmex9.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Gr33nb3rry/AppData/Local/Pro
+grams/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/Gr33nb3rry/App
+Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/G
+r33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pf
+b><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfont
+s/cm/cmmi8.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/p
+ublic/amsfonts/cm/cmmi9.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/
+fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Gr33nb3rry/AppData/Local/Pro
+grams/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/Gr33nb3rry/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/Gr
+33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb>
+<C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
+cm/cmr6.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/publ
+ic/amsfonts/cm/cmr7.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/font
+s/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Gr33nb3rry/AppData/
+Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/Gr33nb
+3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:
+/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/
+cmsy9.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public
+/amsfonts/cm/cmti10.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/font
+s/type1/public/amsfonts/cm/cmti12.pfb><C:/Users/Gr33nb3rry/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/public/amsfonts/cm/cmti7.pfb><C:/Users/Gr33nb3rry/AppData
+/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/Gr33
+nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10
+.pfb><C:/Users/Gr33nb3rry/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsf
+onts/symbols/msbm7.pfb>
+Output written on Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothesis.
+pdf (32 pages, 1024392 bytes).
+Transcript written on Divisor_Waves_and_their_Connection_to_the_Riemann_Hypothe
+sis.log.
+pdflatex: major issue: So far, you have not checked for MiKTeX updates.
